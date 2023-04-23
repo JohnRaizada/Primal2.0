@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="PrimalEditor.Utilities.UndoRedoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrimalEditor.Utilities"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <Border Height="32" VerticalAlignment="Top" Background="{StaticResource Editor.Window.GrayBrush3}">
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.3" BlurRadius="10" ShadowDepth="0"/>
+            </Border.Effect>
+            <DockPanel Grid.Column="0" LastChildFill="False">
+                <TextBlock Text="History" HorizontalAlignment="Left" DockPanel.Dock="Left" Style="{StaticResource LightTextBlockStyle}" Margin="10,0"/>
+                <local:DockMenu Context="HistoryView" DockPanel.Dock="Right"/>
+            </DockPanel>
+        </Border>
+        <ItemsControl ItemsSource="{Binding UndoList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource Editor.FontBrush}"></TextBlock>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding RedoList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource Editor.Disabled.FontBrush}"></TextBlock>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

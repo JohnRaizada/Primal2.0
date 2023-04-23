@@ -1,0 +1,40 @@
+﻿<Window x:Class="PrimalEditor.Utilities.SplashScreenView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrimalEditor.Utilities"
+        mc:Ignorable="d" WindowStyle="None" ResizeMode="NoResize" 
+        Title="SplashScreenView" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:ProgressToOffsetConverter x:Key="ProgressToOffsetConverter"/>
+        <local:ProgressToTextConverter x:Key="ProgressToTextConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png"/>
+        </Grid.Background>
+        <StackPanel VerticalAlignment="Bottom" Margin="0" HorizontalAlignment="Stretch">
+            <TextBlock FontSize="20" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"
+           Text="{Binding ElementName=progressBar, Path=Value, Converter={StaticResource ProgressToTextConverter}}"/>
+            <ProgressBar Name="progressBar" Height="20" Value="40" Margin="0,10,0,0" VerticalAlignment="Bottom">
+                <ProgressBar.Template>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Border CornerRadius="10" BorderThickness="0" Background="Transparent">
+                            <Grid x:Name="PART_Track">
+                                <Rectangle x:Name="PART_Indicator" RadiusX="10" RadiusY="10">
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="Blue" Offset="{Binding RelativeSource={RelativeSource AncestorType={x:Type ProgressBar}}, Path=Value, Converter={StaticResource ProgressToOffsetConverter}, ConverterParameter=0}"/>
+                                            <GradientStop Color="PeachPuff" Offset="{Binding RelativeSource={RelativeSource AncestorType={x:Type ProgressBar}}, Path=Value, Converter={StaticResource ProgressToOffsetConverter}, ConverterParameter=100}"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </ProgressBar.Template>
+            </ProgressBar>
+        </StackPanel>
+    </Grid>
+</Window>

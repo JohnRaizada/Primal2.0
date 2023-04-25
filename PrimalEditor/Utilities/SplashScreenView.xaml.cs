@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PrimalEditor.Utilities
 {
@@ -23,11 +13,12 @@ namespace PrimalEditor.Utilities
         public SplashScreenView()
         {
             InitializeComponent();
+            ForceCursor = true;
         }
 
         public void UpdateProgress(double value)
         {
-           progressBar.Value = value;
+            progressBar.Value = value;
         }
     }
     public class ProgressToOffsetConverter : IValueConverter

@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.IO;
+﻿using System.IO;
+using System.Windows;
 
 namespace PrimalEditor
 {
@@ -13,6 +13,7 @@ namespace PrimalEditor
         {
             InitializeComponent();
             Owner = Application.Current.MainWindow;
+            ForceCursor = true;
         }
 
         private void OnOk_Button_Click(object sender, RoutedEventArgs e)
@@ -26,8 +27,8 @@ namespace PrimalEditor
             else if (path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
             {
                 messageTextBlock.Text = "Invalid character(s) used in path";
-            } 
-            else if (!Directory.Exists(Path.Combine(path,@"Engine\EngineAPI\")))
+            }
+            else if (!Directory.Exists(Path.Combine(path, @"Engine\EngineAPI\")))
             {
                 messageTextBlock.Text = "Unable to find the engine at the specified location";
             }

@@ -35,6 +35,9 @@
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+	<ItemGroup>
+		<Reference Include="Xceed.Wpf.Toolkit.NET5" />
+	</ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SplashScreen\splashscreen.png" />
   </ItemGroup>
@@ -48,10 +51,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="MouseKeyHook" Version="5.7.1" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Core\" />
   </ItemGroup>
+
 </Project>

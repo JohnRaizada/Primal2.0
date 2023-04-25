@@ -1,7 +1,7 @@
 ﻿using PrimalEditor.Content;
-using PrimalEditor.Dependencies;
 using PrimalEditor.GameDev;
 using PrimalEditor.GameProject;
+using PrimalEditor.GameProject.Settings;
 using PrimalEditor.Utilities;
 using System.Collections.Specialized;
 using System.Windows;
@@ -19,6 +19,7 @@ namespace PrimalEditor.Editors
         {
             InitializeComponent();
             Loaded += OnWorldEditorViewLoaded;
+            ForceCursor = true;
         }
 
         private void OnWorldEditorViewLoaded(object sender, RoutedEventArgs e)
@@ -120,6 +121,12 @@ namespace PrimalEditor.Editors
                 default:
                     break;
             }
+        }
+
+        private void OnSettings_Project_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ProjectSettingsView dialog = new ProjectSettingsView();
+            dialog.ShowDialog();
         }
     }
 }

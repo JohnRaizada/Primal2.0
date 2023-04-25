@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace PrimalEditor.Content
 {
@@ -25,10 +16,11 @@ namespace PrimalEditor.Content
         {
             InitializeComponent();
             Closing += OnSaveDialogClosing;
+            ForceCursor = true;
         }
         private bool ValidateFileName(out string saveFilePath)
         {
-            var contentBrowser=contentBrowserView.DataContext as ContentBrowser;
+            var contentBrowser = contentBrowserView.DataContext as ContentBrowser;
             var path = contentBrowser.SelectedFolder;
             if (!Path.EndsInDirectorySeparator(path)) path += @"\";
             var fileName = fileNameTextBox.Text.Trim();
@@ -46,7 +38,7 @@ namespace PrimalEditor.Content
             {
                 errorMsg = "Invalid character(s) used in asset file name.";
             }
-            else if (File.Exists(path) && MessageBox.Show("File already exists. Overwrite?", "Overwrite file", MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.No)
+            else if (File.Exists(path) && MessageBox.Show("File already exists. Overwrite?", "Overwrite file", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
             {
                 // Do nothing. Just return false.
             }
@@ -56,7 +48,7 @@ namespace PrimalEditor.Content
             }
             if (!string.IsNullOrEmpty(errorMsg))
             {
-                MessageBox.Show(errorMsg,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             saveFilePath = path;
             return isValid;

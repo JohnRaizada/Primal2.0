@@ -3,7 +3,6 @@ using PrimalEditor.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -93,7 +92,8 @@ private:
             {
                 isValid = true;
             }
-            if (!isValid) {
+            if (!isValid)
+            {
                 messageTextBlock.Foreground = FindResource("Editor.RedBrush") as Brush;
             }
             else
@@ -121,7 +121,7 @@ private:
             IsEnabled = false;
             busyAnimation.Opacity = 0;
             busyAnimation.Visibility = Visibility.Visible;
-            DoubleAnimation fadeIn = new DoubleAnimation(0,1, new Duration(TimeSpan.FromMilliseconds(500)));
+            DoubleAnimation fadeIn = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
             busyAnimation.BeginAnimation(OpacityProperty, fadeIn);
             try
             {
@@ -138,7 +138,7 @@ private:
             }
             finally
             {
-                DoubleAnimation fadeOut = new DoubleAnimation(1,0,new Duration(TimeSpan.FromMilliseconds(200)));
+                DoubleAnimation fadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(200)));
                 fadeOut.Completed += (s, e) =>
                 {
                     busyAnimation.Opacity = 0;
@@ -170,6 +170,7 @@ private:
             InitializeComponent();
             Owner = Application.Current.MainWindow;
             scriptPath.Text = @"GameCode\";
+            ForceCursor = true;
         }
     }
 }

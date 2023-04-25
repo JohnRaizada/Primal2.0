@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace PrimalEditor.Dependencies
+namespace PrimalEditor.Utilities
 {
     /// <summary>
     /// Interaction logic for SDKManagerView.xaml
@@ -13,6 +13,7 @@ namespace PrimalEditor.Dependencies
         {
             InitializeComponent();
             DataContext = Project.Current;
+            ForceCursor = true;
         }
 
         private void OnSDKManager_Android_EditButton_Click(object sender, RoutedEventArgs e)

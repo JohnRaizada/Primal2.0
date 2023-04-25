@@ -1,4 +1,4 @@
-﻿namespace PrimalEditor.Dependencies
+﻿namespace PrimalEditor.Utilities
 {
     enum Platforms
     {

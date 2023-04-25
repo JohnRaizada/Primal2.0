@@ -22,6 +22,7 @@ namespace PrimalEditor
                 InitializeComponent();
                 Loaded += OnMainWindowLoaded;
                 Closing += OnMainWindowClosing;
+                ForceCursor = true;
             }
             catch (System.Exception ex)
             {

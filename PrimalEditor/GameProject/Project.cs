@@ -1,5 +1,4 @@
 ﻿using PrimalEditor.Components;
-using PrimalEditor.Dependencies;
 using PrimalEditor.DLLWrapper;
 using PrimalEditor.GameDev;
 using PrimalEditor.Utilities;

@@ -19,6 +19,7 @@ namespace PrimalEditor.GameProject
         {
             InitializeComponent();
             Loaded += OnProjectBrowserDialogLoaded;
+            ForceCursor = true;
         }
 
         private void OnProjectBrowserDialogLoaded(object sender, RoutedEventArgs e)
@@ -39,7 +40,7 @@ namespace PrimalEditor.GameProject
 
         private void AnimateToCreateProject()
         {
-            var highlightAnimation = new DoubleAnimation(200,400, new Duration(TimeSpan.FromSeconds(0.2)));
+            var highlightAnimation = new DoubleAnimation(200, 400, new Duration(TimeSpan.FromSeconds(0.2)));
             highlightAnimation.EasingFunction = _easing;
             highlightAnimation.Completed += (s, e) =>
             {

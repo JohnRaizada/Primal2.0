@@ -1,24 +1,15 @@
-﻿using Microsoft.Win32;
-using PrimalEditor.ContentToolsAPIStructs;
+﻿using PrimalEditor.ContentToolsAPIStructs;
 using PrimalEditor.DLLWrapper;
 using PrimalEditor.Editors;
-using PrimalEditor.GameProject;
 using PrimalEditor.Utilities.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PrimalEditor.Content
 {
@@ -88,7 +79,7 @@ namespace PrimalEditor.Content
                 new Uri("pack://application:,,,/Resources/PrimitiveMeshView/Screenshot.png"),
             };
             _textures.Clear();
-            foreach ( var uri in uris)
+            foreach (var uri in uris)
             {
                 var resources = Application.GetResourceStream(uri);
                 using var reader = new BinaryReader(resources.Stream);
@@ -110,6 +101,7 @@ namespace PrimalEditor.Content
         {
             InitializeComponent();
             Loaded += (s, e) => UpdatePrimitive();
+            ForceCursor = true;
         }
 
         private void OnTexture_CheckBox_Click(object sender, RoutedEventArgs e)

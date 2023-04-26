@@ -29,7 +29,18 @@ namespace PrimalEditor.Utilities.Controls
             set => SetValue(MultiplierProperty, value);
         }
         public static readonly DependencyProperty MultiplierProperty = DependencyProperty.Register(nameof(Multiplier), typeof(double), typeof(VectorBox), new PropertyMetadata(1.0));
-
+        public double Minimum
+        {
+            get => (double)GetValue(MinimumProperty);
+            set => SetValue(MinimumProperty, value);
+        }
+        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(nameof(Minimum), typeof(double), typeof(VectorBox), new PropertyMetadata(double.MinValue));
+        public double Maximum
+        {
+            get => (double)GetValue(MaximumProperty);
+            set => SetValue(MaximumProperty, value);
+        }
+        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(nameof(Maximum), typeof(double), typeof(VectorBox), new PropertyMetadata(double.MaxValue));
         public string X
         {
             get => (string)GetValue(XProperty);
@@ -53,6 +64,7 @@ namespace PrimalEditor.Utilities.Controls
             get => (string)GetValue(WProperty);
             set => SetValue(WProperty, value);
         }
+
         public static readonly DependencyProperty WProperty = DependencyProperty.Register(nameof(W), typeof(string), typeof(VectorBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         static VectorBox()
         {

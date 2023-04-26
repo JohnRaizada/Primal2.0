@@ -169,7 +169,7 @@
 					<DataTemplate>
 						<DockPanel>
 							<Image Style="{StaticResource SmallIconStyle}" Width="18" Margin="5,0" VerticalAlignment="Center"/>
-							<utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockCombo}" Text="{Binding FileName}" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60" IsToggled="{Binding IsToggled}" ValueChanged="TextBoxBlockCombo_OnValueChanged" PreviewMouseLeftButtonUp="TextBoxBlockCombo_LeftMouseButtonUp"/>
+							<utl:TextBoxBlockCombo Text="{Binding FileName}" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60" IsToggled="{Binding IsToggled}" ValueChanged="TextBoxBlockCombo_OnValueChanged" PreviewMouseLeftButtonUp="TextBoxBlockCombo_LeftMouseButtonUp"/>
 						</DockPanel>
 					</DataTemplate>
 				</GridViewColumn.CellTemplate>
@@ -198,7 +198,7 @@
 			<StackPanel Width="96" HorizontalAlignment="Center" Margin="-4,0,0,0">
 				<Image Style="{StaticResource LargeIconStyle}" Width="90" HorizontalAlignment="Center"/>
 				<!--<TextBlock Text="{Binding FileName}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60"/>-->
-				<utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockCombo}" Text="{Binding FileName}" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60" IsToggled="{Binding IsToggled}" ValueChanged="TextBoxBlockCombo_OnValueChanged" PreviewMouseLeftButtonUp="TextBoxBlockCombo_LeftMouseButtonUp"/>
+				<utl:TextBoxBlockCombo Text="{Binding FileName}" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60" IsToggled="{Binding IsToggled}" ValueChanged="TextBoxBlockCombo_OnValueChanged" PreviewMouseLeftButtonUp="TextBoxBlockCombo_LeftMouseButtonUp"/>
 			</StackPanel>
 		</DataTemplate>
 		<local:PlainView x:Key="tileView" ItemTemplate="{StaticResource tileTemplate}">

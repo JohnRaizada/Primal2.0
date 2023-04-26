@@ -30,7 +30,9 @@
 		<KeyBinding Command="{Binding DebugStartWithoutDebuggingCommand}" Key="D" Modifiers="Ctrl+Shift"/>
 		<KeyBinding Command="{Binding DebugStopCommand}" Key="P" Modifiers="Ctrl"/>
 		<KeyBinding Command="{Binding BuildCommand}" Key="B" Modifiers="Control" CommandParameter="{StaticResource True}"/>
-	</UserControl.InputBindings>
+        <KeyBinding Command="{Binding ExitCommand}" Key="Esc"/>
+        <KeyBinding Command="{Binding ExitCommand}" Key="F4" Modifiers="Alt"/>
+    </UserControl.InputBindings>
 	<Grid x:Name="WorldEditor">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>

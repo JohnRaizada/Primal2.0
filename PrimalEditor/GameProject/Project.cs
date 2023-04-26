@@ -10,7 +10,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PrimalEditor.GameProject
@@ -18,6 +17,12 @@ namespace PrimalEditor.GameProject
     [DataContract(Name = "Game")]
     public class Project : ViewModelBase
     {
+        private static bool _isModified = false;
+        public bool IsModified
+        {
+            get => _isModified;
+            set => _isModified = value;
+        }
         public static string Extension => ".primal";
         [DataMember]
         public string Name { get; private set; } = "New Project";
@@ -32,37 +37,6 @@ namespace PrimalEditor.GameProject
         public string FullPath => $@"{Path}\{Name}{Extension}";
         public string Solution => $@"{Path}{Name}.sln";
         public string TempFolder => $@"{Path}.Primal\Temp\";
-        // In your view model
-        private StackPanel _selectedSdk;
-        public StackPanel SelectedSdk
-        {
-            get => _selectedSdk;
-            set
-            {
-                SetSelectedSdk(value);
-            }
-        }
-
-        private StackPanel SetSelectedSdk(StackPanel value)
-        {
-            if (_selectedSdk != value)
-            {
-                _selectedSdk = value;
-                switch ((_selectedSdk.Children[1] as TextBlock).Text)
-                {
-                    case "Android":
-                        SelectedSdkDetails = new AndroidSdkDetails();
-                        break;
-                    default:
-                        SelectedSdkDetails = null;
-                        break;
-                }
-                OnPropertyChanged(nameof(SelectedSdk));
-            }
-            return _selectedSdk;
-        }
-
-        public object SelectedSdkDetails { get; set; }
         private int _buildConfig;
         [DataMember]
         public int BuildConfig
@@ -121,6 +95,7 @@ namespace PrimalEditor.GameProject
         public ICommand DebugStopCommand { get; private set; }
         public ICommand RemoveSceneCommand { get; private set; }
         public ICommand BuildCommand { get; private set; }
+        public ICommand ExitCommand { get; private set; }
         public string ContentPath => $@"{Path}Content\";
         private void SetCommands()
         {
@@ -152,6 +127,7 @@ namespace PrimalEditor.GameProject
             DebugStartWithoutDebuggingCommand = new RelayCommand<object>(async x => await RunGame(false), x => !VisualStudio.IsDebugging() && VisualStudio.BuildDone);
             DebugStopCommand = new RelayCommand<object>(async x => await StopGame(), x => VisualStudio.IsDebugging());
             BuildCommand = new RelayCommand<bool>(async x => await BuildGameCodeDLL(x), x => !VisualStudio.IsDebugging() && VisualStudio.BuildDone);
+            ExitCommand = new RelayCommand<object>(x => InitiatializeExitIntent());
             OnPropertyChanged(nameof(AddSceneCommand));
             OnPropertyChanged(nameof(RemoveSceneCommand));
             OnPropertyChanged(nameof(UndoCommand));
@@ -161,17 +137,42 @@ namespace PrimalEditor.GameProject
             OnPropertyChanged(nameof(DebugStartWithoutDebuggingCommand));
             OnPropertyChanged(nameof(DebugStopCommand));
             OnPropertyChanged(nameof(BuildCommand));
+            OnPropertyChanged(nameof(ExitCommand));
         }
+
+        private void InitiatializeExitIntent()
+        {
+            if (_isModified)
+            {
+                switch (MessageBox.Show("Do you want to save the changes before you exit?", "Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Cancel))
+                {
+                    case MessageBoxResult.Yes:
+                        Save(this);
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                    default:
+                        break;
+                }
+                Application.Current.Shutdown();
+                return;
+            }
+            if (MessageBox.Show("Are you sure you really want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
+            Application.Current.Shutdown();
+        }
+
         private void AddScene(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
             _scenes.Add(new Scene(this, sceneName));
+            _isModified = true;
         }
 
         private void RemoveScene(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
+            _isModified = true;
         }
         public static Project Load(string file)
         {
@@ -197,6 +198,7 @@ namespace PrimalEditor.GameProject
         {
             Serializer.ToFile(project, project.FullPath);
             Logger.Log(MessageType.Info, $"Saved project to {project.FullPath}");
+            _isModified = false;
         }
         private void SaveToBinary()
         {

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -8,8 +9,7 @@ namespace PrimalEditor.Utilities.Controls
     internal class PasswordBoxView : Control
     {
         public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(nameof(ValueChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PasswordBoxView));
-        public static readonly DependencyProperty IsToggledProperty =
-            DependencyProperty.Register(nameof(IsToggled), typeof(bool), typeof(PasswordBoxView), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsToggledProperty = DependencyProperty.Register(nameof(IsToggled), typeof(bool), typeof(PasswordBoxView), new PropertyMetadata(false));
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(string), typeof(PasswordBoxView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(OnValueChanged)));
         public event RoutedEventHandler ValueChanged
         {
@@ -28,14 +28,47 @@ namespace PrimalEditor.Utilities.Controls
         }
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as PasswordBoxView).RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
+            ((PasswordBoxView)d).RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
         }
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (GetTemplateChild("visibilityIcons") is Grid grid)
+            if (!(GetTemplateChild("visibilityIcons") is Grid grid)) return;
+            if (!(GetTemplateChild("textBox") is TextBox textBox)) return;
+            if (!(GetTemplateChild("passwordBox") is PasswordBox passwordBox)) return;
+            grid.MouseLeftButtonDown += OnEyeMouseDown;
+            textBox.KeyUp += OnKeyboardValueChanged;
+            passwordBox.KeyUp += OnKeyboardValueChanged;
+        }
+
+        private void OnKeyboardValueChanged(object sender, KeyEventArgs e)
+        {
+            if (!(GetTemplateChild("notificationTextBlock") is TextBlock textBlock)) return;
+            string value = "";
+            if (sender is PasswordBox passwordBox)
             {
-                grid.MouseLeftButtonDown += OnEyeMouseDown;
+                value = passwordBox.Password;
+            }
+            else if (sender is TextBox textBox)
+            {
+                value = textBox.Text;
+            }
+            textBlock.Visibility = Visibility.Visible;
+            if (string.IsNullOrEmpty(value))
+            {
+                textBlock.Text = "Password cannot be empty.";
+            }
+            else if (value.Length < 8)
+            {
+                textBlock.Text = "Password must be at least 8 characters long.";
+            }
+            else if (!Regex.IsMatch(value, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"))
+            {
+                textBlock.Text = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.";
+            }
+            else
+            {
+                textBlock.Visibility = Visibility.Collapsed;
             }
         }
         private void OnEyeMouseDown(object sender, MouseButtonEventArgs e)

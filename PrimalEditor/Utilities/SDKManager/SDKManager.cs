@@ -7,7 +7,9 @@
         iOS,
         Mac,
         Windows,
-        Linux
+        Linux,
+        EK,
+        Aur
     }
     class SDKManager
     {

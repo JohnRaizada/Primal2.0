@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PrimalEditor"
         xmlns:editors="clr-namespace:PrimalEditor.Editors"
+        xmlns:gameproject="clr-namespace:PrimalEditor.GameProject" 
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance Type=gameproject:Project}"
         Title="Primal Editor" Height="1080" Width="1920"
         Style="{StaticResource PrimalWindowStyle}">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ExitCommand}" Key="Esc"/>
+        <KeyBinding Command="{Binding ExitCommand}" Key="F4" Modifiers="Alt"/>
+    </Window.InputBindings>
     <Grid>
         <editors:WorldEditorView/>
     </Grid>

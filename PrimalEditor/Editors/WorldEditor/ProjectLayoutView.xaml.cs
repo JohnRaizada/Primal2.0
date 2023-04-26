@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using PrimalEditor.Components;
+﻿using PrimalEditor.Components;
 using PrimalEditor.GameProject;
 using PrimalEditor.Utilities;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PrimalEditor.Editors
 {
@@ -21,7 +21,8 @@ namespace PrimalEditor.Editors
         {
             var btn = sender as Button;
             var vm = btn.DataContext as Scene;
-            vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "Empty Game Entity"});
+            vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "Empty Game Entity" });
+            Project.Current.IsModified = true;
         }
 
         private void OnGameEntities_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

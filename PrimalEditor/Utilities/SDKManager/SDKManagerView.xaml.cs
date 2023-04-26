@@ -21,10 +21,6 @@ namespace PrimalEditor.Utilities
             SDKPath.IsToggled = true;
         }
 
-        private void OnSDKManager_Android_SDKPath_DoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            SDKPath.IsToggled = true;
-        }
         private void OnSDKManager_DismissButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

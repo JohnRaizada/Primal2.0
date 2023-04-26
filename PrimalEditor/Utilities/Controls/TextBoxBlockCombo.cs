@@ -7,6 +7,9 @@ namespace PrimalEditor.Utilities.Controls
     public class TextBoxBlockCombo : Control
     {
         private TextBox _textBox;
+        private TextBlock _textBlock;
+        private Border _textBlockBorder;
+        private int clickCount = 0;
         public static readonly DependencyProperty IsToggledProperty =
             DependencyProperty.Register("IsToggled", typeof(bool), typeof(TextBoxBlockCombo), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(OnIsToggledChanged)));
 
@@ -14,7 +17,7 @@ namespace PrimalEditor.Utilities.Controls
             DependencyProperty.Register("Text", typeof(string), typeof(TextBoxBlockCombo), new PropertyMetadata(string.Empty));
 
         public static readonly RoutedEvent ValueChangedEvent =
-            EventManager.RegisterRoutedEvent("ValueChanged", RoutingStrategy.Bubble, typeof(ValueChangedEventHandler), typeof(TextBoxBlockCombo));
+            EventManager.RegisterRoutedEvent(nameof(ValueChanged), RoutingStrategy.Bubble, typeof(ValueChangedEventHandler), typeof(TextBoxBlockCombo));
 
         public bool IsToggled
         {
@@ -78,11 +81,23 @@ namespace PrimalEditor.Utilities.Controls
             base.OnApplyTemplate();
 
             _textBox = GetTemplateChild("PART_TextBox") as TextBox;
+            _textBlock = GetTemplateChild("PART_TextBlock") as TextBlock;
+            _textBlockBorder = (Border)GetTemplateChild("TextBlockBorder");
             if (_textBox != null)
             {
                 _textBox.KeyDown += TextBox_KeyDown;
                 _textBox.LostFocus += TextBox_LostFocus;
+                _textBlock.MouseDown += TextBlock_MouseDown;
+                if (_textBlockBorder == null) return;
+                _textBlockBorder.MouseUp += TextBlock_MouseDown;
             }
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (++clickCount < 2) return;
+            IsToggled = true;
+            clickCount = 0;
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)

@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings"
 		xmlns:dep="clr-namespace:PrimalEditor.Utilities"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        mc:Ignorable="d"
+		mc:Ignorable="d"
 		Title="SettingsView" Height="450" Width="800"
 		Style="{StaticResource PrimalWindowStyle}">
     <Window.Resources>
@@ -21,25 +21,25 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
-    <ScrollViewer>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                    </Style>
-                </StackPanel.Style>
-            </StackPanel>
-            <ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="6" ItemsSource="{Binding Source={StaticResource dataFromEnumSettings}}" x:Name="settingsTypes"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
+            <StackPanel.Style>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
+        <ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="6" ItemsSource="{Binding Source={StaticResource dataFromEnumSettings}}" x:Name="settingsTypes"/>
+        <ScrollViewer Grid.Column="1" Grid.Row="1">
             <DockPanel LastChildFill="False" Grid.Column="1" Grid.Row="1" Background="{StaticResource Editor.Window.GrayBrush3}" DockPanel.Dock="Top">
                 <DockPanel.Style>
                     <Style TargetType="{x:Type DockPanel}">
@@ -61,17 +61,17 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="Player" Foreground="{StaticResource Editor.Disabled.FontBrush}" FontWeight="Black" FontSize="25" Margin="1" Padding="1"/>
-                    <DockPanel Grid.Row="1" Margin="1">
+                    <DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
                         <TextBlock DockPanel.Dock="Left" Text="Company Name" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="100"/>
-                        <TextBox DockPanel.Dock="Right" Style="{StaticResource TextBoxStyle}"/>
+                        <TextBox DockPanel.Dock="Right" MinWidth="300" Style="{StaticResource TextBoxStyle}"/>
                     </DockPanel>
-                    <DockPanel Grid.Row="2" Margin="1">
+                    <DockPanel Grid.Row="2" Margin="1" LastChildFill="False">
                         <TextBlock DockPanel.Dock="Left" Text="Product Name" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="100"/>
-                        <TextBox DockPanel.Dock="Right" Style="{StaticResource TextBoxStyle}"/>
+                        <TextBox DockPanel.Dock="Right" MinWidth="300" Style="{StaticResource TextBoxStyle}"/>
                     </DockPanel>
-                    <DockPanel Grid.Row="3" Margin="1">
+                    <DockPanel Grid.Row="3" Margin="1" LastChildFill="False">
                         <TextBlock DockPanel.Dock="Left" Text="Version" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="100"/>
-                        <TextBox DockPanel.Dock="Right" Style="{StaticResource TextBoxStyle}"/>
+                        <utl:VectorBox DockPanel.Dock="Right" VectorType="Vector4" Minimum="0"/>
                     </DockPanel>
                     <DockPanel Grid.Row="4" Margin="1" LastChildFill="False">
                         <TextBlock DockPanel.Dock="Left" Text="Default Icon" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="100"/>
@@ -1015,6 +1015,7 @@
                                     </Expander>
                                     <Expander Header="Resolution and Presentation" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
                                         <StackPanel>
+                                            <utl:SteppedSlider ItemSource="{Binding Source={StaticResource dataFromEnumSDK}}" SelectedIndex="5" TickPlacement="BottomRight" IsLabelVisible="tRUE" Orientation="Vertical"/>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Fullscreen Mode" Margin="1" Padding="1" FontWeight="Normal"/>
                                                 <ComboBox DockPanel.Dock="Right" Margin="1" Padding="1" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}"/>
@@ -1025,19 +1026,19 @@
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Default Window Width" Margin="1" Padding="1" FontWeight="Normal"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Default Window Height" Margin="1" Padding="1" FontWeight="Normal"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Minimum Window Width" Margin="1" Padding="1" FontWeight="Normal"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Minimum Window Height" Margin="1" Padding="1" FontWeight="Normal"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="1920" Minimum="100" Maximum="1930"/>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Hide Navigation Bar" Margin="1" Padding="1" FontWeight="Normal"/>
@@ -1138,20 +1139,20 @@
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Logo Zoom" Margin="1" Padding="1" FontWeight="Normal"/>
                                                 <Slider DockPanel.Dock="Right" Minimum="0" Maximum="1" Width="100" Margin="1" Padding="1" x:Name="LogoZoomSlider" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" IsSnapToTickEnabled="True"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1">
-                                                    <utl:NumberBox.Value>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1">
+                                                    <utl:ScalarBox.Value>
                                                         <Binding ElementName="LogoZoomSlider" Path="Value" StringFormat="{}{0:F2}"/>
-                                                    </utl:NumberBox.Value>
-                                                </utl:NumberBox>
+                                                    </utl:ScalarBox.Value>
+                                                </utl:ScalarBox>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Background Zoom" Margin="1" Padding="1" FontWeight="Normal"/>
                                                 <Slider DockPanel.Dock="Right" Minimum="0" Maximum="1" Width="100" Margin="1" Padding="1" x:Name="BackgroundZoomSlider" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" IsSnapToTickEnabled="True"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1">
-                                                    <utl:NumberBox.Value>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1">
+                                                    <utl:ScalarBox.Value>
                                                         <Binding ElementName="BackgroundZoomSlider" Path="Value" StringFormat="{}{0:F2}"/>
-                                                    </utl:NumberBox.Value>
-                                                </utl:NumberBox>
+                                                    </utl:ScalarBox.Value>
+                                                </utl:ScalarBox>
                                             </DockPanel>
                                             <TextBlock Text="Logos*" Margin="1" Padding="1" Foreground="{StaticResource Editor.FontBrush}" FontWeight="SemiBold"/>
                                             <DockPanel LastChildFill="False">
@@ -1186,11 +1187,11 @@
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Overlay Opacity" Margin="1" Padding="1" FontWeight="Normal"/>
                                                 <Slider DockPanel.Dock="Right" Minimum="0" Maximum="1" Width="100" Margin="1" Padding="1" x:Name="OverlapOpacitySlider" SmallChange="0.05" LargeChange="0.1" TickFrequency="0.05" IsSnapToTickEnabled="True"/>
-                                                <utl:NumberBox DockPanel.Dock="Right" Margin="1" Padding="1">
-                                                    <utl:NumberBox.Value>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1">
+                                                    <utl:ScalarBox.Value>
                                                         <Binding ElementName="OverlapOpacitySlider" Path="Value" StringFormat="{}{0:F2}"/>
-                                                    </utl:NumberBox.Value>
-                                                </utl:NumberBox>
+                                                    </utl:ScalarBox.Value>
+                                                </utl:ScalarBox>
                                             </DockPanel>
                                             <DockPanel LastChildFill="False">
                                                 <TextBlock DockPanel.Dock="Left" Text="Background Color" Margin="1" Padding="1" FontWeight="Normal"/>
@@ -1269,7 +1270,274 @@
                                         </StackPanel>
                                     </Expander>
                                     <Expander Header="Other Settings" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
-                                        <TextBlock Text="Other Settings" Margin="10" />
+                                        <StackPanel>
+                                            <TextBlock Text="Rendering" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Color Space*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Auto Graphics API" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Require ES3.1" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Require ES3.1+AEP" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Require ES3.2" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <StackPanel>
+                                                <TextBlock Text="Color Gamut" Background="{StaticResource Editor.Window.GrayBrush3}"/>
+                                                <TextBlock Text="sRGB" Background="{StaticResource Editor.Window.GrayBrush4}"/>
+                                                <DockPanel LastChildFill="False">
+                                                    <Border DockPanel.Dock="Right" Background="{StaticResource Editor.Window.GrayBrush4}" Margin="0,0,10,1" Padding="0,0,1,1">
+                                                        <Button Style="{StaticResource ControlButton}" Width="30" Height="20">
+                                                            <Button.Content>
+                                                                <Path Data="M6 12H18" Stretch="Uniform" Width="15" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.FontBrush}"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </Border>
+                                                    <Border DockPanel.Dock="Right" Background="{StaticResource Editor.Window.GrayBrush4}" Margin="1,0,0,1" Padding="1,0,0,1">
+                                                        <Button Style="{StaticResource ControlButton}" Width="30" Height="20">
+                                                            <Button.Content>
+                                                                <Path Data="M6 12H12M12 12H18M12 12V18M12 12V6" Stretch="Uniform" Width="15" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.FontBrush}"/>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </Border>
+                                                </DockPanel>
+                                            </StackPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Multithreaded Rendering" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Static Batching" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Dynamic Batching" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Compute Skinning*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Texture compression format" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Normal Map Encoding" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Lightmap Encoding" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Lightmap Streaming" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Streaming Priority" Margin="20,1" Padding="20,1" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Frame Timing Stats" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Virtual Texturing*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Shader precision model*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="360 Stereo Capture*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Vulkan Settings" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="SRGB Write Mode*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Number of swapchain buffers*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Acquire swapchain image late as possible*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Recycle Command Buffers" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Apply display rotation during rendering" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Identification" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Override Default Package Name" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Package Name" Margin="20,1" Padding="20,1" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:TextBoxBlockCombo DockPanel.Dock="Right" Text="com.DefaultCompany.Android" Margin="1" Padding="1" Style="{StaticResource TextBoxBlockComboWithBorder}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Version*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:VectorBox DockPanel.Dock="Right" VectorType="Vector4" Minimum="0"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Bundle Version Code" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Minimum="0" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Minimum API Level" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Target API Level" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Configuration" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Scripting Backend" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Api Compatibility Level*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="C++ Compiler Configuration" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Use Incremental GC" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Assembly Version Validation" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Mute Other Audio Sources*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Target Architectures" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="ARMv7" Style="{StaticResource EnableDisableSubItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="ARM64" Style="{StaticResource EnableDisableSubItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="x86 (Chrome OS)" Style="{StaticResource EnableDisableSubItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="x86-64 (Chrome OS)" Style="{StaticResource EnableDisableSubItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Target Devices" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Install Location" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Internet Access" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Write Permission" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Filter Touches When Obscured" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Sustained Performance Mode" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Low Accuracy Location" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Chrome OS Input Emulation" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Android TV Compatibility" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Warn about App Bundle size" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="App Bundle size threshold" Style="{StaticResource EnableDisableSubItemTextBlockStyle}"/>
+                                                <utl:ScalarBox DockPanel.Dock="Right" Minimum="0" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Active Input Handling*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Optimization" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Prebake Collision Meshes*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Keep Loaded Shaders Alive*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Managed Stripping Level" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Vertex Compression*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Optimize Mesh Data*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Texture MipMap Stripping*" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Stack Trace*" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <Slider x:Name="mySlider" Minimum="0" Maximum="2" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
+<StackPanel Orientation="Horizontal">
+    <TextBlock Text="None"/>
+    <TextBlock Margin="30 0 0 0" Text="Script Only"/>
+    <TextBlock Margin="30 0 0 0" Text="Full"/>
+</StackPanel>
+                                            
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Warn about App Bundle size" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                        </StackPanel>
                                     </Expander>
                                     <Expander Header="Publishing Settings" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
                                         <StackPanel>
@@ -1290,13 +1558,67 @@
                                                 <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}"/>
                                             </DockPanel>
                                             <DockPanel IsEnabled="{Binding ElementName=CheckBox, Path=IsChecked}" LastChildFill="False">
-                                                <TextBlock DockPanel.Dock="Left" Text="Path" Margin="1" Padding="1" Style="{StaticResource EnableDisableTextBlockStyle}"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Path" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
                                                 <TextBlock DockPanel.Dock="Right" Text="Development Keystore" Margin="1" Padding="1" Style="{StaticResource EnableDisableTextBlockStyle}"/>
                                             </DockPanel>
                                             <DockPanel IsEnabled="{Binding ElementName=CheckBox, Path=IsChecked}" LastChildFill="False">
-                                                <TextBlock DockPanel.Dock="Left" Text="Password" Margin="1" Padding="1" Style="{StaticResource EnableDisableTextBlockStyle}"/>
+                                                <TextBlock DockPanel.Dock="Left" Text="Password" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
                                                 <utl:PasswordBoxView DockPanel.Dock="Right" IsToggled="True" MinWidth="100" MaxWidth="200"/>
-                                                <!--Show password here-->
+                                            </DockPanel>
+                                            <TextBlock Text="Project Key" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False" IsEnabled="{Binding ElementName=CheckBox, Path=IsChecked}">
+                                                <TextBlock DockPanel.Dock="Left" Text="Alias" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <ComboBox DockPanel.Dock="Right" Margin="1" Padding="1" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}"/>
+                                            </DockPanel>
+                                            <DockPanel IsEnabled="{Binding ElementName=CheckBox, Path=IsChecked}" LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Password" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <utl:PasswordBoxView DockPanel.Dock="Right" IsToggled="True" MinWidth="100" MaxWidth="200"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Build" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Main Manifest" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Launcher Manifest" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Main Gradle Template" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Launcher Gradle Template" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Base Gradle Template" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Gradle Properties Template" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Custom Proguard File" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <TextBlock Text="Minify" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Use R8" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Release" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Debug" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock DockPanel.Dock="Left" Text="Split Application Binary" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+                                                <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
                                             </DockPanel>
                                         </StackPanel>
                                     </Expander>
@@ -1305,10 +1627,10 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
-                <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Height="Auto" Background="{StaticResource Editor.Window.GrayBrush1}">
-                    <Button Content="Done" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnProjectSettings_Player_DoneButton_Click"/>
-                </DockPanel>
             </DockPanel>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+        <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="False" Height="Auto" Background="{StaticResource Editor.Window.GrayBrush1}">
+            <Button Content="Done" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnProjectSettings_Player_DoneButton_Click"/>
+        </DockPanel>
+    </Grid>
 </Window>

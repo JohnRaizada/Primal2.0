@@ -4,8 +4,6 @@
 A panel that allows developers to manage and mix audio sources in the game world.
 ### Scene View
 A panel that displays a 3D view of the game world and allows developers to interact with and manipulate objects in the scene.
-### Project Settings
-A panel that allows developers to configure various project-wide settings such as rendering options, physics settings, and input mappings.
 ### Animation Editor
 A panel that allows developers to create and edit animations for characters and other objects.
 ### Script Editor
@@ -24,7 +22,7 @@ A panel that provides tools for designing and building user interfaces for menus
 Tools for implementing multiplayer gameplay and other networked features.
 ### Analytics
 Tools for collecting and analyzing data about player behavior and game performance.
-### Existing Featured 
+### Existing Features
 ### Asset Browser
 A panel that allows developers to browse, import, and manage assets such as models, textures, and sounds.
 ### Inspector
@@ -41,6 +39,8 @@ A panel that provides tools for designing and building game levels and environme
 Tools for allowing players to create and share custom content for the game.
 ### Procedural Generation
 Tools for generating game content such as levels, environments, and characters algorithmically.
+### Project Settings
+A panel that allows developers to configure various project-wide settings such as rendering options, physics settings, and input mappings.
 ## Features Under Comsideration
 ### Particle Editor
 A panel that allows developers to create and edit particle systems for effects such as fire, smoke, and explosions.

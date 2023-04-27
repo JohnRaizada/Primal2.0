@@ -76,8 +76,19 @@
 				<Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush3}"/>
 			</Trigger>
 		</Style.Triggers>
-	</Style>
-	<Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
+    </Style>
+    <Style TargetType="{x:Type utl:SteppedSlider}" x:Key="EnableDisableSteppedSlider">
+        <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Padding" Value="1"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
 		<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="HorizontalAlignment" Value="Left"/>

@@ -1,0 +1,905 @@
+﻿<UserControl x:Class="PrimalEditor.GameProject.Settings.Player.Android.AndroidIconPlayerSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings.Player.Android"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <Expander Header="Adaptive (API 26) icons (6/6)" Foreground="{StaticResource Editor.FontBrush}" FontWeight="Normal">
+            <StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxxhdpi (432x432px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxhdpi (324x324px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xhdpi (216x216px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="hdpi (162x162px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="mdpi (108x108px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="ldpi (81x81px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+        <Expander Header="Round (API 25) icons" Foreground="{StaticResource Editor.FontBrush}" FontWeight="Normal">
+            <StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxxhdpi (432x432px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxhdpi (324x324px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xhdpi (216x216px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="hdpi (162x162px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="mdpi (108x108px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="ldpi (81x81px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+        <Expander Header="Legacy icons" Foreground="{StaticResource Editor.FontBrush}" FontWeight="Normal">
+            <StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxxhdpi (432x432px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xxhdpi (324x324px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="xhdpi (216x216px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="hdpi (162x162px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="mdpi (108x108px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Margin="1">
+                    <TextBlock Text="ldpi (81x81px)" Foreground="{StaticResource Editor.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush1}" Margin="1" Padding="1"/>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left"  Text="Background" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel Margin="1" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+                        <TextBlock DockPanel.Dock="Left" Text="Foreground" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="10" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="{StaticResource Editor.FontBrush}"  Height="50" Width="50" BorderThickness="1" Margin="1" MouseUp="OnProjectSettings_Player_Icon_MouseUp">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/SplashScreen/splashscreen.png" Stretch="Fill"/>
+                                </Border.Background>
+                            </Border>
+                            <Button Grid.Column="1" Grid.Row="1" Background="Transparent" Click="OnProjectSettings_Player_Icon_EditButton_Click" BorderBrush="Transparent">
+                                <Button.Content>
+                                    <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DockPanel>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+</UserControl>

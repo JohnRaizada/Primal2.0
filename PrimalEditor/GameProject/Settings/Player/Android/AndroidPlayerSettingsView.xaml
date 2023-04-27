@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="PrimalEditor.GameProject.Settings.Player.AndroidPlayerSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings.Player" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
+             xmlns:dep="clr-namespace:PrimalEditor.Utilities"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:android="clr-namespace:PrimalEditor.GameProject.Settings.Player.Android"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="dataFromEnumSDK" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dep:Platforms"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Text="Settings for Android" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+        <StackPanel>
+            <Expander Header="Icon" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
+                <android:AndroidIconPlayerSettings/>
+            </Expander>
+            <Expander Header="Resolution and Presentation" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
+                <android:AndroidResolution_PresentationPlayerSettings/>
+            </Expander>
+            <Expander Header="Splash Image" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
+                <android:AndroidSplashImagePlayerSettings/>
+            </Expander>
+            <Expander Header="Other Settings" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
+                <android:AndroidOtherPlayerSettings/>
+            </Expander>
+            <Expander Header="Publishing Settings" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" FontWeight="Bold">
+                <android:AndroidPublishingPlayerSettings/>
+            </Expander>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

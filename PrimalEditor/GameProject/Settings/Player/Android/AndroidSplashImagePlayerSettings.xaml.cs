@@ -31,14 +31,14 @@ namespace PrimalEditor.GameProject.Settings.Player.Android
             Mouse.OverrideCursor = Cursors.Cross;
 
             // Capture the mouse to receive events even if the cursor leaves the window
-            this.CaptureMouse();
+            CaptureMouse();
         }
         private async void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (Mouse.Captured == this)
             {
                 // Release the mouse capture
-                this.ReleaseMouseCapture();
+                ReleaseMouseCapture();
 
                 // Change the cursor back to default
                 Mouse.OverrideCursor = null;
@@ -53,7 +53,7 @@ namespace PrimalEditor.GameProject.Settings.Player.Android
                 var color = await GetPixelColorAsync((int)point.X, (int)point.Y);
 
                 // Update the color picker with the selected color
-                var colorPicker = this.FindName("ColorPicker") as Xceed.Wpf.Toolkit.ColorPicker;
+                var colorPicker = FindName("ColorPicker") as Xceed.Wpf.Toolkit.ColorPicker;
                 if (colorPicker != null)
                 {
                     var mediaColor = System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);

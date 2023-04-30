@@ -4,210 +4,247 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:PrimalEditor.Utilities"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
-        mc:Ignorable="d"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
+		mc:Ignorable="d"
 		Title="SDK Manager" Height="450" Width="800"
 		Style="{StaticResource PrimalWindowStyle}">
-    <Window.Resources>
+	<Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="local:Platforms"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="datasFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Headings"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
-            <StackPanel.Style>
-                <Style TargetType="{x:Type StackPanel}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                </Style>
-            </StackPanel.Style>
-        </StackPanel>
-        <ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource dataFromEnum}}" x:Name="platformsList"/>
-        <Grid Grid.Column="1" Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Background="{StaticResource Editor.Window.GrayBrush3}" DockPanel.Dock="Top">
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding SelectedItem, ElementName=platformsList}" Value="{x:Static local:Platforms.Android}">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Manager for the Android SDK and Tools used by the engine" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-                    <DockPanel Grid.Row="1" LastChildFill="False">
-                        <TextBlock Text="Android SDK Location:" Foreground="{StaticResource Editor.FontBrush}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
-                        <utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockComboWithBorder}" Text="Binding SDKPath}" Margin="10,1,1,1" x:Name="SDKPath"/>
-                        <Button DockPanel.Dock="Right" Background="Transparent" Click="OnSDKManager_Android_EditButton_Click" BorderBrush="Transparent">
-                            <Button.Content>
-                                <Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
-                            </Button.Content>
-                        </Button>
-                    </DockPanel>
-                    <TabControl Grid.Row="2" Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-                        <TabItem Header="Platforms" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-                            <StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-                                <TextBlock Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine will automatically check for updates. Check 'show package details' to display individual SDK components." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-                                <StackPanel Orientation="Horizontal" Margin="1">
-                                    <CheckBox Margin="1" Padding="1"/>
-                                    <TextBlock Text="Show package details" Margin="1" Padding="1"/>
-                                </StackPanel>
-                                <ListView>
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Width="70">
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" Margin="1">
-                                                            <Grid Margin="1">
-                                                                <Path Data="M18 9L12 15L6 9" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-                                                                <Path Data="M18 15L12 9L6 15" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-                                                            </Grid>
-                                                            <Path Data="M0 16q0 2.912 1.824 5.088t4.576 2.752q0.032 0 0.032-0.032v-0.064t0.032-0.032q0.544-1.344 1.344-2.176t2.208-1.184v-2.336q0-2.496 1.728-4.256t4.256-1.76 4.256 1.76 1.76 4.256v2.336q1.376 0.384 2.176 1.216t1.344 2.144l0.096 0.288h0.384q2.464 0 4.224-1.76t1.76-4.224v-2.016q0-2.464-1.76-4.224t-4.224-1.76q-0.096 0-0.32 0.032 0.32-1.152 0.32-2.048 0-3.296-2.368-5.632t-5.632-2.368q-2.88 0-5.056 1.824t-2.784 4.544q-1.152-0.352-2.176-0.352-3.296 0-5.664 2.336t-2.336 5.664v1.984zM10.016 25.824q-0.096 0.928 0.576 1.6l4 4q0.576 0.576 1.408 0.576t1.408-0.576l4-4q0.672-0.672 0.608-1.6-0.064-0.32-0.16-0.576-0.224-0.576-0.736-0.896t-1.12-0.352h-1.984v-5.984q0-0.832-0.608-1.408t-1.408-0.608-1.408 0.608-0.576 1.408v5.984h-2.016q-0.608 0-1.12 0.352t-0.736 0.896q-0.096 0.288-0.128 0.576z" Stretch="Uniform" Fill="{StaticResource Editor.GreenBrush}" Height="20" Width="20" Margin="1"/>
-                                                            <CheckBox IsChecked="{Binding IsSelected}"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                                            <GridViewColumn Header="API Level" DisplayMemberBinding="{Binding APILevel}"/>
-                                            <GridViewColumn Header="Revision" DisplayMemberBinding="{Binding Revision}"/>
-                                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
-                                        </GridView>
-                                    </ListView.View>
-                                    <ListViewItem/>
-                                    <ListViewItem/>
-                                </ListView>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
+			<StackPanel.Style>
+				<Style TargetType="{x:Type StackPanel}">
+					<Setter Property="Visibility" Value="Collapsed"/>
+				</Style>
+			</StackPanel.Style>
+		</StackPanel>
+		<ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource dataFromEnum}}" x:Name="platformsList"/>
+		<Grid Grid.Column="1" Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<StackPanel Grid.Row="0" Background="{StaticResource Editor.Window.GrayBrush3}" DockPanel.Dock="Top">
+				<StackPanel.Style>
+					<Style TargetType="{x:Type StackPanel}">
+						<Setter Property="Visibility" Value="Collapsed"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding SelectedItem, ElementName=platformsList}" Value="{x:Static local:Platforms.Android}">
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</StackPanel.Style>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" Text="Manager for the Android SDK and Tools used by the engine" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+					<DockPanel Grid.Row="1" LastChildFill="False">
+						<TextBlock Text="Android SDK Location:" Foreground="{StaticResource Editor.FontBrush}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+						<utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockComboWithBorder}" Text="Binding SDKPath}" Margin="10,1,1,1" x:Name="SDKPath"/>
+						<Button DockPanel.Dock="Right" Background="Transparent" Click="OnSDKManager_Android_EditButton_Click" BorderBrush="Transparent">
+							<Button.Content>
+								<Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
+							</Button.Content>
+						</Button>
+					</DockPanel>
+					<TabControl Grid.Row="2" Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
+						<TabItem Header="Platforms" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
+							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
+								<TextBlock Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine will automatically check for updates. Check 'show package details' to display individual SDK components." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<StackPanel Orientation="Horizontal" Margin="1">
+									<CheckBox Margin="1" Padding="1" x:Name="showPackageDetails" Click="ShowPackageDetails_Clicked"/>
+									<TextBlock Text="Show package details" Margin="1" Padding="1"/>
+								</StackPanel>
+								<!--<Border BorderBrush="{StaticResource Editor.Window.GrayBrush3}" BorderThickness="1">
+									<Grid x:Name="ColumnHeaders" Grid.Row="1" HorizontalAlignment="Stretch" Margin="0" Grid.IsSharedSizeScope="True" >
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="*" MinWidth="20" SharedSizeGroup="A"/>
+											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="B"/>
+											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="C"/>
+											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="D"/>
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="Name" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+										<GridSplitter Grid.Column="0" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right" DragDelta="GridSplitter_DragDelta"/>
+										<TextBlock Grid.Column="1" Text="API Level" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+										<GridSplitter Grid.Column="1" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right"/>
+										<TextBlock Grid.Column="2" Text="Revision" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+										<GridSplitter Grid.Column="2" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right"/>
+										<TextBlock Grid.Column="3" Text="Status" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+									</Grid>
+								</Border>
+								<ListView x:Name="myList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
+									<ListView.ItemTemplate>
+										<DataTemplate>
+                                            <Expander PreviewMouseUp="Expander_MouseUp" Background="{StaticResource Editor.Window.GrayBrush4}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="{Binding ElementName=ColumnHeaders,Path=Width}" MaxWidth="{Binding ElementName=ColumnHeaders,Path=MaxWidth}" MinWidth="{Binding ElementName=ColumnHeaders,Path=MinWidth}">
+													<Expander.Header>
+														<TextBlock Text="{Binding Name}"/>
+													</Expander.Header>
+													<Expander.Style>
+														<Style TargetType="Expander">
+															<Setter Property="IsExpanded" Value="{Binding ElementName=showPackageDetails, Path=IsChecked}" />
+															<Style.Triggers>
+																<DataTrigger Binding="{Binding ElementName=showPackageDetails, Path=IsChecked}" Value="False">
+																	<Setter Property="IsExpanded" Value="False" />
+																</DataTrigger>
+															</Style.Triggers>
+														</Style>
+												</Expander.Style>
+												<Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Stretch" x:Name="SecondGrid" Margin="1">
+													<Grid.ColumnDefinitions>
+														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].MaxWidth}" SharedSizeGroup="A"/>
+														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].MaxWidth}" SharedSizeGroup="B"/>
+														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].MaxWidth}" SharedSizeGroup="C"/>
+                                                        <ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].MaxWidth}" SharedSizeGroup="D"/>
+                                                    </Grid.ColumnDefinitions>
+													<TextBlock Text="{Binding Name}"/>
+													<TextBlock Grid.Column="1" Text="{Binding APILevel}"/>
+													<TextBlock Grid.Column="2" Text="{Binding Name}"/>
+													<TextBlock Grid.Column="3" Text="{Binding APILevel}"/>
+												</Grid>
+											</Expander>
+										</DataTemplate>
+									</ListView.ItemTemplate>
+									<ListView.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Margin="1" />
+										</ItemsPanelTemplate>
+									</ListView.ItemsPanel>
+								</ListView>-->
+                                <utl:ExpanderListView x:Name="myCustomElement" HeaderSource="{Binding Source={StaticResource datasFromEnum}}" IsToggled="{Binding ElementName=showPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True"/>
                             </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Tools" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-                            <StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-                                <TextBlock Text="Below are the available SDK developer tools. Once installed, the engine will automatically check for updates. Check 'show package details' to display available versions of an SDK Tool." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-                                <StackPanel Orientation="Horizontal" Margin="1">
-                                    <CheckBox Margin="1" Padding="1"/>
-                                    <TextBlock Text="Show package details" Margin="1" Padding="1"/>
-                                </StackPanel>
-                                <ListView>
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Width="70">
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" Margin="1">
-                                                            <Grid Margin="1">
-                                                                <Path Data="M18 9L12 15L6 9" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-                                                                <Path Data="M18 15L12 9L6 15" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-                                                            </Grid>
-                                                            <Path Data="M0 16q0 2.912 1.824 5.088t4.576 2.752q0.032 0 0.032-0.032v-0.064t0.032-0.032q0.544-1.344 1.344-2.176t2.208-1.184v-2.336q0-2.496 1.728-4.256t4.256-1.76 4.256 1.76 1.76 4.256v2.336q1.376 0.384 2.176 1.216t1.344 2.144l0.096 0.288h0.384q2.464 0 4.224-1.76t1.76-4.224v-2.016q0-2.464-1.76-4.224t-4.224-1.76q-0.096 0-0.32 0.032 0.32-1.152 0.32-2.048 0-3.296-2.368-5.632t-5.632-2.368q-2.88 0-5.056 1.824t-2.784 4.544q-1.152-0.352-2.176-0.352-3.296 0-5.664 2.336t-2.336 5.664v1.984zM10.016 25.824q-0.096 0.928 0.576 1.6l4 4q0.576 0.576 1.408 0.576t1.408-0.576l4-4q0.672-0.672 0.608-1.6-0.064-0.32-0.16-0.576-0.224-0.576-0.736-0.896t-1.12-0.352h-1.984v-5.984q0-0.832-0.608-1.408t-1.408-0.608-1.408 0.608-0.576 1.408v5.984h-2.016q-0.608 0-1.12 0.352t-0.736 0.896q-0.096 0.288-0.128 0.576z" Stretch="Uniform" Fill="{StaticResource Editor.GreenBrush}" Height="20" Width="20" Margin="1"/>
-                                                            <CheckBox IsChecked="{Binding IsSelected}"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                                            <GridViewColumn Header="Version" DisplayMemberBinding="{Binding Revision}"/>
-                                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
-                                        </GridView>
-                                    </ListView.View>
-                                    <ListViewItem/>
-                                    <ListViewItem/>
-                                </ListView>
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Update Sites" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-                            <StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-                                <TextBlock Text="These sites are consulted for installing and updating SDK platforms and tools." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-                                <ListView>
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="Enabled">
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center"/>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                                            <GridViewColumn Header="URL" DisplayMemberBinding="{Binding Status}"/>
-                                        </GridView>
-                                    </ListView.View>
-                                    <ListViewItem/>
-                                    <ListViewItem/>
-                                </ListView>
-                            </StackPanel>
-                        </TabItem>
-                    </TabControl>
-                </Grid>
-            </StackPanel>
-            <DockPanel Grid.Row="1" DockPanel.Dock="Bottom" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
-                <Button Content="Download and Install" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnSDKManager_ActionButton_Click"/>
-                <Button Content="Cancel" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_DismissButton_Click"/>
-            </DockPanel>
-        </Grid>
-        <!--<ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding Path=SelectedSdkDetails}">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type local:AndroidSdkDetails}">
-                    <Grid>
-                        <TabControl>
-                            <TabItem Header="Platforms">
-                                <ListView ItemsSource="{Binding Platforms}">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                                            <GridViewColumn Header="API Level" DisplayMemberBinding="{Binding APILevel}" />
-                                            <GridViewColumn Header="Revision" DisplayMemberBinding="{Binding Revision}" />
-                                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                            </TabItem>
-                            <TabItem Header="Tools">
-                                <ListView ItemsSource="{Binding Tools}">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                                            <GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}" />
-                                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                            </TabItem>
-                            <TabItem Header="Update Sites">
-                                <ListView ItemsSource="{Binding UpdateSites}">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                                            <GridViewColumn Header="URL" DisplayMemberBinding="{Binding URL}" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                            </TabItem>
-                        </TabControl>
-                    </Grid>
-                </DataTemplate>
-            </ContentControl.Resources>
-        </ContentControl>-->
-        <GridSplitter Grid.Column="0" Grid.Row="1" Width="5" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
-    </Grid>
+						</TabItem>
+						<TabItem Header="Tools" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
+							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
+								<TextBlock Text="Below are the available SDK developer tools. Once installed, the engine will automatically check for updates. Check 'show package details' to display available versions of an SDK Tool." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<StackPanel Orientation="Horizontal" Margin="1">
+									<CheckBox Margin="1" Padding="1"/>
+									<TextBlock Text="Show package details" Margin="1" Padding="1"/>
+								</StackPanel>
+								<ListView>
+									<ListView.View>
+										<GridView>
+											<GridViewColumn Width="70">
+												<GridViewColumn.CellTemplate>
+													<DataTemplate>
+														<StackPanel Orientation="Horizontal" Margin="1">
+															<Grid Margin="1">
+																<Path Data="M18 9L12 15L6 9" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
+																<Path Data="M18 15L12 9L6 15" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
+															</Grid>
+															<Path Data="M0 16q0 2.912 1.824 5.088t4.576 2.752q0.032 0 0.032-0.032v-0.064t0.032-0.032q0.544-1.344 1.344-2.176t2.208-1.184v-2.336q0-2.496 1.728-4.256t4.256-1.76 4.256 1.76 1.76 4.256v2.336q1.376 0.384 2.176 1.216t1.344 2.144l0.096 0.288h0.384q2.464 0 4.224-1.76t1.76-4.224v-2.016q0-2.464-1.76-4.224t-4.224-1.76q-0.096 0-0.32 0.032 0.32-1.152 0.32-2.048 0-3.296-2.368-5.632t-5.632-2.368q-2.88 0-5.056 1.824t-2.784 4.544q-1.152-0.352-2.176-0.352-3.296 0-5.664 2.336t-2.336 5.664v1.984zM10.016 25.824q-0.096 0.928 0.576 1.6l4 4q0.576 0.576 1.408 0.576t1.408-0.576l4-4q0.672-0.672 0.608-1.6-0.064-0.32-0.16-0.576-0.224-0.576-0.736-0.896t-1.12-0.352h-1.984v-5.984q0-0.832-0.608-1.408t-1.408-0.608-1.408 0.608-0.576 1.408v5.984h-2.016q-0.608 0-1.12 0.352t-0.736 0.896q-0.096 0.288-0.128 0.576z" Stretch="Uniform" Fill="{StaticResource Editor.GreenBrush}" Height="20" Width="20" Margin="1"/>
+															<CheckBox IsChecked="{Binding IsSelected}"/>
+														</StackPanel>
+													</DataTemplate>
+												</GridViewColumn.CellTemplate>
+											</GridViewColumn>
+											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+											<GridViewColumn Header="Version" DisplayMemberBinding="{Binding Revision}"/>
+											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
+										</GridView>
+									</ListView.View>
+									<ListViewItem/>
+									<ListViewItem/>
+								</ListView>
+							</StackPanel>
+						</TabItem>
+						<TabItem Header="Update Sites" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
+							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
+								<TextBlock Text="These sites are consulted for installing and updating SDK platforms and tools." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<ListView>
+									<ListView.View>
+										<GridView>
+											<GridViewColumn Header="Enabled">
+												<GridViewColumn.CellTemplate>
+													<DataTemplate>
+														<CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center"/>
+													</DataTemplate>
+												</GridViewColumn.CellTemplate>
+											</GridViewColumn>
+											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+											<GridViewColumn Header="URL" DisplayMemberBinding="{Binding Status}"/>
+										</GridView>
+									</ListView.View>
+									<ListViewItem/>
+									<ListViewItem/>
+								</ListView>
+							</StackPanel>
+						</TabItem>
+					</TabControl>
+				</Grid>
+			</StackPanel>
+			<DockPanel Grid.Row="1" DockPanel.Dock="Bottom" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
+				<Button Content="Download and Install" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnSDKManager_ActionButton_Click"/>
+				<Button Content="Cancel" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_DismissButton_Click"/>
+			</DockPanel>
+		</Grid>
+		<!--<ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding Path=SelectedSdkDetails}">
+			<ContentControl.Resources>
+				<DataTemplate DataType="{x:Type local:AndroidSdkDetails}">
+					<Grid>
+						<TabControl>
+							<TabItem Header="Platforms">
+								<ListView ItemsSource="{Binding Platforms}">
+									<ListView.View>
+										<GridView>
+											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+											<GridViewColumn Header="API Level" DisplayMemberBinding="{Binding APILevel}" />
+											<GridViewColumn Header="Revision" DisplayMemberBinding="{Binding Revision}" />
+											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
+										</GridView>
+									</ListView.View>
+								</ListView>
+							</TabItem>
+							<TabItem Header="Tools">
+								<ListView ItemsSource="{Binding Tools}">
+									<ListView.View>
+										<GridView>
+											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+											<GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}" />
+											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
+										</GridView>
+									</ListView.View>
+								</ListView>
+							</TabItem>
+							<TabItem Header="Update Sites">
+								<ListView ItemsSource="{Binding UpdateSites}">
+									<ListView.View>
+										<GridView>
+											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+											<GridViewColumn Header="URL" DisplayMemberBinding="{Binding URL}" />
+										</GridView>
+									</ListView.View>
+								</ListView>
+							</TabItem>
+						</TabControl>
+					</Grid>
+				</DataTemplate>
+			</ContentControl.Resources>
+		</ContentControl>-->
+		<GridSplitter Grid.Column="0" Grid.Row="1" Width="5" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
+	</Grid>
 </Window>

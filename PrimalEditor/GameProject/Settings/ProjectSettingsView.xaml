@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings"
         xmlns:dep="clr-namespace:PrimalEditor.Utilities"
-		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:player="clr-namespace:PrimalEditor.GameProject.Settings.Player" xmlns:audio="clr-namespace:PrimalEditor.GameProject.Settings.Audio"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:player="clr-namespace:PrimalEditor.GameProject.Settings.Player" xmlns:audio="clr-namespace:PrimalEditor.GameProject.Settings.Audio" xmlns:time="clr-namespace:PrimalEditor.GameProject.Settings.Time" xmlns:physics="clr-namespace:PrimalEditor.GameProject.Settings.Physics"
         mc:Ignorable="d"
 		Title="SettingsView" Height="450" Width="800"
 		Style="{StaticResource PrimalWindowStyle}">
@@ -59,6 +59,19 @@
                         <Style TargetType="{x:Type DockPanel}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedItem, ElementName=settingsTypes}" Value="{x:Static local:ProjectSettingsTypes.Physics}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                    <physics:PhysicsSettingsView DockPanel.Dock="Top"/>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <DockPanel.Style>
+                        <Style TargetType="{x:Type DockPanel}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
                                 <DataTrigger Binding="{Binding SelectedItem, ElementName=settingsTypes}" Value="{x:Static local:ProjectSettingsTypes.Player}">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
@@ -66,6 +79,19 @@
                         </Style>
                     </DockPanel.Style>
                     <player:PlayerSettingsView DockPanel.Dock="Top"/>
+                </DockPanel>
+                <DockPanel LastChildFill="False">
+                    <DockPanel.Style>
+                        <Style TargetType="{x:Type DockPanel}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedItem, ElementName=settingsTypes}" Value="{x:Static local:ProjectSettingsTypes.Time}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                    <time:TimeSettingsView DockPanel.Dock="Top"/>
                 </DockPanel>
             </StackPanel>
         </ScrollViewer>

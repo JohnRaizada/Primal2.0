@@ -15,7 +15,7 @@ namespace PrimalEditor.GameProject.Settings
         }
         private void OnProjectSettings_Player_DoneButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void OnProjectSettings_Player_Icon_EditButton_Click(object sender, RoutedEventArgs e)

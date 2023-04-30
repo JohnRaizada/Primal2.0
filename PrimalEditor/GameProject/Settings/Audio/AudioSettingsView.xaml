@@ -3,10 +3,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings.Audio"
+             xmlns:dep="clr-namespace:PrimalEditor.Utilities"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:PrimalEditor.GameProject.Settings.Audio" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="dataFromEnumSDK" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dep:Platforms"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock Text="Audio" Foreground="{StaticResource Editor.Disabled.FontBrush}" FontWeight="Black" FontSize="25" Margin="1" Padding="1"/>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Global Volume" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Volume Rolloff Scale" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Doppler Factor" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Default Speaker Mode" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="System Sample Rate" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="DSP Buffer Size" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Max Virtual Voices" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Max Real Voices" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <utl:ScalarBox DockPanel.Dock="Right" Margin="1" Padding="1" Value="0" Minimum="0"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Spatializer Plugin" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Ambisonic Decoder Plugin" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Source={StaticResource dataFromEnumSDK}}" Margin="1" Padding="1"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Disable Era Audio" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+        </DockPanel>
+        <DockPanel LastChildFill="False">
+            <TextBlock DockPanel.Dock="Left" Text="Virtualize Effects" Style="{StaticResource EnableDisableItemTextBlockStyle}"/>
+            <CheckBox DockPanel.Dock="Right" Margin="1" Padding="1" Background="{StaticResource Editor.FontBrush}"/>
+        </DockPanel>
+    </StackPanel>
 </UserControl>

@@ -11,7 +11,7 @@ namespace PrimalEditor
     {
         public App()
         {
-            this.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
         protected override void OnStartup(StartupEventArgs e)

@@ -12,9 +12,13 @@ namespace PrimalEditor.GameProject
     public partial class ProjectBrowserDialog : Window
     {
         private readonly CubicEase _easing = new CubicEase() { EasingMode = EasingMode.EaseInOut };
-
+        /// <summary>
+        /// Determines whether the Project Manager Window should be opened in New Project Tab
+        /// </summary>
         public static bool GotoNewProjectTab { get; set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectBrowserDialog"/> class.
+        /// </summary>
         public ProjectBrowserDialog()
         {
             InitializeComponent();

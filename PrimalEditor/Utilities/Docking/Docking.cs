@@ -110,7 +110,7 @@ namespace PrimalEditor.Utilities
                         }
                     }
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException)
                 {
 
                 }

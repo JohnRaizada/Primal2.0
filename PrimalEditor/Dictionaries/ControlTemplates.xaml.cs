@@ -1,4 +1,5 @@
-﻿using PrimalEditor.Utilities.Controls;
+﻿using PrimalEditor.GameProject;
+using PrimalEditor.Utilities.Controls;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -13,11 +14,11 @@ namespace PrimalEditor.Dictionaries
         private void OnTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             var textBox = sender as TextBox;
-            var exp = textBox.GetBindingExpression(TextBox.TextProperty);
+            var exp = textBox?.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
             if (e.Key == Key.Enter)
             {
-                if (textBox.Tag is ICommand command && command.CanExecute(textBox.Text))
+                if (textBox?.Tag is ICommand command && command.CanExecute(textBox.Text))
                 {
                     command.Execute(textBox.Text);
                 }
@@ -37,6 +38,7 @@ namespace PrimalEditor.Dictionaries
         private void OnTextBoxRename_KeyDown(object sender, KeyEventArgs e)
         {
             var textBox = sender as TextBox;
+            if (textBox == null) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
             if (e.Key == Key.Enter)
@@ -62,6 +64,7 @@ namespace PrimalEditor.Dictionaries
         private void OnTextBoxRename_LostFocus(object sender, RoutedEventArgs e)
         {
             var textBox = sender as TextBox;
+            if (textBox == null) return;
             if (!textBox.IsVisible) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp != null)
@@ -74,6 +77,11 @@ namespace PrimalEditor.Dictionaries
         private void OnClose_Button_Click(object sender, RoutedEventArgs e)
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
+            if (window.DataContext is Project project && project.ExitCommand != null)
+            {
+                CommandHelper.CallCommand(project.ExitCommand);
+                return;
+            }
             window.Close();
         }
 
@@ -90,26 +98,12 @@ namespace PrimalEditor.Dictionaries
             window.WindowState = WindowState.Minimized;
         }
     }
-    public sealed class MethodToValueConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var methodName = parameter as string;
-            if (value == null || methodName == null)
-                return value;
-            var methodInfo = value.GetType().GetMethod(methodName, new Type[0]);
-            if (methodInfo == null)
-                return value;
-            return methodInfo.Invoke(value, new object[0]);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException("MethodToValueConverter can only be used for one way conversion.");
-        }
-    }
+    /// <summary>
+    /// Helpful in toggling between the list and expander views of ExpanderListView custom user control
+    /// </summary>
     public class ContentViewModeToVisibilityConverter : IValueConverter
     {
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is ContentViewMode contentViewMode)
@@ -119,14 +113,19 @@ namespace PrimalEditor.Dictionaries
 
             return Visibility.Collapsed;
         }
+        /// <inheritdoc/>
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
     }
+    /// <summary>
+    /// Returns a visibility value based on the negated boolean value supplied
+    /// </summary>
     public class InvertedBooleanToVisibilityConverter : IValueConverter
     {
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool boolValue)
@@ -136,6 +135,7 @@ namespace PrimalEditor.Dictionaries
 
             return Binding.DoNothing;
         }
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

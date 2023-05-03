@@ -1,20 +1,20 @@
 ﻿<Window x:Class="PrimalEditor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PrimalEditor"
-        xmlns:editors="clr-namespace:PrimalEditor.Editors"
-        xmlns:gameproject="clr-namespace:PrimalEditor.GameProject" 
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance Type=gameproject:Project}"
-        Title="Primal Editor" Height="1080" Width="1920"
-        Style="{StaticResource PrimalWindowStyle}">
-    <Window.InputBindings>
-        <KeyBinding Command="{Binding ExitCommand}" Key="Esc"/>
-        <KeyBinding Command="{Binding ExitCommand}" Key="F4" Modifiers="Alt"/>
-    </Window.InputBindings>
-    <Grid>
-        <editors:WorldEditorView/>
-    </Grid>
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:PrimalEditor"
+		xmlns:editors="clr-namespace:PrimalEditor.Editors"
+		xmlns:gameproject="clr-namespace:PrimalEditor.GameProject" 
+		mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+		d:DataContext="{d:DesignInstance Type=gameproject:Project}"
+		Title="Primal Editor" Height="1080" Width="1920"
+		Style="{StaticResource PrimalWindowStyle}">
+	<Window.InputBindings>
+		<KeyBinding Command="{Binding ExitCommand}" Key="Esc"/>
+		<KeyBinding Command="{Binding ExitCommand}" Key="F4" Modifiers="Alt"/>
+	</Window.InputBindings>
+	<Grid>
+		<editors:WorldEditorView/>
+	</Grid>
 </Window>

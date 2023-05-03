@@ -18,23 +18,23 @@ namespace PrimalEditor.Content
     sealed class AssetInfo
     {
         public AssetType Type { get; set; }
-        public byte[] Icon { get; set; }
-        public string FullPath { get; set; }
-        public string FileName => Path.GetFileNameWithoutExtension(FullPath);
-        public string SourcePath { get; set; }
+        public byte[]? Icon { get; set; }
+        public string? FullPath { get; set; }
+        public string? FileName => Path.GetFileNameWithoutExtension(FullPath);
+        public string? SourcePath { get; set; }
         public DateTime RegisterTime { get; set; }
         public DateTime ImportDate { get; set; }
         public Guid Guid { get; set; }
-        public byte[] Hash { get; set; }
+        public byte[]? Hash { get; set; }
     }
     abstract class Asset : ViewModelBase
     {
         public static string AssetFileExtension => ".asset";
         public AssetType Type { get; private set; }
-        public byte[] Icon { get; protected set; }
-        public string SourcePath { get; protected set; }
-        private string _fullPath;
-        public string FullPath
+        public byte[]? Icon { get; protected set; }
+        public string? SourcePath { get; protected set; }
+        private string? _fullPath;
+        public string? FullPath
         {
             get => _fullPath;
             set
@@ -47,10 +47,10 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        public string FileName => Path.GetFileNameWithoutExtension(FullPath);
+        public string? FileName => Path.GetFileNameWithoutExtension(FullPath);
         public Guid Guid { get; protected set; } = Guid.NewGuid();
         public DateTime ImportDate { get; protected set; }
-        public byte[] Hash { get; protected set; }
+        public byte[]? Hash { get; protected set; }
         public abstract void Import(string file);
         public abstract void Load(string file);
         public abstract IEnumerable<string> Save(string file);
@@ -72,8 +72,8 @@ namespace PrimalEditor.Content
             info.Icon = reader.ReadBytes(iconSize);
             return info;
         }
-        public static AssetInfo TryGetAssetInfo(string file) => File.Exists(file) && Path.GetExtension(file) == AssetFileExtension ? AssetRegistry.GetAssetInfo(file) ?? GetAssetInfo(file) : null;
-        public static AssetInfo GetAssetInfo(string file)
+        public static AssetInfo? TryGetAssetInfo(string file) => File.Exists(file) && Path.GetExtension(file) == AssetFileExtension ? AssetRegistry.GetAssetInfo(file) ?? GetAssetInfo(file) : null;
+        public static AssetInfo? GetAssetInfo(string file)
         {
             Debug.Assert(File.Exists(file) && Path.GetExtension(file) == AssetFileExtension);
             try
@@ -106,6 +106,7 @@ namespace PrimalEditor.Content
                 writer.Write(0);
             }
             writer.Write(SourcePath ?? "");
+            if (Icon == null) return;
             writer.Write(Icon.Length);
             writer.Write(Icon);
         }

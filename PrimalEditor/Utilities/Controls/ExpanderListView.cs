@@ -354,82 +354,74 @@ namespace PrimalEditor.Utilities.Controls
         private static void CreateRowContent(ExpanderListView expanderListView, ListViewItem container, ExpanderListMenuItem item, Grid columnHeaders, int columnIndex, int index)
         {
             // Check if container is not null
-            if (container != null)
+            if (container == null) return;
+            // Try to get expander and dockPanel
+            var expander = expanderListView.FindVisualChild<Expander>(container);
+            var dockPanel = expanderListView.FindVisualChild<DockPanel>(container);
+
+            // Check if expander and dockPanel are not null
+            if (expander == null || dockPanel == null) return;
+            // Set expander.Width and dockPanel.Width
+            expander.Width = columnHeaders.ActualWidth;
+            dockPanel.Width = columnHeaders.ActualWidth;
+
+            // Set expander.IsExpanded
+            expander.IsExpanded = expanderListView.IsToggled;
+
+            // Subscribe to expander.Collapsed event
+            expander.Collapsed += (sender, e) =>
             {
-                // Try to get expander and dockPanel
-                var expander = expanderListView.FindVisualChild<Expander>(container);
-                var dockPanel = expanderListView.FindVisualChild<DockPanel>(container);
+                _isChildCollapsed = true;
+                expanderListView.IsToggled = false;
+                _isChildCollapsed = false;
+            };
 
-                // Check if expander and dockPanel are not null
-                if (expander != null && dockPanel != null)
-                {
-                    // Set expander.Width and dockPanel.Width
-                    expander.Width = columnHeaders.ActualWidth;
-                    dockPanel.Width = columnHeaders.ActualWidth;
+            // Subscribe to expander.Expanded event
+            expander.Expanded += (sender, e) =>
+            {
+                // Check if all expanders are expanded
+                bool allExpanded = expanderListView.FindVisualChildren<Expander>()
+                    .All(x => x.IsExpanded == true);
 
-                    // Set expander.IsExpanded
-                    expander.IsExpanded = expanderListView.IsToggled;
+                // Update expanderListView.IsToggled if all expanders are expanded
+                if (allExpanded)
+                    expanderListView.IsToggled = true;
+            };
 
-                    // Subscribe to expander.Collapsed event
-                    expander.Collapsed += (sender, e) =>
-                    {
-                        _isChildCollapsed = true;
-                        expanderListView.IsToggled = false;
-                        _isChildCollapsed = false;
-                    };
+            // Try to get header, expanderGrid, and dockPanelGrid
+            var header = expander.Header as StackPanel;
+            var expanderGrid = expander.Content as Grid;
+            var dockPanelGrid = dockPanel != null ? expanderListView.FindVisualChild<Grid>(dockPanel) : null;
 
-                    // Subscribe to expander.Expanded event
-                    expander.Expanded += (sender, e) =>
-                    {
-                        // Check if all expanders are expanded
-                        bool allExpanded = expanderListView.FindVisualChildren<Expander>()
-                            .All(x => x.IsExpanded == true);
+            // Check if header, expanderGrid, and dockPanelGrid are not null
+            if (header == null || expanderGrid == null || dockPanelGrid == null) return;
+            // Try to add masterCheckBox
+            var masterCheckBox = AddMasterCheckBox(header, expanderGrid);
 
-                        // Update expanderListView.IsToggled if all expanders are expanded
-                        if (allExpanded)
-                            expanderListView.IsToggled = true;
-                    };
+            // Get properties of ExpanderListMenuItem class
+            var properties = typeof(ExpanderListMenuItem).GetProperties();
 
-                    // Try to get header, expanderGrid, and dockPanelGrid
-                    var header = expander.Header as StackPanel;
-                    var expanderGrid = expander.Content as Grid;
-                    var dockPanelGrid = dockPanel != null ? expanderListView.FindVisualChild<Grid>(dockPanel) : null;
+            // Check if columnIndex is within bounds
+            if (columnIndex >= properties.Length) return;
+            // Try to get listMenuItemsProperty and listMenuItems
+            var listMenuItemsProperty = properties.FirstOrDefault(p => p.Name == "ListMenuItems");
+            var listMenuItems = listMenuItemsProperty?.GetValue(item) as IList<ExpanderListMenuItem>;
 
-                    // Check if header, expanderGrid, and dockPanelGrid are not null
-                    if (header != null && expanderGrid != null && dockPanelGrid != null)
-                    {
-                        // Try to add masterCheckBox
-                        var masterCheckBox = AddMasterCheckBox(header, expanderGrid);
+            // Check if listMenuItems is not null
+            if (listMenuItems == null)
+            {
+                AddRow(expanderListView, columnIndex, columnHeaders, expanderGrid, properties, item, index, masterCheckBox);
+                AddRow(expanderListView, columnIndex, columnHeaders, dockPanelGrid, properties, item, index);
+                return;
+            }
 
-                        // Get properties of ExpanderListMenuItem class
-                        var properties = typeof(ExpanderListMenuItem).GetProperties();
+            for (int j = 0; j < listMenuItems.Count; j++)
+            {
+                // Add a new row to expanderGrid
+                expanderGrid.RowDefinitions.Add(new RowDefinition());
 
-                        // Check if columnIndex is within bounds
-                        if (columnIndex < properties.Length)
-                        {
-                            // Try to get listMenuItemsProperty and listMenuItems
-                            var listMenuItemsProperty = properties.FirstOrDefault(p => p.Name == "ListMenuItems");
-                            var listMenuItems = listMenuItemsProperty?.GetValue(item) as IList<ExpanderListMenuItem>;
-
-                            // Check if listMenuItems is not null
-                            if (listMenuItems == null)
-                            {
-                                AddRow(expanderListView, columnIndex, columnHeaders, expanderGrid, properties, item, index, masterCheckBox);
-                                AddRow(expanderListView, columnIndex, columnHeaders, dockPanelGrid, properties, item, index);
-                                return;
-                            }
-
-                            for (int j = 0; j < listMenuItems.Count; j++)
-                            {
-                                // Add a new row to expanderGrid
-                                expanderGrid.RowDefinitions.Add(new RowDefinition());
-
-                                AddRow(expanderListView, columnIndex, columnHeaders, expanderGrid, properties, item, index, masterCheckBox, j);
-                                if (j == 0) AddRow(expanderListView, columnIndex, columnHeaders, dockPanelGrid, properties, item, index, isDockPanel: true);
-                            }
-                        }
-                    }
-                }
+                AddRow(expanderListView, columnIndex, columnHeaders, expanderGrid, properties, item, index, masterCheckBox, j);
+                if (j == 0) AddRow(expanderListView, columnIndex, columnHeaders, dockPanelGrid, properties, item, index, isDockPanel: true);
             }
         }
         private static CheckBox? AddMasterCheckBox(StackPanel header, Grid grid)
@@ -618,51 +610,45 @@ namespace PrimalEditor.Utilities.Controls
         private void GridSplitter_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e, int columnIndex = 0, Grid? columnHeaders = null, ListView? listView = null)
         {
             // Check if columnHeaders and listView are not null
-            if (columnHeaders != null && listView != null)
-            {
-                // Try to get the container, expander, dockPanel, expanderGrid, and dockPanelGrid
-                var container = listView.ItemContainerGenerator.ContainerFromItem(listView.Items[0]) as ListViewItem;
-                var expander = container != null ? FindVisualChild<Expander>(container) : null;
-                var dockPanel = container != null ? FindVisualChild<DockPanel>(container) : null;
-                var expanderGrid = expander?.Content as Grid;
-                var dockPanelGrid = dockPanel != null ? FindVisualChild<Grid>(dockPanel) : null;
+            if (columnHeaders == null || listView == null) return;
+            // Try to get the container, expander, dockPanel, expanderGrid, and dockPanelGrid
+            var container = listView.ItemContainerGenerator.ContainerFromItem(listView.Items[0]) as ListViewItem;
+            var expander = container != null ? FindVisualChild<Expander>(container) : null;
+            var dockPanel = container != null ? FindVisualChild<DockPanel>(container) : null;
+            var expanderGrid = expander?.Content as Grid;
+            var dockPanelGrid = dockPanel != null ? FindVisualChild<Grid>(dockPanel) : null;
 
-                // Check if columnIndex is within bounds
-                if (expanderGrid != null && columnIndex < expanderGrid.ColumnDefinitions.Count)
+            // Check if columnIndex is within bounds
+            if (expanderGrid == null || columnIndex >= expanderGrid.ColumnDefinitions.Count) return;
+            // Calculate the new width
+            var newWidth = columnHeaders.ColumnDefinitions[columnIndex].ActualWidth + e.HorizontalChange;
+
+            // Check if newWidth is greater than minWidth
+            if (newWidth <= columnHeaders.ColumnDefinitions[columnIndex].MinWidth) return;
+            // Update the width of the columnHeader
+            columnHeaders.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
+
+            // Update the width of expanderGrid and dockPanelGrid for each item in listView
+            listView.Items
+                .OfType<object>()
+                .Select(item => listView.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem)
+                .Where(x => x != null)
+                .Select(x => (x, expander: x != null ? FindVisualChild<Expander>(x) : null))
+                .Where(x => x.expander != null)
+                .Select(x => (x.x, x.expander, dockPanel: x.x != null ? FindVisualChild<DockPanel>(x.x) : null))
+                .Where(x => x.dockPanel != null)
+                .Select(x => (x.x, x.expander, x.dockPanel, expanderGrid: x.expander?.Content as Grid))
+                .Where(x => x.expanderGrid != null)
+                .Select(x => (x.x, x.expander, x.dockPanel, x.expanderGrid, dockPanelGrid: x.dockPanel != null ? FindVisualChild<Grid>(x.dockPanel) : null))
+                .Where(x => x.dockPanelGrid != null)
+                .ToList()
+                .ForEach(x =>
                 {
-                    // Calculate the new width
-                    var newWidth = columnHeaders.ColumnDefinitions[columnIndex].ActualWidth + e.HorizontalChange;
-
-                    // Check if newWidth is greater than minWidth
-                    if (newWidth > columnHeaders.ColumnDefinitions[columnIndex].MinWidth)
-                    {
-                        // Update the width of the columnHeader
-                        columnHeaders.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
-
-                        // Update the width of expanderGrid and dockPanelGrid for each item in listView
-                        listView.Items
-                            .OfType<object>()
-                            .Select(item => listView.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem)
-                            .Where(x => x != null)
-                            .Select(x => (x, expander: x != null ? FindVisualChild<Expander>(x) : null))
-                            .Where(x => x.expander != null)
-                            .Select(x => (x.x, x.expander, dockPanel: x.x != null ? FindVisualChild<DockPanel>(x.x) : null))
-                            .Where(x => x.dockPanel != null)
-                            .Select(x => (x.x, x.expander, x.dockPanel, expanderGrid: x.expander?.Content as Grid))
-                            .Where(x => x.expanderGrid != null)
-                            .Select(x => (x.x, x.expander, x.dockPanel, x.expanderGrid, dockPanelGrid: x.dockPanel != null ? FindVisualChild<Grid>(x.dockPanel) : null))
-                            .Where(x => x.dockPanelGrid != null)
-                            .ToList()
-                            .ForEach(x =>
-                            {
-                                if (x.expanderGrid != null)
-                                    x.expanderGrid.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
-                                if (x.dockPanelGrid != null)
-                                    x.dockPanelGrid.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
-                            });
-                    }
-                }
-            }
+                    if (x.expanderGrid != null)
+                        x.expanderGrid.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
+                    if (x.dockPanelGrid != null)
+                        x.dockPanelGrid.ColumnDefinitions[columnIndex].Width = new GridLength(newWidth);
+                });
         }
         private T? FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
         {
@@ -676,10 +662,8 @@ namespace PrimalEditor.Utilities.Controls
                 else
                 {
                     var descendant = FindVisualChild<T>(child);
-                    if (descendant != null)
-                    {
-                        return descendant;
-                    }
+                    if (descendant == null) continue;
+                    return descendant;
                 }
             }
             return null;

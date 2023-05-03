@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace PrimalEditor.Content
 {
@@ -36,7 +37,7 @@ namespace PrimalEditor.Content
             }
             return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, _sizeSuffixes[mag]);
         }
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (value is long size) ? SizeSuffix(size, 0) : null;
         }
@@ -54,7 +55,7 @@ namespace PrimalEditor.Content
             get { return (Style)GetValue(ItemContainerStyleProperty); }
             set { SetValue(ItemContainerStyleProperty, value); }
         }
-        public static readonly DependencyProperty ItemTemplateProperty=ItemsControl.ItemTemplateProperty.AddOwner(typeof(PlainView));
+        public static readonly DependencyProperty ItemTemplateProperty = ItemsControl.ItemTemplateProperty.AddOwner(typeof(PlainView));
         public DataTemplate ItemTemplate
         {
             get { return (DataTemplate)GetValue(ItemTemplateProperty); }
@@ -81,29 +82,62 @@ namespace PrimalEditor.Content
     {
         private int _numberOfClicks = 0;
         private string _sortedProperty = nameof(ContentInfo.FileName);
-        private ListSortDirection _sortDirection; 
+        private ListSortDirection _sortDirection;
+
+        /// <summary>
+        /// Gets or sets the selection mode for the content browser.
+        /// </summary>
         public SelectionMode SelectionMode
         {
             get => (SelectionMode)GetValue(SelectionModeProperty);
             set => SetValue(SelectionModeProperty, value);
         }
+        /// <summary>
+        /// Property associated with selection mode of the items.
+        /// </summary>
+        /// <remarks>
+        /// Selection mode can be anyone of Single, Multiple and Extended
+        /// </remarks>
         public static readonly DependencyProperty SelectionModeProperty =
             DependencyProperty.Register(nameof(SelectionMode), typeof(SelectionMode), typeof(ContentBrowserView), new PropertyMetadata(SelectionMode.Extended));
+
+        /// <summary>
+        /// Gets or sets the file access mode for the content browser.
+        /// </summary>
         public FileAccess FileAccess
         {
             get => (FileAccess)GetValue(FileAccessProperty);
             set => SetValue(FileAccessProperty, value);
         }
+
+        /// <summary>
+        /// Property associated with File Access of the items.
+        /// </summary>
+        /// <remarks>
+        /// File Access can be anyone of Read, Write and ReadWrite
+        /// </remarks>
         public static readonly DependencyProperty FileAccessProperty =
-            DependencyProperty.Register(nameof(FileAccess), typeof(FileAccess), typeof(ContentBrowserView), new PropertyMetadata(FileAccess.ReadWrite)); 
+            DependencyProperty.Register(nameof(FileAccess), typeof(FileAccess), typeof(ContentBrowserView), new PropertyMetadata(FileAccess.ReadWrite));
+
         internal ObservableCollection<ContentInfo> SelectedItems
         {
             get { return (ObservableCollection<ContentInfo>)GetValue(SelectedItemsProperty); }
             set { SetValue(SelectedItemsProperty, value); }
         }
-        public static readonly DependencyProperty SelectedItemsProperty = 
+        /// <summary>
+        /// Property associated with Selected Item.
+        /// </summary>
+        /// <remarks>
+        /// It is useful in accessing and modifying the properties associated with selected items.
+        /// </remarks>
+        public static readonly DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<ContentInfo>), typeof(ContentBrowserView), new PropertyMetadata(new ObservableCollection<ContentInfo>()));
+
         private List<object> _selectedItems = new List<object>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentBrowserView"/> class.
+        /// </summary>
         public ContentBrowserView()
         {
             DataContext = null;
@@ -111,7 +145,6 @@ namespace PrimalEditor.Content
             Loaded += OnContentBrowserLoaded;
             AllowDrop = true;
         }
-
         private void OnContentBrowserLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnContentBrowserLoaded;
@@ -139,22 +172,22 @@ namespace PrimalEditor.Content
             }
         }
 
-        private void OnProjectChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnProjectChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             (DataContext as ContentBrowser)?.Dispose();
             DataContext = null;
             if (e.NewValue is Project project)
             {
-                Debug.Assert(e.NewValue==Project.Current);
+                Debug.Assert(e.NewValue == Project.Current);
                 var contentBrowser = new ContentBrowser(project);
                 contentBrowser.PropertyChanged += OnSelectedFolderChanged;
-                DataContext= contentBrowser;
+                DataContext = contentBrowser;
             }
         }
-        private void OnSelectedFolderChanged(object sender, PropertyChangedEventArgs e)
+        private void OnSelectedFolderChanged(object? sender, PropertyChangedEventArgs e)
         {
             var vm = sender as ContentBrowser;
-            if (e.PropertyName == nameof(vm.SelectedFolder) && !string.IsNullOrEmpty(vm.SelectedFolder))
+            if (e.PropertyName == nameof(vm.SelectedFolder) && !string.IsNullOrEmpty(vm?.SelectedFolder))
             {
                 GeneratePathStackButtons();
             }
@@ -163,9 +196,10 @@ namespace PrimalEditor.Content
         private void GeneratePathStackButtons()
         {
             var vm = DataContext as ContentBrowser;
-            var path = Directory.GetParent(Path.TrimEndingDirectorySeparator(vm.SelectedFolder)).FullName;
+            if (vm == null) return;
+            var path = Path.TrimEndingDirectorySeparator(vm.SelectedFolder);
             var contentPath = Path.TrimEndingDirectorySeparator(vm.ContentFolder);
-            pathStack.Children.RemoveRange(1, pathStack.Children.Count - 1);
+            pathStack.Children.Clear();
             if (vm.SelectedFolder == vm.ContentFolder) return;
             string[] paths = new string[3];
             string[] labels = new string[3];
@@ -183,7 +217,9 @@ namespace PrimalEditor.Content
                 var btn = new Button()
                 {
                     DataContext = paths[i],
-                    Content = new TextBlock() { Text = labels[i], TextTrimming = TextTrimming.CharacterEllipsis }
+                    Content = new TextBlock() { Text = labels[i], TextTrimming = TextTrimming.CharacterEllipsis },
+                    Background = Brushes.Transparent,
+                    Foreground = (Brush)Application.Current.FindResource("Editor.FontBrush")
                 };
                 pathStack.Children.Add(btn);
                 if (i > 0) pathStack.Children.Add(new System.Windows.Shapes.Path());
@@ -192,13 +228,15 @@ namespace PrimalEditor.Content
         private void OnPathStack_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
+            if (vm == null) return;
             vm.UpdatePathStack(vm.SelectedFolder);
-            vm.SelectedFolder = (sender as Button).DataContext as string;
+            vm.SelectedFolder = (string)((Button)sender).DataContext;
         }
         private void OnGridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             var column = sender as GridViewColumnHeader;
-            var sortBy = column.Tag.ToString();
+            string? sortBy = column?.Tag.ToString();
+            if (sortBy == null) return;
             folderListView.Items.SortDescriptions.Clear();
             var newDir = ListSortDirection.Ascending;
             if (_sortedProperty == sortBy && _sortDirection == newDir)
@@ -212,13 +250,15 @@ namespace PrimalEditor.Content
 
         private void OnContent_Item_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var info = (sender as FrameworkElement).DataContext as ContentInfo;
+            var info = ((FrameworkElement)sender).DataContext as ContentInfo;
+            if (info == null) return;
             if (info.IsToggled) return;
             ExecuteSelection(info);
         }
         private void OnContent_Item_KeyDown(object sender, KeyEventArgs e)
         {
-            var info = (sender as FrameworkElement).DataContext as ContentInfo;
+            var info = ((FrameworkElement)sender).DataContext as ContentInfo;
+            if (info == null) return;
             if (e.Key == Key.Enter)
             {
                 ExecuteSelection(info);
@@ -230,6 +270,7 @@ namespace PrimalEditor.Content
             if (info.IsDirectory)
             {
                 var vm = DataContext as ContentBrowser;
+                if (vm == null) return;
                 string currentSelectedFolder = vm.SelectedFolder;
                 vm.SelectedFolder = info.FullPath;
                 vm.UpdatePathStack(currentSelectedFolder);
@@ -244,9 +285,9 @@ namespace PrimalEditor.Content
             }
         }
 
-        private IAssetEditor OpenAssetEditor(AssetInfo info)
+        private IAssetEditor? OpenAssetEditor(AssetInfo info)
         {
-            IAssetEditor editor = null;
+            IAssetEditor? editor = null;
             try
             {
                 switch (info.Type)
@@ -269,7 +310,7 @@ namespace PrimalEditor.Content
             return editor;
         }
 
-        private IAssetEditor OpenEditorPanel<T>(AssetInfo info, Guid guid, string title) where T : FrameworkElement, new()
+        private IAssetEditor? OpenEditorPanel<T>(AssetInfo info, Guid guid, string title) where T : FrameworkElement, new()
         {
             // First look for a window that's already open and is displaying the same asset.
             foreach (Window window in Application.Current.Windows)
@@ -283,7 +324,7 @@ namespace PrimalEditor.Content
             // If not already open in an asset editor, we create a new window and load the asset.
             var newEditor = new T();
             Debug.Assert(newEditor.DataContext is IAssetEditor);
-            (newEditor.DataContext as IAssetEditor).SetAsset(info);
+            ((IAssetEditor)newEditor.DataContext).SetAsset(info);
             var win = new Window()
             {
                 Content = newEditor,
@@ -299,7 +340,7 @@ namespace PrimalEditor.Content
         private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            if (vm.SelectedFolder != null && e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (vm?.SelectedFolder != null && e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (files?.Length > 0 && Directory.Exists(vm.SelectedFolder))
@@ -319,7 +360,7 @@ namespace PrimalEditor.Content
                 _selectedItems.Remove(thing);
                 if (DataContext == null) continue;
                 var vm = DataContext as ContentBrowser;
-                vm.SelectedItems.RemoveAt(index);
+                vm?.SelectedItems.RemoveAt(index);
             }
             foreach (var thing in e.AddedItems)
             {
@@ -328,11 +369,13 @@ namespace PrimalEditor.Content
                 SelectedItems.Add(item?.IsDirectory == true ? null : item);
                 if (DataContext == null) continue;
                 var vm = DataContext as ContentBrowser;
-                vm.SelectedItems.Add(item.FullPath);
-                vm.SelectedItemsInfo.Add(item);
+                if (item == null) continue;
+                vm?.SelectedItems.Add(item.FullPath);
+                vm?.SelectedItemsInfo.Add(item);
             }
             _numberOfClicks = 0;
         }
+        /// <inheritdoc/>
         public void Dispose()
         {
             Loaded -= OnContentBrowserLoaded;
@@ -346,28 +389,26 @@ namespace PrimalEditor.Content
         private void OnLeft_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            vm.BackOperation();
+            vm?.BackOperation();
         }
         private void OnRight_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            vm.ForwardOperation();
+            vm?.ForwardOperation();
         }
         private void OnUp_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            vm.UpOperation();
+            vm?.UpOperation();
         }
         private void OnHome_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            if (vm.BackPathStack.Peek() == vm.SelectedFolder) return;
-            vm.UpdatePathStack(vm.SelectedFolder);
-            vm.SelectedFolder = vm.ContentFolder;
+            vm?.HomeOperation();
         }
         private void TextBoxBlockCombo_OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            var info = (sender as FrameworkElement).DataContext as ContentInfo;
+            var info = (sender as FrameworkElement)?.DataContext as ContentInfo;
             if (info == null) return;
             if (e.Value == info.FileName) return;
             SystemOperations.Rename(e.Value, info.FullPath);
@@ -377,6 +418,7 @@ namespace PrimalEditor.Content
         {
             if (_numberOfClicks++ < 1) return;
             var vm = DataContext as ContentBrowser;
+            if (vm == null) return;
             CommandHelper.CallCommand(vm.RenameCommand);
             _numberOfClicks = 0;
         }
@@ -386,6 +428,7 @@ namespace PrimalEditor.Content
             if (sender is MenuItem menuItem)
             {
                 var vm = DataContext as ContentBrowser;
+                if (vm == null) return;
                 switch (menuItem.Header.ToString())
                 {
                     case "Copy":
@@ -425,6 +468,7 @@ namespace PrimalEditor.Content
         private void MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
             var menuItem = sender as MenuItem;
+            if (menuItem == null) return;
             menuItem.IsSubmenuOpen = true;
             Debug.WriteLine(menuItem.IsSubmenuOpen);
         }
@@ -443,6 +487,7 @@ namespace PrimalEditor.Content
             if (sender is MenuItem item)
             {
                 var vm = DataContext as ContentBrowser;
+                if (vm == null) return;
                 switch (item.Header.ToString())
                 {
                     case "Folder":

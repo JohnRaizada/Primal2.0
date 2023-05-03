@@ -3,7 +3,6 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="clr-namespace:PrimalEditor.Dictionaries"
 					xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
-	<local:MethodToValueConverter x:Key="MethodToValueConverter" />
 	<local:ContentViewModeToVisibilityConverter x:Key="ContentViewModeToVisibilityConverter" />
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<local:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
@@ -77,8 +76,8 @@
 				<Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush3}"/>
 			</Trigger>
 		</Style.Triggers>
-	</Style>
-	<Style TargetType="{x:Type Expander}" x:Key="EnableDisableSubItemUniformExpander">
+    </Style>
+    <Style TargetType="{x:Type Expander}" x:Key="EnableDisableSubItemUniformExpander">
 		<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}" />
 		<Setter Property="FontWeight" Value="Normal"/>
 		<Setter Property="Margin" Value="1"/>
@@ -481,8 +480,20 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-	</Style>
-	<Style x:Key="ControlButton" TargetType="{x:Type Button}" BasedOn="{StaticResource SimpleButton}">
+    </Style>
+    <Style x:Key="EnableDisableBorderlessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource SimpleButton}">
+        <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ControlButton" TargetType="{x:Type Button}" BasedOn="{StaticResource SimpleButton}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">

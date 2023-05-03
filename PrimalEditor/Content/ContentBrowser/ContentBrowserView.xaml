@@ -400,8 +400,55 @@
 					<ToggleButton DockPanel.Dock="Right" Style="{StaticResource ListViewToggleButtonStyle}" x:Name="listViewToggle"/>
 					<TextBox Style="{StaticResource TextBoxStyle_WithLabel}"/>
 				</DockPanel>
-				<DockPanel DockPanel.Dock="Bottom">
-					<StackPanel Orientation="Horizontal" x:Name="pathStack" Margin="0,0,0,5">
+                <DockPanel DockPanel.Dock="Bottom">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <Button Margin="2" Click="OnLeft_Button_Click" IsEnabled="{Binding IsBackButtonEnabled}" Style="{StaticResource ControlButton}">
+                            <Path Data="M0 10 L10 0 L10 20 Z" Height="20" Width="10" x:Name="LeftArrow">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                                <Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Button>
+                        <Button Margin="2" Click="OnRight_Button_Click" IsEnabled="{Binding IsFrontButtonEnabled}" Style="{StaticResource ControlButton}">
+                            <Path Data="M10 10 L0 0 L0 20 Z" Height="20" Width="10">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                                <Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Button>
+                        <Button Margin="5,1" Click="OnUp_Button_Click" IsEnabled="{Binding IsUpButtonEnabled}" Style="{StaticResource ControlButton}">
+                            <Path Data="M0 13 L10 0 L20 13 L12 8 L12 20 L8 20 L8 8 L0 13 Z" Height="20" Width="20" x:Name="UpArrow">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                                <Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Button>
+                        <Button Click="OnHome_Button_Click" MinWidth="25" Style="{StaticResource ControlButton}">
+                            <Image Source="pack://application:,,,/Resources/ContentBrowser/FolderSmall.png" Width="18"/>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" x:Name="pathStack" Margin="0,0,0,5">
 						<StackPanel.Resources>
 							<Style TargetType="{x:Type Button}" x:Key="{x:Type Button}">
 								<Setter Property="Margin" Value="2,1"/>
@@ -450,53 +497,6 @@
 								<Setter Property="VerticalAlignment" Value="Center"/>
 							</Style>
 						</StackPanel.Resources>
-						<StackPanel Orientation="Horizontal">
-							<Button Margin="2" Click="OnLeft_Button_Click" IsEnabled="{Binding IsBackButtonEnabled}" Style="{StaticResource ControlButton}">
-								<Path Data="M0 10 L10 0 L10 20 Z" Height="20" Width="10" x:Name="LeftArrow">
-									<Path.Style>
-										<Style TargetType="Path">
-											<Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
-													<Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</Path.Style>
-								</Path>
-							</Button>
-							<Button Margin="2" Click="OnRight_Button_Click" IsEnabled="{Binding IsFrontButtonEnabled}" Style="{StaticResource ControlButton}">
-								<Path Data="M10 10 L0 0 L0 20 Z" Height="20" Width="10">
-									<Path.Style>
-										<Style TargetType="Path">
-											<Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
-													<Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</Path.Style>
-								</Path>
-							</Button>
-							<Button Margin="5,1" Click="OnUp_Button_Click" IsEnabled="{Binding IsUpButtonEnabled}" Style="{StaticResource ControlButton}">
-								<Path Data="M0 13 L10 0 L20 13 L12 8 L12 20 L8 20 L8 8 L0 13 Z" Height="20" Width="20" x:Name="UpArrow">
-									<Path.Style>
-										<Style TargetType="Path">
-											<Setter Property="Fill" Value="{StaticResource Editor.FontBrush}"/>
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
-													<Setter Property="Fill" Value="{StaticResource Editor.Disabled.FontBrush}"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</Path.Style>
-								</Path>
-							</Button>
-							<Button Click="OnHome_Button_Click" MinWidth="25">
-								<Image Source="pack://application:,,,/Resources/ContentBrowser/FolderSmall.png" Width="18"/>
-							</Button>
-						</StackPanel>
 					</StackPanel>
 					<Button Click="OnAddItem_Button_Click" HorizontalAlignment="Right" Margin="5" Style="{StaticResource ControlButton}">
 						<Button.Content>

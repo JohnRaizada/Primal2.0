@@ -10,21 +10,51 @@ using System.Text.RegularExpressions;
 
 namespace PrimalEditor.GameProject
 {
+    /// <summary>
+    /// Represents a template for creating new projects.
+    /// </summary>
     [DataContract]
     public class ProjectTemplate
     {
+        /// <summary>
+        /// Gets or sets the type of project that the template is for.
+        /// </summary>
         [DataMember]
-        public string ProjectType { get; set; }
+        public string? ProjectType { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the project file for the template.
+        /// </summary>
         [DataMember]
-        public string ProjectFile { get; set; }
+        public string? ProjectFile { get; set; }
+        /// <summary>
+        /// Gets or sets the list of folders to create for the new project.
+        /// </summary>
         [DataMember]
-        public List<string> Folders { get; set; }
-        public byte[] Icon { get; set; }
-        public byte[] Screenshot { get; set; }
-        public string IconFilePath { get; set; }
-        public string ScreenshotFilePath { get; set; }
-        public string ProjectFilePath { get; set; }
-        public string TemplatePath { get; set; }
+        public List<string>? Folders { get; set; }
+        /// <summary>
+        /// Gets or sets the icon for the template.
+        /// </summary>
+        public byte[]? Icon { get; set; }
+        /// <summary>
+        /// Gets or sets the screenshot for the template.
+        /// </summary>
+        public byte[]? Screenshot { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the icon file for the template.
+        /// </summary>
+        public string? IconFilePath { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the screenshot file for the template.
+        /// </summary>
+        public string? ScreenshotFilePath { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the project file for the template.
+        /// </summary>
+        public string? ProjectFilePath { get; set; }
+        /// <summary>
+        /// Gets or sets the path to the template.
+        /// </summary>
+        public string? TemplatePath { get; set; }
     }
     class NewProject : ViewModelBase
     {
@@ -70,9 +100,9 @@ namespace PrimalEditor.GameProject
             }
         }
 
-        private string _errorMsg;
+        private string? _errorMsg;
 
-        public string ErrorMsg
+        public string? ErrorMsg
         {
             get => _errorMsg;
             set
@@ -124,7 +154,7 @@ namespace PrimalEditor.GameProject
             return IsValid;
         }
 
-        public string CreateProject(ProjectTemplate template)
+        public string? CreateProject(ProjectTemplate template)
         {
             ValidateProjectPath();
             if (!IsValid)
@@ -137,14 +167,20 @@ namespace PrimalEditor.GameProject
             try
             {
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                if (template.Folders == null) return null;
                 foreach (var folder in template.Folders)
                 {
-                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path), folder)));
+                    string? directoryName = Path.GetDirectoryName(path);
+                    if (directoryName == null) continue;
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(directoryName, folder)));
                 }
                 var dirInfo = new DirectoryInfo(path + @".Primal\");
                 dirInfo.Attributes |= FileAttributes.Hidden;
+                if (template.IconFilePath == null) return null;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
+                if (template.ScreenshotFilePath == null) return null;
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
+                if (template.ProjectFilePath == null) return null;
                 var projectXml = File.ReadAllText(template.ProjectFilePath);
                 projectXml = string.Format(projectXml, ProjectName, path);
                 var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
@@ -162,6 +198,7 @@ namespace PrimalEditor.GameProject
 
         private void CreateMSVCSolution(ProjectTemplate template, string projectPath)
         {
+            if (template.TemplatePath == null) return;
             Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCSolution")));
             Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCProject")));
             var engineAPIPath = @"$(PRIMAL_ENGINE)Engine\EngineAPI\";
@@ -189,10 +226,12 @@ namespace PrimalEditor.GameProject
                 {
                     var template = Serializer.FromFile<ProjectTemplate>(file);
                     template.TemplatePath = Path.GetDirectoryName(file);
+                    if (template.TemplatePath == null) continue;
                     template.IconFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, "Icon.png"));
                     template.Icon = File.ReadAllBytes(template.IconFilePath);
                     template.ScreenshotFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, "Screenshot.png"));
                     template.Screenshot = File.ReadAllBytes(template.ScreenshotFilePath);
+                    if (template.ProjectFile == null) continue;
                     template.ProjectFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, template.ProjectFile));
                     _projectTemplates.Add(template);
                 }

@@ -14,10 +14,10 @@ namespace PrimalEditor.Content
     sealed class ContentInfo : ViewModelBase
     {
         public static int IconWidth => 90;
-        public byte[] Icon { get; }
-        public byte[] IconSmall { get; }
+        public byte[]? Icon { get; }
+        public byte[]? IconSmall { get; }
         public string FullPath { get; }
-        private string _fileName;
+        private string? _fileName;
         public string FileName
         {
             get => _fileName = Path.GetFileNameWithoutExtension(FullPath);
@@ -46,7 +46,7 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        public ContentInfo(string fullPath, byte[] icon = null, byte[] smallIcon = null, DateTime? lastModified = null, bool isToggled = false)
+        public ContentInfo(string fullPath, byte[]? icon = null, byte[]? smallIcon = null, DateTime? lastModified = null, bool isToggled = false)
         {
             Debug.Assert(File.Exists(fullPath) || Directory.Exists(fullPath));
             var info = new FileInfo(fullPath);
@@ -65,8 +65,8 @@ namespace PrimalEditor.Content
         public string ContentFolder { get; }
         private readonly ObservableCollection<ContentInfo> _folderContent = new ObservableCollection<ContentInfo>();
         public ReadOnlyObservableCollection<ContentInfo> FolderContent { get; }
-        private string _selectedFolder;
-        public string SelectedFolder
+        private string? _selectedFolder;
+        public string? SelectedFolder
         {
             get => _selectedFolder;
             set
@@ -101,7 +101,7 @@ namespace PrimalEditor.Content
             get => _selectedItemsInfo;
             set
             {
-                if (_selectedItemsInfo!= value)
+                if (_selectedItemsInfo != value)
                 {
                     _selectedItemsInfo = value;
                     OnPropertyChanged(nameof(SelectedItemsInfo));
@@ -173,29 +173,39 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        public ICommand CopyCommand { get; private set; }
-        public ICommand CutCommand { get; private set; }
-        public ICommand PasteCommand { get; private set; }
-        public ICommand TemporaryDeleteCommand { get; private set; }
-        public ICommand PermanentDeleteCommand { get; private set; }
-        public ICommand BackCommand {  get; private set; }
-        public ICommand ForwardCommand { get; private set; }
-        public ICommand UpCommand { get; private set; }
-        public ICommand RenameCommand { get; private set; }
-        public ICommand NewFolderCommand { get; internal set; }
+        public ICommand? CopyCommand { get; private set; }
+        public ICommand? CutCommand { get; private set; }
+        public ICommand? PasteCommand { get; private set; }
+        public ICommand? TemporaryDeleteCommand { get; private set; }
+        public ICommand? PermanentDeleteCommand { get; private set; }
+        public ICommand? BackCommand { get; private set; }
+        public ICommand? ForwardCommand { get; private set; }
+        public ICommand? UpCommand { get; private set; }
+        public ICommand? RenameCommand { get; private set; }
+        public ICommand? NewFolderCommand { get; internal set; }
 
         internal void SetCommands()
         {
             CopyCommand = new RelayCommand<object>(x => SystemOperations.LocalCopy(SelectedItems));
             CutCommand = new RelayCommand<object>(x => SystemOperations.LocalCut(SelectedItems));
-            PasteCommand = new RelayCommand<object>(x => SystemOperations.Paste(SelectedFolder));
             TemporaryDeleteCommand = new RelayCommand<object>(x => SystemOperations.Delete(SelectedItems));
-            PermanentDeleteCommand = new RelayCommand<object>(x=>SystemOperations.Delete(SelectedItems, true));
+            PermanentDeleteCommand = new RelayCommand<object>(x => SystemOperations.Delete(SelectedItems, true));
             BackCommand = new RelayCommand<object>(x => BackOperation(), x => IsBackButtonEnabled);
             ForwardCommand = new RelayCommand<object>(x => ForwardOperation(), x => IsFrontButtonEnabled);
             UpCommand = new RelayCommand<object>(x => UpOperation(), x => IsUpButtonEnabled);
-            RenameCommand = new RelayCommand<object>(x => SelectedItemsInfo.LastOrDefault().IsToggled = true);
-            NewFolderCommand = new RelayCommand<object>(x=>SystemOperations.CreateNewFolder(SelectedFolder));
+            RenameCommand = new RelayCommand<object>(x =>
+            {
+                var lastItem = SelectedItemsInfo.LastOrDefault();
+                if (lastItem != null)
+                {
+                    lastItem.IsToggled = true;
+                }
+            });
+            if (SelectedFolder != null)
+            {
+                NewFolderCommand = new RelayCommand<object>(x => SystemOperations.CreateNewFolder(SelectedFolder));
+                PasteCommand = new RelayCommand<object>(x => SystemOperations.Paste(SelectedFolder));
+            }
             OnPropertyChanged(nameof(CopyCommand));
             OnPropertyChanged(nameof(CutCommand));
             OnPropertyChanged(nameof(PasteCommand));
@@ -208,8 +218,10 @@ namespace PrimalEditor.Content
         }
         internal void UpOperation()
         {
+            if (SelectedFolder == null) return;
             UpdatePathStack(SelectedFolder);
-            DirectoryInfo parentDirectory = Directory.GetParent(SelectedFolder);
+            DirectoryInfo? parentDirectory = Directory.GetParent(SelectedFolder);
+            if (parentDirectory == null) return;
             SelectedFolder = parentDirectory.FullName;
             UpdateAccessibilityStatus();
         }
@@ -217,6 +229,7 @@ namespace PrimalEditor.Content
         internal void BackOperation()
         {
             if (BackPathStack.Count < 1) return;
+            if (SelectedFolder == null) return;
             FrontPathStack.Push(SelectedFolder);
             SelectedFolder = BackPathStack.Pop();
             UpdateAccessibilityStatus();
@@ -225,8 +238,18 @@ namespace PrimalEditor.Content
         internal void ForwardOperation()
         {
             if (FrontPathStack.Count < 1) return;
+            if (SelectedFolder == null) return;
             BackPathStack.Push(SelectedFolder);
             SelectedFolder = FrontPathStack.Pop();
+            UpdateAccessibilityStatus();
+        }
+        internal void HomeOperation()
+        {
+            if (BackPathStack.Count <= 0) return;
+            if (BackPathStack.Peek() == SelectedFolder) return;
+            if (SelectedFolder == null) return;
+            UpdatePathStack(SelectedFolder);
+            SelectedFolder = ContentFolder;
             UpdateAccessibilityStatus();
         }
         internal void UpdatePathStack(string path)
@@ -277,10 +300,11 @@ namespace PrimalEditor.Content
             var folderContent = new List<ContentInfo>();
             await Task.Run(() =>
             {
+                if (SelectedFolder == null) return;
                 folderContent = GetFolderContent(SelectedFolder);
             });
             _folderContent.Clear();
-            folderContent.ForEach(x=>_folderContent.Add(x));
+            folderContent.ForEach(x => _folderContent.Add(x));
         }
 
         private List<ContentInfo> GetFolderContent(string path)

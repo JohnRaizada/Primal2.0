@@ -144,7 +144,7 @@ namespace PrimalEditor.Utilities
                         File.Copy(sourcePath, Path.Combine(destinationPath, fileName));
                         OnPasteSuccessful(sourcePath);
                     }
-                    catch (IOException ex)
+                    catch (IOException)
                     {
                         try
                         {
@@ -195,7 +195,7 @@ namespace PrimalEditor.Utilities
                     File.Copy(file, Path.Combine(destinationPath, fileName));
                     OnPasteSuccessful(sourcePath);
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
                     try
                     {
@@ -262,14 +262,16 @@ namespace PrimalEditor.Utilities
             {
                 try
                 {
+                    string? directoryName = Path.GetDirectoryName(path);
+                    if (directoryName == null) return;
                     if (File.Exists(path))
                     {
-                        string newPath = Path.Combine(Path.GetDirectoryName(path), name + Path.GetExtension(path));
+                        string newPath = Path.Combine(directoryName, name + Path.GetExtension(path));
                         File.Move(path, newPath);
                     }
                     else if (Directory.Exists(path))
                     {
-                        string newPath = Path.Combine(Path.GetDirectoryName(path), name);
+                        string newPath = Path.Combine(directoryName, name);
                         Directory.Move(path, newPath);
                     }
                     else

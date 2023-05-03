@@ -14,16 +14,28 @@ using System.Windows.Input;
 
 namespace PrimalEditor.GameProject
 {
+    /// <summary>
+    /// Represents a game project.
+    /// </summary>
     [DataContract(Name = "Game")]
     public class Project : ViewModelBase
     {
         private static bool _isModified = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether the project has been modified.
+        /// </summary>
         public bool IsModified
         {
             get => _isModified;
             set => _isModified = value;
         }
+        /// <summary>
+        /// Gets the file extension for project files.
+        /// </summary>
         public static string Extension => ".primal";
+        /// <summary>
+        /// Gets or sets the name of the project.
+        /// </summary>
         [DataMember]
         public string Name { get; private set; } = "New Project";
         /// <summary>
@@ -35,9 +47,18 @@ namespace PrimalEditor.GameProject
         /// Gets the full path of the current Primal project file, including its file name and extension.
         /// </summary>
         public string FullPath => $@"{Path}\{Name}{Extension}";
+        /// <summary>
+        /// Gets the path to the solution file for the project.
+        /// </summary>
         public string Solution => $@"{Path}{Name}.sln";
+        /// <summary>
+        /// Gets the path to the temporary folder for the project.
+        /// </summary>
         public string TempFolder => $@"{Path}.Primal\Temp\";
         private int _buildConfig;
+        /// <summary>
+        /// Gets or sets the build configuration for the project.
+        /// </summary>
         [DataMember]
         public int BuildConfig
         {
@@ -51,10 +72,19 @@ namespace PrimalEditor.GameProject
                 }
             }
         }
+        /// <summary>
+        /// Gets the build configuration for standalone builds of the project.
+        /// </summary>
         public BuildConfiguration StandAloneBuildConfig => BuildConfig == 0 ? BuildConfiguration.Debug : BuildConfiguration.Release;
+        /// <summary>
+        /// Gets the build configuration for DLL builds of the project.
+        /// </summary>
         public BuildConfiguration DLLBuildConfig => BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
-        private string[] _availableScripts;
-        public string[] AvailableScripts
+        private string[]? _availableScripts;
+        /// <summary>
+        /// Gets or sets the available scripts for the project.
+        /// </summary>
+        public string[]? AvailableScripts
         {
             get => _availableScripts;
             private set
@@ -68,13 +98,20 @@ namespace PrimalEditor.GameProject
         }
         [DataMember(Name = nameof(Scenes))]
         private readonly ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
-        public ReadOnlyObservableCollection<Scene> Scenes
+        /// <summary>
+        /// Gets the collection of scenes in the project.
+        /// </summary>
+        public ReadOnlyObservableCollection<Scene>? Scenes
         {
             get; private set;
         }
 
-        private Scene _activeScene;
-        public Scene ActiveScene
+        private Scene? _activeScene;
+        /// <summary>
+        /// Gets or sets the active scene in the project.
+        /// </summary>
+
+        public Scene? ActiveScene
         {
             get => _activeScene;
             set
@@ -84,18 +121,57 @@ namespace PrimalEditor.GameProject
                 OnPropertyChanged(nameof(ActiveScene));
             }
         }
-        public static Project Current => Application.Current.MainWindow?.DataContext as Project;
+        /// <summary>
+        /// Gets the current project.
+        /// </summary>
+        public static Project? Current => Application.Current.MainWindow?.DataContext as Project;
+        /// <summary>
+        /// Gets the undo/redo manager for the project.
+        /// </summary>
         public static UndoRedo UndoRedo { get; } = new UndoRedo();
-        public ICommand UndoCommand { get; private set; }
-        public ICommand RedoCommand { get; private set; }
-        public ICommand AddSceneCommand { get; private set; }
-        public ICommand SaveCommand { get; private set; }
-        public ICommand DebugStartCommand { get; private set; }
-        public ICommand DebugStartWithoutDebuggingCommand { get; private set; }
-        public ICommand DebugStopCommand { get; private set; }
-        public ICommand RemoveSceneCommand { get; private set; }
-        public ICommand BuildCommand { get; private set; }
-        public ICommand ExitCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for undoing the last action.
+        /// </summary>
+        public ICommand? UndoCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for redoing the last undone action.
+        /// </summary>
+        public ICommand? RedoCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for adding a new scene to the project.
+        /// </summary>
+        public ICommand? AddSceneCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for saving the project.
+        /// </summary>
+        public ICommand? SaveCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for starting debugging of the project.
+        /// </summary>
+        public ICommand? DebugStartCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for starting the project without debugging.
+		/// </summary>
+        public ICommand? DebugStartWithoutDebuggingCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for stopping debugging of the project.
+        /// </summary>
+        public ICommand? DebugStopCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for removing a scene from the project.
+        /// </summary>
+        public ICommand? RemoveSceneCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for building the project.
+        /// </summary>
+        public ICommand? BuildCommand { get; private set; }
+        /// <summary>
+        /// Gets the command for exiting the project.
+        /// </summary>
+        public ICommand? ExitCommand { get; private set; }
+        /// <summary>
+        /// Gets the path to the content folder for the project.
+        /// </summary>
         public string ContentPath => $@"{Path}Content\";
         private void SetCommands()
         {
@@ -139,7 +215,6 @@ namespace PrimalEditor.GameProject
             OnPropertyChanged(nameof(BuildCommand));
             OnPropertyChanged(nameof(ExitCommand));
         }
-
         private void InitiatializeExitIntent()
         {
             if (_isModified)
@@ -160,7 +235,6 @@ namespace PrimalEditor.GameProject
             if (MessageBox.Show("Are you sure you really want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No) return;
             Application.Current.Shutdown();
         }
-
         private void AddScene(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
@@ -174,11 +248,19 @@ namespace PrimalEditor.GameProject
             _scenes.Remove(scene);
             _isModified = true;
         }
+        /// <summary>
+        /// Loads a project from a file.
+        /// </summary>
+        /// <param name="file">The path to the file to load the project from.</param>
+        /// <returns>The loaded project.</returns>
         public static Project Load(string file)
         {
             Debug.Assert(File.Exists(file));
             return Serializer.FromFile<Project>(file);
         }
+        /// <summary>
+        /// Unloads the project.
+        /// </summary>
         public void Unload()
         {
             UnloadGameCodeDLL();
@@ -209,13 +291,15 @@ namespace PrimalEditor.GameProject
             {
                 bw = new BinaryWriter(File.Open(bin, FileMode.Create, FileAccess.Write));
             }
-            catch (DirectoryNotFoundException ex)
+            catch (DirectoryNotFoundException)
             {
                 SystemOperations.CreateNewFolderWithName($@"{Path}x64\{configName}");
                 bw = new BinaryWriter(File.Open(bin, FileMode.Create, FileAccess.Write));
             }
             using (bw)
             {
+                if (ActiveScene == null) return;
+                if (ActiveScene.GameEntities == null) return;
                 bw.Write(ActiveScene.GameEntities.Count);
                 foreach (var entity in ActiveScene.GameEntities)
                 {
@@ -239,7 +323,7 @@ namespace PrimalEditor.GameProject
                 Debug.Assert(Directory.Exists(path));
 
             }
-            catch (DirectoryNotFoundException ex)
+            catch (DirectoryNotFoundException)
             {
                 Debug.Assert(File.Exists(path));
             }
@@ -291,7 +375,7 @@ namespace PrimalEditor.GameProject
             if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
             {
                 AvailableScripts = EngineAPI.GetScriptNames();
-                ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
+                ActiveScene?.GameEntities?.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, "Game code Dll loaded successfully");
             }
             else
@@ -299,17 +383,15 @@ namespace PrimalEditor.GameProject
                 Logger.Log(MessageType.Warning, "Failed to load game code DLL file. Try to build the project first");
             }
         }
-
         private void UnloadGameCodeDLL()
         {
-            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
+            ActiveScene?.GameEntities?.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
             if (EngineAPI.UnloadGameCodeDll() != 0)
             {
                 Logger.Log(MessageType.Info, "Game code Dll unloaded successfully");
                 AvailableScripts = null;
             }
         }
-
         [OnDeserialized]
         private async void OnDeserialized(StreamingContext context)
         {
@@ -318,11 +400,14 @@ namespace PrimalEditor.GameProject
                 Scenes = new ReadOnlyObservableCollection<Scene>(_scenes);
                 OnPropertyChanged(nameof(Scenes));
             }
-            ActiveScene = _scenes.FirstOrDefault(x => x.IsActive);
+            ActiveScene = _scenes?.FirstOrDefault(x => x.IsActive);
             Debug.Assert(ActiveScene != null);
             await BuildGameCodeDLL(false);
             SetCommands();
         }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Project"/> class with the specified name and path.
+		/// </summary>
         public Project(string name, string path)
         {
             Name = name;
@@ -330,6 +415,5 @@ namespace PrimalEditor.GameProject
             Debug.Assert(File.Exists((Path + Name + Extension).ToLower()));
             OnDeserialized(new StreamingContext());
         }
-
     }
 }

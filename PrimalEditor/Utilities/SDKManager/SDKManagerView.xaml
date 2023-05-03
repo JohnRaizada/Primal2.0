@@ -9,19 +9,19 @@
 		Title="SDK Manager" Height="450" Width="800"
 		Style="{StaticResource PrimalWindowStyle}">
 	<Window.Resources>
-        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:Platforms"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+		<ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="local:Platforms"/>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
 
-        <ObjectDataProvider x:Key="datasFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:Headings"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+		<ObjectDataProvider x:Key="datasFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="local:Headings"/>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
 
-    </Window.Resources>
+	</Window.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
@@ -45,9 +45,9 @@
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<StackPanel Grid.Row="0" Background="{StaticResource Editor.Window.GrayBrush3}" DockPanel.Dock="Top">
-				<StackPanel.Style>
-					<Style TargetType="{x:Type StackPanel}">
+			<Grid Grid.Row="0" Background="{StaticResource Editor.Window.GrayBrush3}" DockPanel.Dock="Top">
+				<Grid.Style>
+					<Style TargetType="{x:Type Grid}">
 						<Setter Property="Visibility" Value="Collapsed"/>
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding SelectedItem, ElementName=platformsList}" Value="{x:Static local:Platforms.Android}">
@@ -55,7 +55,7 @@
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
-				</StackPanel.Style>
+				</Grid.Style>
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
@@ -74,69 +74,21 @@
 					</DockPanel>
 					<TabControl Grid.Row="2" Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
 						<TabItem Header="Platforms" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-								<TextBlock Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine will automatically check for updates. Check 'show package details' to display individual SDK components." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-								<StackPanel Orientation="Horizontal" Margin="1">
-									<CheckBox Margin="1" Padding="1" x:Name="showPackageDetails" Click="ShowPackageDetails_Clicked"/>
-									<TextBlock Text="Show package details" Margin="1" Padding="1"/>
-								</StackPanel>
-								<!--<Border BorderBrush="{StaticResource Editor.Window.GrayBrush3}" BorderThickness="1">
-									<Grid x:Name="ColumnHeaders" Grid.Row="1" HorizontalAlignment="Stretch" Margin="0" Grid.IsSharedSizeScope="True" >
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="*" MinWidth="20" SharedSizeGroup="A"/>
-											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="B"/>
-											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="C"/>
-											<ColumnDefinition Width="*" MinWidth="100" SharedSizeGroup="D"/>
-										</Grid.ColumnDefinitions>
-										<TextBlock Text="Name" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
-										<GridSplitter Grid.Column="0" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right" DragDelta="GridSplitter_DragDelta"/>
-										<TextBlock Grid.Column="1" Text="API Level" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
-										<GridSplitter Grid.Column="1" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right"/>
-										<TextBlock Grid.Column="2" Text="Revision" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
-										<GridSplitter Grid.Column="2" Width="5" Background="{StaticResource Editor.Window.GrayBrush3}" HorizontalAlignment="Right"/>
-										<TextBlock Grid.Column="3" Text="Status" TextAlignment="Center" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
-									</Grid>
-								</Border>
-								<ListView x:Name="myList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
-									<ListView.ItemTemplate>
-										<DataTemplate>
-                                            <Expander PreviewMouseUp="Expander_MouseUp" Background="{StaticResource Editor.Window.GrayBrush4}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="{Binding ElementName=ColumnHeaders,Path=Width}" MaxWidth="{Binding ElementName=ColumnHeaders,Path=MaxWidth}" MinWidth="{Binding ElementName=ColumnHeaders,Path=MinWidth}">
-													<Expander.Header>
-														<TextBlock Text="{Binding Name}"/>
-													</Expander.Header>
-													<Expander.Style>
-														<Style TargetType="Expander">
-															<Setter Property="IsExpanded" Value="{Binding ElementName=showPackageDetails, Path=IsChecked}" />
-															<Style.Triggers>
-																<DataTrigger Binding="{Binding ElementName=showPackageDetails, Path=IsChecked}" Value="False">
-																	<Setter Property="IsExpanded" Value="False" />
-																</DataTrigger>
-															</Style.Triggers>
-														</Style>
-												</Expander.Style>
-												<Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Stretch" x:Name="SecondGrid" Margin="1">
-													<Grid.ColumnDefinitions>
-														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[0].MaxWidth}" SharedSizeGroup="A"/>
-														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[1].MaxWidth}" SharedSizeGroup="B"/>
-														<ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[2].MaxWidth}" SharedSizeGroup="C"/>
-                                                        <ColumnDefinition MinWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].MinWidth}" Width="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].Width}" MaxWidth="{Binding ElementName=ColumnHeaders, Path=ColumnDefinitions[3].MaxWidth}" SharedSizeGroup="D"/>
-                                                    </Grid.ColumnDefinitions>
-													<TextBlock Text="{Binding Name}"/>
-													<TextBlock Grid.Column="1" Text="{Binding APILevel}"/>
-													<TextBlock Grid.Column="2" Text="{Binding Name}"/>
-													<TextBlock Grid.Column="3" Text="{Binding APILevel}"/>
-												</Grid>
-											</Expander>
-										</DataTemplate>
-									</ListView.ItemTemplate>
-									<ListView.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Margin="1" />
-										</ItemsPanelTemplate>
-									</ListView.ItemsPanel>
-								</ListView>-->
-                                <utl:ExpanderListView x:Name="myCustomElement" HeaderSource="{Binding Source={StaticResource datasFromEnum}}" IsToggled="{Binding ElementName=showPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True"/>
-                            </StackPanel>
+							<Grid Background="{StaticResource Editor.Window.GrayBrush4}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0" Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine will automatically check for updates. Check 'show package details' to display individual SDK components." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
+									<CheckBox DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showPackageDetails" Click="ShowPackageDetails_Clicked"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show package details" Margin="1" Padding="1"/>
+                                    <RadioButton DockPanel.Dock="Right" x:Name="listViewRadioButton" IsChecked="True" Checked="RadioButton_Checked" Unchecked="RadioButton_UnChecked"/>
+									<RadioButton DockPanel.Dock="Right"/>
+								</DockPanel>
+                                <utl:ExpanderListView Grid.Row="2" x:Name="myCustomElement" HeaderSource="{Binding Source={StaticResource datasFromEnum}}" IsToggled="{Binding ElementName=showPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True" ContentViewMode="List"/>
+                            </Grid>
 						</TabItem>
 						<TabItem Header="Tools" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
 							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
@@ -196,7 +148,7 @@
 						</TabItem>
 					</TabControl>
 				</Grid>
-			</StackPanel>
+			</Grid>
 			<DockPanel Grid.Row="1" DockPanel.Dock="Bottom" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
 				<Button Content="Download and Install" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnSDKManager_ActionButton_Click"/>
 				<Button Content="Cancel" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_DismissButton_Click"/>

@@ -4,6 +4,7 @@
 					xmlns:local="clr-namespace:PrimalEditor.Dictionaries"
 					xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 	<local:MethodToValueConverter x:Key="MethodToValueConverter" />
+	<local:ContentViewModeToVisibilityConverter x:Key="ContentViewModeToVisibilityConverter" />
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<local:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
 	<Style x:Key="EnableDisableTextBlockStyle" TargetType="{x:Type TextBlock}">
@@ -76,30 +77,30 @@
 				<Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush3}"/>
 			</Trigger>
 		</Style.Triggers>
-    </Style>
-    <Style TargetType="{x:Type Expander}" x:Key="EnableDisableSubItemUniformExpander">
-        <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}" />
-        <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="1"/>
-        <Setter Property="Padding" Value="1"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style TargetType="{x:Type utl:SteppedSlider}" x:Key="EnableDisableSteppedSlider">
-        <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
-        <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="1"/>
-        <Setter Property="Padding" Value="1"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
+	</Style>
+	<Style TargetType="{x:Type Expander}" x:Key="EnableDisableSubItemUniformExpander">
+		<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}" />
+		<Setter Property="FontWeight" Value="Normal"/>
+		<Setter Property="Margin" Value="1"/>
+		<Setter Property="Padding" Value="1"/>
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style TargetType="{x:Type utl:SteppedSlider}" x:Key="EnableDisableSteppedSlider">
+		<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
+		<Setter Property="FontWeight" Value="Normal"/>
+		<Setter Property="Margin" Value="1"/>
+		<Setter Property="Padding" Value="1"/>
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
 		<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="HorizontalAlignment" Value="Left"/>
@@ -811,25 +812,25 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type utl:SteppedSlider}">
-                    <StackPanel x:Name="Collector">
-                        <Slider x:Name="PART_SLIDER" Grid.Row="0" IsSnapToTickEnabled="True" TickPlacement="BottomRight"/>
+					<StackPanel x:Name="Collector">
+						<Slider x:Name="PART_SLIDER" Grid.Row="0" IsSnapToTickEnabled="True" TickPlacement="BottomRight"/>
 						<UniformGrid x:Name="PART_STACKPANEL" Grid.Row="1" HorizontalAlignment="Stretch" Margin="0"/>
 					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
-    <Style TargetType="{x:Type utl:CheckboxMatrix}" x:Key="{x:Type utl:CheckboxMatrix}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type utl:CheckboxMatrix}">
-                    <Grid x:Name="checkBox">
-                        
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	<Style TargetType="{x:Type utl:CheckboxMatrix}" x:Key="{x:Type utl:CheckboxMatrix}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type utl:CheckboxMatrix}">
+					<Grid x:Name="checkBox">
+						
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 	<Style TargetType="{x:Type utl:TextBoxBlockCombo}" x:Key="{x:Type utl:TextBoxBlockCombo}">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -841,40 +842,67 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		</Style>
+		<Style TargetType="{x:Type utl:ExpanderListView}" x:Key="{x:Type utl:ExpanderListView}">
+			<Setter Property="Template">
+				<Setter.Value>
+				<ControlTemplate TargetType="{x:Type utl:ExpanderListView}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<Border Grid.Row="0" x:Name="PART_ColumnHeadersBorder" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" BorderThickness="1" Margin="1" Padding="1">
+							<Grid x:Name="PART_ColumnHeaders" HorizontalAlignment="Stretch" Margin="1" Grid.IsSharedSizeScope="True" />
+						</Border>
+						<ScrollViewer Grid.Row="1">
+							<ListView x:Name="PART_ContentList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+                                        <Grid x:Name="ListMenuItemGrid">
+                                            <DockPanel Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type utl:ExpanderListView}}, Path=ContentViewMode, Converter={StaticResource ContentViewModeToVisibilityConverter}}" LastChildFill="False" x:Name="ListViewDockPanel" Margin="1">
+                                                <Grid DockPanel.Dock="Left" Grid.IsSharedSizeScope="True" HorizontalAlignment="Stretch" Margin="1"/>
+                                            </DockPanel>
+                                            <Expander x:Name="ListViewExpander" Background="{StaticResource Editor.Window.GrayBrush4}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="{Binding ElementName=PART_ColumnHeaders,Path=Width}" MaxWidth="{Binding ElementName=PART_ColumnHeaders,Path=MaxWidth}" MinWidth="{Binding ElementName=PART_ColumnHeaders,Path=MinWidth}" >
+												<Expander.Style>
+													<Style TargetType="{x:Type Expander}">
+														<Setter Property="Visibility" Value="Collapsed"/>
+														<Style.Triggers>
+															<DataTrigger Binding="{Binding ElementName=ListViewDockPanel, Path=IsVisible}" Value="False">
+																<Setter Property="Visibility" Value="Visible"/>
+															</DataTrigger>
+															<DataTrigger Binding="{Binding ElementName=ListViewDockPanel, Path=Visibility}" Value="Hidden">
+																<Setter Property="Visibility" Value="Visible"/>
+															</DataTrigger>
+															<DataTrigger Binding="{Binding ElementName=ListViewDockPanel, Path=Visibility}" Value="Collapsed">
+																<Setter Property="Visibility" Value="Visible"/>
+															</DataTrigger>
+														</Style.Triggers>
+													</Style>
+												</Expander.Style>
+												<Expander.Header>
+													<StackPanel Orientation="Horizontal">
+														<CheckBox/>
+														<TextBlock Text="{Binding Name}"/>
+													</StackPanel>
+												</Expander.Header>
+												<Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Stretch" x:Name="SecondGrid" Margin="1"/>
+											</Expander>
+										</Grid>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+								<ListView.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Margin="1" />
+									</ItemsPanelTemplate>
+								</ListView.ItemsPanel>
+							</ListView>
+						</ScrollViewer>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
-    <Style TargetType="{x:Type utl:ExpanderListView}" x:Key="{x:Type utl:ExpanderListView}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type utl:ExpanderListView}">
-                    <StackPanel>
-                        <Border x:Name="PART_ColumnHeadersBorder" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" BorderThickness="1" Margin="1" Padding="1">
-                            <Grid x:Name="PART_ColumnHeaders" HorizontalAlignment="Stretch" Margin="1" Grid.IsSharedSizeScope="True" />
-                        </Border>
-                        <ListView x:Name="PART_ContentList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Expander Background="{StaticResource Editor.Window.GrayBrush4}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1" Width="{Binding ElementName=PART_ColumnHeaders,Path=Width}" MaxWidth="{Binding ElementName=PART_ColumnHeaders,Path=MaxWidth}" MinWidth="{Binding ElementName=PART_ColumnHeaders,Path=MinWidth}" >
-                                        <Expander.Header>
-                                            <StackPanel Orientation="Horizontal">
-                                                <CheckBox/>
-                                                <TextBlock Text="{Binding Name}"/>
-                                            </StackPanel>
-                                        </Expander.Header>
-                                        <Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Stretch" x:Name="SecondGrid" Margin="1"/>
-                                    </Expander>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Margin="1" />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                        </ListView>
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 	<Style TargetType="{x:Type utl:TextBoxBlockCombo}" x:Key="TextBoxBlockComboWithBorder">
 		<Setter Property="Template">
 			<Setter.Value>

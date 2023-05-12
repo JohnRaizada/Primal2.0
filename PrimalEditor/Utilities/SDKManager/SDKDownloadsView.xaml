@@ -1,0 +1,116 @@
+﻿<Window x:Class="PrimalEditor.Utilities.SDKDownloadsView"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:PrimalEditor.Utilities" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
+		d:DataContext="{d:DesignInstance Type=local:Downloads}"
+		mc:Ignorable="d"
+		Title="Download" Height="450" Width="800"
+		Style="{StaticResource PrimalWindowStyle}">
+	<Window.Resources>
+		<local:ProgressToForegroundConverter x:Key="ProgressToForegroundConverter"/>
+	</Window.Resources>
+	<Grid Margin="1">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<DockPanel Grid.Row="0" Margin="1" LastChildFill="False">
+			<TextBlock DockPanel.Dock="Left" Margin="1" Padding="1" FontWeight="Black" Foreground="{StaticResource Editor.Disabled.FontBrush}" FontSize="20">
+				<TextBlock.Style>
+					<Style TargetType="{x:Type TextBlock}">
+						<Setter Property="Text" Value="Downloading Items..."/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=totalProgress, Path=Text}" Value="100%">
+								<Setter Property="Text" Value="Downloaded Items..."/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+			<TextBlock DockPanel.Dock="Right" Text="{Binding AverageProgress, StringFormat='\{0\}%'}" Margin="1" Padding="1" FontWeight="UltraBlack" Style="{StaticResource EnableDisableNotificationTextBlockStyle}" FontSize="30" x:Name="totalProgress"/>
+		</DockPanel>
+		<Grid Grid.Row="1" Margin="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Border Background="{StaticResource Editor.Window.GrayBrush2}" BorderBrush="{StaticResource Editor.Window.GrayBrush4}" BorderThickness="1" CornerRadius="10" Margin="20,1,1,1" Padding="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="downloadProgressBox">
+				<Grid>
+					<Grid.Resources>
+						<Style TargetType="TextBlock" BasedOn="{StaticResource EnableDisableTextBlockStyle}">
+							<Setter Property="VerticalAlignment" Value="Bottom"/>
+							<Setter Property="TextWrapping" Value="Wrap"/>
+						</Style>
+					</Grid.Resources>
+                    <ListBox Margin="1" Padding="1" ItemsSource="{Binding DownloadItems}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="A"/>
+                                        <ColumnDefinition SharedSizeGroup="B"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="{Binding Name}" MinWidth="100"/>
+                                    <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False">
+                                        <TextBlock Text="{Binding Progress, StringFormat= '\{0\}%'}" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                                        <TextBlock Text="{Binding Status}" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                                    </DockPanel>
+                                    <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" Value="{Binding Progress}" HorizontalAlignment="Stretch" Foreground="{Binding Progress, Converter={StaticResource ProgressToForegroundConverter}}" ValueChanged="OnSDKDownloads_ProgressBar_Value_Changed"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+			</Border>
+			<GridSplitter Grid.Column="0" Width="10" Margin="1" Padding="1" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
+			<utl:CommandOutputRelay Grid.Column="1" x:Name="commandOutputRelay" Progress="0" ProgressChanged="OnSDKDownloads_CommandOutputRelay_ProgressChanged"/>
+		</Grid>
+		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="1">
+			<RadioButton Checked="OnSDKDownloads_VisibilityRadioButton_LeftChecked" Margin="1" Padding="1"/>
+			<RadioButton IsChecked="True" Checked="OnSDKDownloads_VisibilityRadioButton_CenterChecked" Margin="1" Padding="1"/>
+			<RadioButton Checked="OnSDKDownloads_VisibilityRadioButton_RightChecked" Margin="1" Padding="1"/>
+		</StackPanel>
+		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="1">
+			<Button Content="Cancel" Margin="1" Click="OnSDKDownloads_CancelButton_Click" Padding="1">
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Visibility" Value="Visible"/>
+						<Setter Property="Background" Value="Transparent"/>
+						<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
+						<Setter Property="BorderBrush" Value="Transparent"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=totalProgress, Path=Text}" Value="100%">
+								<Setter Property="Visibility" Value="Collapsed"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+			</Button>
+			<Button Margin="1" Click="OnSDKDownloads_BackgroundDoneButton_Click" Padding="1" FontWeight="Bold">
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Content" Value="Background"/>
+						<Setter Property="Background" Value="Transparent"/>
+						<Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource Editor.BlueBrush}"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=totalProgress, Path=Text}" Value="100%">
+								<Setter Property="Content" Value="Done"/>
+								<Setter Property="Background" Value="{StaticResource Editor.GreenBrush}"/>
+								<Setter Property="Foreground" Value="{StaticResource Editor.Window.GrayBrush1}"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+			</Button>
+		</StackPanel>
+	</Grid>
+</Window>

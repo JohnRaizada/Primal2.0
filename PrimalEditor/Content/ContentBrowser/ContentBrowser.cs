@@ -61,9 +61,9 @@ namespace PrimalEditor.Content
     }
     class ContentBrowser : ViewModelBase, IDisposable
     {
-        private readonly DelayEventTimer _refreshTimer = new DelayEventTimer(TimeSpan.FromMilliseconds(250));
+        private readonly DelayEventTimer _refreshTimer = new(TimeSpan.FromMilliseconds(250));
         public string ContentFolder { get; }
-        private readonly ObservableCollection<ContentInfo> _folderContent = new ObservableCollection<ContentInfo>();
+        private readonly ObservableCollection<ContentInfo> _folderContent = new();
         public ReadOnlyObservableCollection<ContentInfo> FolderContent { get; }
         private string? _selectedFolder;
         public string? SelectedFolder
@@ -82,7 +82,7 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        private List<string> _selectedItems = new List<string>();
+        private List<string> _selectedItems = new();
         public List<string> SelectedItems
         {
             get => _selectedItems;
@@ -95,7 +95,7 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        private List<ContentInfo> _selectedItemsInfo = new List<ContentInfo>();
+        private List<ContentInfo> _selectedItemsInfo = new();
         public List<ContentInfo> SelectedItemsInfo
         {
             get => _selectedItemsInfo;
@@ -108,7 +108,7 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        private Stack<string> _backPathStack = new Stack<string>();
+        private Stack<string> _backPathStack = new();
         public Stack<string> BackPathStack
         {
             get => _backPathStack;
@@ -121,7 +121,7 @@ namespace PrimalEditor.Content
                 }
             }
         }
-        private Stack<string> _frontPathStack = new Stack<string>();
+        private Stack<string> _frontPathStack = new();
         public Stack<string> FrontPathStack
         {
             get => _frontPathStack;
@@ -252,7 +252,7 @@ namespace PrimalEditor.Content
             SelectedFolder = ContentFolder;
             UpdateAccessibilityStatus();
         }
-        internal void UpdatePathStack(string path)
+        internal void UpdatePathStack(string? path)
         {
             Debug.Assert(path != null);
             Debug.Assert(path.Length > 0);
@@ -307,7 +307,7 @@ namespace PrimalEditor.Content
             folderContent.ForEach(x => _folderContent.Add(x));
         }
 
-        private List<ContentInfo> GetFolderContent(string path)
+        private static List<ContentInfo> GetFolderContent(string path)
         {
             Debug.Assert(!string.IsNullOrEmpty(path));
             var folderContent = new List<ContentInfo>();

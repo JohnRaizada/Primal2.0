@@ -4,23 +4,17 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:PrimalEditor.Utilities"
-		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls" xmlns:system="clr-namespace:System;assembly=netstandard" d:DataContext="{d:DesignInstance Type=local:SDKManager}"
 		mc:Ignorable="d"
 		Title="SDK Manager" Height="450" Width="800"
 		Style="{StaticResource PrimalWindowStyle}">
 	<Window.Resources>
-		<ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+		<ObjectDataProvider x:Key="platformsList" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
 			<ObjectDataProvider.MethodParameters>
 				<x:Type TypeName="local:Platforms"/>
 			</ObjectDataProvider.MethodParameters>
 		</ObjectDataProvider>
-
-		<ObjectDataProvider x:Key="datasFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-			<ObjectDataProvider.MethodParameters>
-				<x:Type TypeName="local:Headings"/>
-			</ObjectDataProvider.MethodParameters>
-		</ObjectDataProvider>
-
+		<local:DataSourceTypeToSliderValueConverter x:Key="DataSourceTypeToSliderValueConverter"/>
 	</Window.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -39,7 +33,7 @@
 				</Style>
 			</StackPanel.Style>
 		</StackPanel>
-		<ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource dataFromEnum}}" x:Name="platformsList"/>
+		<ListBox Grid.Column="0" Grid.Row="1" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource platformsList}}" x:Name="platformsList"/>
 		<Grid Grid.Column="1" Grid.Row="1">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
@@ -49,10 +43,14 @@
 				<Grid.Style>
 					<Style TargetType="{x:Type Grid}">
 						<Setter Property="Visibility" Value="Collapsed"/>
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding SelectedItem, ElementName=platformsList}" Value="{x:Static local:Platforms.Android}">
-								<Setter Property="Visibility" Value="Visible"/>
-							</DataTrigger>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsContentAvailable}" Value="True"/>
+                                    <Condition Binding="{Binding SelectedItem, ElementName=platformsList}" Value="{x:Static local:Platforms.Android}"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
 						</Style.Triggers>
 					</Style>
 				</Grid.Style>
@@ -60,143 +58,156 @@
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
-					<TextBlock Grid.Row="0" Text="Manager for the Android SDK and Tools used by the engine" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+					<DockPanel Grid.Row="0" LastChildFill="False">
+						<TextBlock DockPanel.Dock="Left" Text="Manager for the Android SDK and Tools used by the engine" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+						<TextBlock DockPanel.Dock="Right" Text="{Binding LastSyncTime, StringFormat='Last Sync: {0}'}" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+					</DockPanel>
 					<DockPanel Grid.Row="1" LastChildFill="False">
 						<TextBlock Text="Android SDK Location:" Foreground="{StaticResource Editor.FontBrush}" DockPanel.Dock="Left" VerticalAlignment="Center"/>
-						<utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockComboWithBorder}" Text="Binding SDKPath}" Margin="10,1,1,1" x:Name="SDKPath"/>
-						<Button DockPanel.Dock="Right" Background="Transparent" Click="OnSDKManager_Android_EditButton_Click" BorderBrush="Transparent">
+						<utl:TextBoxBlockCombo Style="{StaticResource TextBoxBlockComboWithBorder}" DockPanel.Dock="Left" Text="{Binding AndroidSDKLocation}" Margin="10,1,1,1" x:Name="SDKPath" Height="25" ValueChanged="OnSDKManager_Android_SDKLocationBox_ValueChanged"/>
+						<Button DockPanel.Dock="Left" Background="Transparent" Click="OnSDKManager_Android_EditButton_Click" BorderBrush="Transparent">
 							<Button.Content>
 								<Path Data="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83l3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z" Fill="{StaticResource Editor.FontBrush}"/>
 							</Button.Content>
 						</Button>
+						<Button DockPanel.Dock="Right" Background="Transparent" Click="OnSDKManager_Android_Sync_Click" BorderBrush="Transparent" VerticalAlignment="Top" Visibility="{Binding ElementName=autoSyncCheckBox, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+							<Button.Content>
+								<Path Data="M30,16c0,3.279-2.631,5.939-5.896,5.995l-0.629-0.001C23.22,25.905,19.975,29,16,29 c-2.464,0-4.634-1.201-6-3.036V27.5c0,0.276-0.224,0.5-0.5,0.5S9,27.776,9,27.5V24h3.5c0.276,0,0.5,0.224,0.5,0.5S12.776,25,12.5,25 h-1.955c1.157,1.798,3.162,3,5.455,3c3.418,0,6.222-2.653,6.475-6.008L9.528,21.974C9.515,21.817,9.5,21.66,9.5,21.5 c0-3.584,2.916-6.5,6.5-6.5c2.292,0,4.298,1.202,5.454,3H19.5c-0.276,0-0.5,0.224-0.5,0.5s0.224,0.5,0.5,0.5H23v-3.5 c0-0.276-0.224-0.5-0.5-0.5S22,15.224,22,15.5v1.528C20.634,15.195,18.462,14,16,14c-4.142,0-7.5,3.358-7.5,7.5 c0,0.16,0.01,0.316,0.022,0.473l-0.061,0C4.848,21.697,2,18.684,2,15c0-3.613,2.738-6.585,6.252-6.959C9.127,4.572,12.259,2,16,2 c4.418,0,8,3.582,8,8C27.314,10,30,12.686,30,16z" Fill="{StaticResource Editor.FontBrush}"/>
+							</Button.Content>
+						</Button>
+						<CheckBox IsChecked="{Binding IsAutoSyncEnabled}" DockPanel.Dock="Right" x:Name="autoSyncCheckBox" Margin="1" VerticalAlignment="Center" Checked="OnSDKManager_AutoSyncCheckbox_Toggled" Unchecked="OnSDKManager_AutoSyncCheckbox_Toggled"/>
+						<TextBlock Text="Enable Auto Sync" Foreground="{StaticResource Editor.FontBrush}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
 					</DockPanel>
-					<TabControl Grid.Row="2" Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-						<TabItem Header="Platforms" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
+					<StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Text="{Binding NotificationText}" Style="{StaticResource EnableDisableNotificationTextBlockStyle}" Visibility="{Binding IsNotificationTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+						<Button Visibility="{Binding IsNotificationReloadButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ControlButton}" Click="OnSDKManager_ReloadButton_Click">
+							<Path Data="M0 16q0-2.784 1.088-5.312t2.912-4.384 4.384-2.912 5.344-1.088q2.784 0 5.312 1.088t4.384 2.912 2.912 4.384 1.088 5.312h2.304q0.736 0 1.28 0.416t0.8 1.024 0.16 1.28-0.64 1.184l-4.576 4.576q-0.672 0.672-1.6 0.672t-1.632-0.672l-4.576-4.576q-0.512-0.512-0.608-1.184t0.128-1.28 0.8-1.024 1.312-0.416h2.272q0-2.464-1.216-4.576t-3.328-3.328-4.576-1.216-4.608 1.216-3.328 3.328-1.216 4.576 1.216 4.608 3.328 3.328 4.608 1.216q1.728 0 3.36-0.64l3.424 3.392q-3.136 1.824-6.784 1.824-2.816 0-5.344-1.088t-4.384-2.912-2.912-4.384-1.088-5.344z" Fill="{StaticResource Editor.BlueBrush}" Stroke="{StaticResource Editor.GreenBrush}" Stretch="Uniform" Height="15"/>
+						</Button>
+                        <Button Visibility="{Binding IsNotificationRefreshButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ControlButton}" Click="OnSDKManager_RefreshButton_Click">
+							<Path Data="M17.8069373,7 C16.4464601,5.07869636 14.3936238,4 12,4 C7.581722,4 4,7.581722 4,12 L2,12 C2,6.4771525 6.4771525,2 12,2 C14.8042336,2 17.274893,3.18251178 19,5.27034886 L19,4 L21,4 L21,9 L16,9 L16,7 L17.8069373,7 Z M6.19306266,17 C7.55353989,18.9213036 9.60637619,20 12,20 C16.418278,20 20,16.418278 20,12 L22,12 C22,17.5228475 17.5228475,22 12,22 C9.19576641,22 6.72510698,20.8174882 5,18.7296511 L5,20 L3,20 L3,15 L8,15 L8,17 L6.19306266,17 Z M12.0003283,15.9983464 C11.4478622,15.9983464 11,15.5506311 11,14.9983464 C11,14.4460616 11.4478622,13.9983464 12.0003283,13.9983464 C12.5527943,13.9983464 13.0006565,14.4460616 13.0006565,14.9983464 C13.0006565,15.5506311 12.5527943,15.9983464 12.0003283,15.9983464 Z M11.0029544,6.99834639 L13.0036109,6.99834639 L13.0036109,12.9983464 L11.0029544,12.9983464 L11.0029544,6.99834639 Z" Fill="{StaticResource Editor.BlueBrush}" Stretch="Uniform" Height="15"/>
+						</Button>
+					</StackPanel>
+					<TabControl Grid.Row="3" Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" x:Name="androidTabControl">
+						<TabItem Header="Platform" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
 							<Grid Background="{StaticResource Editor.Window.GrayBrush4}">
 								<Grid.RowDefinitions>
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
-								<TextBlock Grid.Row="0" Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine will automatically check for updates. Check 'show package details' to display individual SDK components." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-								<DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
-									<CheckBox DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showPackageDetails" Click="ShowPackageDetails_Clicked"/>
-									<TextBlock DockPanel.Dock="Left" Text="Show package details" Margin="1" Padding="1"/>
-                                    <RadioButton DockPanel.Dock="Right" x:Name="listViewRadioButton" IsChecked="True" Checked="RadioButton_Checked" Unchecked="RadioButton_UnChecked"/>
+                                <TextBlock Grid.Row="0" Text="Each Android SDK Platform package includes the Android platform and sources pertaining to an API level by default. Once installed, the engine can check for updates automatically or manually based on your choice. Check 'show package details' to display individual SDK componenets" TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+                                <DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
+									<CheckBox IsChecked="{Binding ShowObsoletePackages}" DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showPlatformObsoletePackages" Checked="OnSDKManager_Android_ObsoletePackagesCheckbox_Toggled" Unchecked="OnSDKManager_Android_ObsoletePackagesCheckbox_Toggled"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show obsolete packages" Margin="1" Padding="1"/>
+									<CheckBox IsChecked="True" DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showPlatformPackageDetails" Visibility="{Binding ElementName=listViewPlatformRadioButton, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show package details" Margin="1" Padding="1" Visibility="{Binding ElementName=showPlatformPackageDetails, Path=Visibility}"/>
+									<RadioButton DockPanel.Dock="Right" x:Name="listViewPlatformRadioButton" IsChecked="True" Checked="Platform_RadioButton_Toggled" Unchecked="Platform_RadioButton_Toggled"/>
 									<RadioButton DockPanel.Dock="Right"/>
 								</DockPanel>
-                                <utl:ExpanderListView Grid.Row="2" x:Name="myCustomElement" HeaderSource="{Binding Source={StaticResource datasFromEnum}}" IsToggled="{Binding ElementName=showPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True" ContentViewMode="List"/>
-                            </Grid>
+								<utl:ExpanderListView Grid.Row="2" x:Name="platformListView" HeaderSource="{Binding AndroidPlatformHeadings}" ContentSource="{Binding AndroidPlatformContent}" IsToggled="{Binding ElementName=showPlatformPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True" ContentViewMode="List" CheckBoxChanged="OnSDKManager_PlatformListView_CheckBoxChanged"/>
+							</Grid>
 						</TabItem>
 						<TabItem Header="Tools" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-								<TextBlock Text="Below are the available SDK developer tools. Once installed, the engine will automatically check for updates. Check 'show package details' to display available versions of an SDK Tool." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-								<StackPanel Orientation="Horizontal" Margin="1">
-									<CheckBox Margin="1" Padding="1"/>
-									<TextBlock Text="Show package details" Margin="1" Padding="1"/>
-								</StackPanel>
-								<ListView>
-									<ListView.View>
-										<GridView>
-											<GridViewColumn Width="70">
-												<GridViewColumn.CellTemplate>
-													<DataTemplate>
-														<StackPanel Orientation="Horizontal" Margin="1">
-															<Grid Margin="1">
-																<Path Data="M18 9L12 15L6 9" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-																<Path Data="M18 15L12 9L6 15" Height="15" Width="15" Stretch="Uniform" Fill="{StaticResource Editor.Disabled.FontBrush}" Margin="1"/>
-															</Grid>
-															<Path Data="M0 16q0 2.912 1.824 5.088t4.576 2.752q0.032 0 0.032-0.032v-0.064t0.032-0.032q0.544-1.344 1.344-2.176t2.208-1.184v-2.336q0-2.496 1.728-4.256t4.256-1.76 4.256 1.76 1.76 4.256v2.336q1.376 0.384 2.176 1.216t1.344 2.144l0.096 0.288h0.384q2.464 0 4.224-1.76t1.76-4.224v-2.016q0-2.464-1.76-4.224t-4.224-1.76q-0.096 0-0.32 0.032 0.32-1.152 0.32-2.048 0-3.296-2.368-5.632t-5.632-2.368q-2.88 0-5.056 1.824t-2.784 4.544q-1.152-0.352-2.176-0.352-3.296 0-5.664 2.336t-2.336 5.664v1.984zM10.016 25.824q-0.096 0.928 0.576 1.6l4 4q0.576 0.576 1.408 0.576t1.408-0.576l4-4q0.672-0.672 0.608-1.6-0.064-0.32-0.16-0.576-0.224-0.576-0.736-0.896t-1.12-0.352h-1.984v-5.984q0-0.832-0.608-1.408t-1.408-0.608-1.408 0.608-0.576 1.408v5.984h-2.016q-0.608 0-1.12 0.352t-0.736 0.896q-0.096 0.288-0.128 0.576z" Stretch="Uniform" Fill="{StaticResource Editor.GreenBrush}" Height="20" Width="20" Margin="1"/>
-															<CheckBox IsChecked="{Binding IsSelected}"/>
-														</StackPanel>
-													</DataTemplate>
-												</GridViewColumn.CellTemplate>
-											</GridViewColumn>
-											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-											<GridViewColumn Header="Version" DisplayMemberBinding="{Binding Revision}"/>
-											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
-										</GridView>
-									</ListView.View>
-									<ListViewItem/>
-									<ListViewItem/>
-								</ListView>
-							</StackPanel>
+							<Grid Background="{StaticResource Editor.Window.GrayBrush4}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0" Text="Below are the available SDK developer tools. Once installed, the engine will automatically check for updates. Check 'show package details' to display available versions of an SDK Tool." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
+									<CheckBox IsChecked="{Binding ShowObsoletePackages}" DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showToolsObsoletePackages" Checked="OnSDKManager_Android_ObsoletePackagesCheckbox_Toggled" Unchecked="OnSDKManager_Android_ObsoletePackagesCheckbox_Toggled"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show obsolete packages" Margin="1" Padding="1"/>
+									<CheckBox IsChecked="True" DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showToolsPackageDetails" Visibility="{Binding ElementName=listViewToolsRadioButton, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show package details" Margin="1" Padding="1" Visibility="{Binding ElementName=showToolsPackageDetails, Path=Visibility}"/>
+									<RadioButton DockPanel.Dock="Right" x:Name="listViewToolsRadioButton" IsChecked="True" Checked="Tools_RadioButton_Toggled" Unchecked="Tools_RadioButton_Toggled"/>
+									<RadioButton DockPanel.Dock="Right"/>
+								</DockPanel>
+								<utl:ExpanderListView Grid.Row="2" x:Name="toolsListView" HeaderSource="{Binding AndroidToolsHeadings}" ContentSource="{Binding AndroidToolsContent}" IsToggled="{Binding ElementName=showToolsPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True" ContentViewMode="List" CheckBoxChanged="OnSDKManager_ToolsListView_CheckBoxChanged"/>
+							</Grid>
 						</TabItem>
 						<TabItem Header="Update Sites" Width="100" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}">
-							<StackPanel Background="{StaticResource Editor.Window.GrayBrush4}">
-								<TextBlock Text="These sites are consulted for installing and updating SDK platforms and tools." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
-								<ListView>
-									<ListView.View>
-										<GridView>
-											<GridViewColumn Header="Enabled">
-												<GridViewColumn.CellTemplate>
-													<DataTemplate>
-														<CheckBox IsChecked="{Binding IsSelected}" HorizontalAlignment="Center"/>
-													</DataTemplate>
-												</GridViewColumn.CellTemplate>
-											</GridViewColumn>
-											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-											<GridViewColumn Header="URL" DisplayMemberBinding="{Binding Status}"/>
-										</GridView>
-									</ListView.View>
-									<ListViewItem/>
-									<ListViewItem/>
-								</ListView>
-							</StackPanel>
+							<Grid Background="{StaticResource Editor.Window.GrayBrush4}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0" Text="These sites are consulted for installing and updating SDK platforms and tools." TextWrapping="Wrap" Foreground="{StaticResource Editor.Disabled.FontBrush}"/>
+								<DockPanel Grid.Row="1" Margin="1" LastChildFill="False">
+									<CheckBox IsChecked="True" DockPanel.Dock="Left" Margin="1" Padding="1" x:Name="showUpdateSitesPackageDetails" Visibility="{Binding ElementName=updateSitesListViewRadioButton, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+									<TextBlock DockPanel.Dock="Left" Text="Show package details" Margin="1" Padding="1" Visibility="{Binding ElementName=showUpdateSitesPackageDetails, Path=Visibility}"/>
+									<RadioButton DockPanel.Dock="Right" x:Name="updateSitesListViewRadioButton" Checked="UpdateSites_RadioButton_Toggled" Unchecked="UpdateSites_RadioButton_Toggled"/>
+									<RadioButton DockPanel.Dock="Right" IsChecked="True"/>
+								</DockPanel>
+								<utl:ExpanderListView Grid.Row="2" x:Name="updateSitesListView" HeaderSource="{Binding AndroidUpdateSitesHeadings}" ContentSource="{Binding AndroidUpdateSitesContent}" IsToggled="{Binding ElementName=showUpdateSitesPackageDetails, Path=IsChecked, Mode=TwoWay}" IsSaved="True" ContentViewMode="Expander"/>
+							</Grid>
 						</TabItem>
 					</TabControl>
 				</Grid>
 			</Grid>
-			<DockPanel Grid.Row="1" DockPanel.Dock="Bottom" LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush3}">
-				<Button Content="Download and Install" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnSDKManager_ActionButton_Click"/>
-				<Button Content="Cancel" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_DismissButton_Click"/>
-			</DockPanel>
+			<Grid Grid.Row="1" DockPanel.Dock="Bottom" Background="{StaticResource Editor.Window.GrayBrush3}">
+				<ProgressBar x:Name="syncingBar" IsIndeterminate="True" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Editor.GreenBrush}" Visibility="Collapsed"/>
+				<DockPanel LastChildFill="False">
+					<Button Content="Apply" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" FontWeight="ExtraBold" Click="OnSDKManager_ApplyButton_Click">
+						<Button.Style>
+							<Style TargetType="{x:Type Button}">
+								<Setter Property="IsEnabled" Value="False"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ElementName=platformListView, Path=IsSaved}" Value="False">
+										<Setter Property="IsEnabled" Value="True"/>
+									</DataTrigger>
+									<DataTrigger Binding="{Binding ElementName=toolsListView, Path=IsSaved}" Value="False">
+										<Setter Property="IsEnabled" Value="True"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+					<Button Content="OK" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="{StaticResource Editor.BlueBrush}" Foreground="{StaticResource Editor.Window.GrayBrush1}" FontWeight="ExtraBold" Click="OnSDKManager_OkButton_Click"/>
+					<Button Content="Cancel" DockPanel.Dock="Right" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_DismissButton_Click"/>
+					<Button DockPanel.Dock="Left" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_WarningButton_Click">
+						<Button.Content>
+							<Path Data="M928.99 755.83 574.6 203.25c-12.89-20.16-36.76-32.58-62.6-32.58s-49.71 12.43-62.6 32.58L95.01 755.83c-12.91 20.12-12.9 44.91.01 65.03 12.92 20.12 36.78 32.51 62.59 32.49h708.78c25.82.01 49.68-12.37 62.59-32.49 12.91-20.12 12.92-44.91.01-65.03zM554.67 768h-85.33v-85.33h85.33V768zm0-426.67v298.66h-85.33V341.32l85.33.01z" Fill="{StaticResource Editor.OrangeBrush}" Stroke="{StaticResource Editor.RedBrush}" Stretch="Uniform" Height="18"/>
+						</Button.Content>
+						<Button.Style>
+							<Style TargetType="{x:Type Button}">
+								<Setter Property="Visibility" Value="Collapsed"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Value, ElementName=dataSourceSwitch}" Value="0">
+										<Setter Property="Visibility" Value="Visible"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+					<Button DockPanel.Dock="Left" Padding="1" Margin="1,1,10,1" Background="Transparent" BorderBrush="Transparent" Click="OnSDKManager_InfoButton_Click">
+						<Button.Content>
+							<Path Data="M21.5609 10.7381L20.2109 9.15812C19.9609 8.85812 19.7509 8.29813 19.7509 7.89813V6.19812C19.7509 5.13812 18.8809 4.26812 17.8209 4.26812H16.1209C15.7209 4.26812 15.1509 4.05813 14.8509 3.80812L13.2709 2.45812C12.5809 1.86813 11.4509 1.86813 10.7609 2.45812L9.16086 3.80812C8.86086 4.05813 8.30086 4.26812 7.90086 4.26812H6.17086C5.11086 4.26812 4.24086 5.13812 4.24086 6.19812V7.89813C4.24086 8.28813 4.04086 8.84812 3.79086 9.14812L2.44086 10.7381C1.86086 11.4381 1.86086 12.5581 2.44086 13.2381L3.79086 14.8281C4.04086 15.1181 4.24086 15.6881 4.24086 16.0781V17.7881C4.24086 18.8481 5.11086 19.7181 6.17086 19.7181H7.91086C8.30086 19.7181 8.87086 19.9281 9.17086 20.1781L10.7509 21.5281C11.4409 22.1181 12.5709 22.1181 13.2609 21.5281L14.8409 20.1781C15.1409 19.9281 15.7009 19.7181 16.1009 19.7181H17.8009C18.8609 19.7181 19.7309 18.8481 19.7309 17.7881V16.0881C19.7309 15.6881 19.9409 15.1281 20.1909 14.8281L21.5409 13.2481C22.1509 12.5681 22.1509 11.4381 21.5609 10.7381ZM11.2509 8.12813C11.2509 7.71813 11.5909 7.37813 12.0009 7.37813C12.4109 7.37813 12.7509 7.71813 12.7509 8.12813V12.9581C12.7509 13.3681 12.4109 13.7081 12.0009 13.7081C11.5909 13.7081 11.2509 13.3681 11.2509 12.9581V8.12813ZM12.0009 16.8681C11.4509 16.8681 11.0009 16.4181 11.0009 15.8681C11.0009 15.3181 11.4409 14.8681 12.0009 14.8681C12.5509 14.8681 13.0009 15.3181 13.0009 15.8681C13.0009 16.4181 12.5609 16.8681 12.0009 16.8681Z" Fill="{StaticResource Editor.BlueBrush}" Stroke="{StaticResource Editor.Window.GrayBrush1}" Stretch="Uniform" Height="18"/>
+						</Button.Content>
+						<Button.Style>
+							<Style TargetType="{x:Type Button}">
+								<Setter Property="Visibility" Value="Collapsed"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Value, ElementName=dataSourceSwitch}" Value="0">
+										<Setter Property="Visibility" Value="Visible"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+					<TextBlock Text="Fetch Data From" Style="{StaticResource EnableDisableItemTextBlockStyle}" VerticalAlignment="Center"/>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Web" Foreground="{StaticResource Editor.FontBrush}" VerticalAlignment="Center"/>
+						<Slider Style="{StaticResource SwitchAppearance}" MinWidth="30" Maximum="1" Minimum="0" Value="{Binding DataSource, Mode=TwoWay, Converter={StaticResource DataSourceTypeToSliderValueConverter}}" IsSnapToTickEnabled="True" BorderBrush="{StaticResource Editor.Disabled.OrangeBrush}" BorderThickness="1" SmallChange="1" LargeChange="1" ValueChanged="OnSDKManager_DataSourceSwitch_ValueChanged" x:Name="dataSourceSwitch"/>
+						<TextBlock Text="Local" Foreground="{StaticResource Editor.FontBrush}" VerticalAlignment="Center"/>
+					</StackPanel>
+				</DockPanel>
+			</Grid>
 		</Grid>
-		<!--<ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding Path=SelectedSdkDetails}">
-			<ContentControl.Resources>
-				<DataTemplate DataType="{x:Type local:AndroidSdkDetails}">
-					<Grid>
-						<TabControl>
-							<TabItem Header="Platforms">
-								<ListView ItemsSource="{Binding Platforms}">
-									<ListView.View>
-										<GridView>
-											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-											<GridViewColumn Header="API Level" DisplayMemberBinding="{Binding APILevel}" />
-											<GridViewColumn Header="Revision" DisplayMemberBinding="{Binding Revision}" />
-											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
-										</GridView>
-									</ListView.View>
-								</ListView>
-							</TabItem>
-							<TabItem Header="Tools">
-								<ListView ItemsSource="{Binding Tools}">
-									<ListView.View>
-										<GridView>
-											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-											<GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}" />
-											<GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
-										</GridView>
-									</ListView.View>
-								</ListView>
-							</TabItem>
-							<TabItem Header="Update Sites">
-								<ListView ItemsSource="{Binding UpdateSites}">
-									<ListView.View>
-										<GridView>
-											<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-											<GridViewColumn Header="URL" DisplayMemberBinding="{Binding URL}" />
-										</GridView>
-									</ListView.View>
-								</ListView>
-							</TabItem>
-						</TabControl>
-					</Grid>
-				</DataTemplate>
-			</ContentControl.Resources>
-		</ContentControl>-->
 		<GridSplitter Grid.Column="0" Grid.Row="1" Width="5" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Stretch"/>
 	</Grid>
 </Window>

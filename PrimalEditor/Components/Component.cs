@@ -9,10 +9,7 @@ namespace PrimalEditor.Components
     /// <summary>
     /// It is an interface to interact with multi selection components like MSTransform.
     /// </summary>
-    public interface IMSComponent
-    {
-        
-    }
+    public interface IMSComponent { }
     /// <summary>
     /// It is a high level abstraction for a single selection component like Transform
     /// </summary>
@@ -27,30 +24,29 @@ namespace PrimalEditor.Components
         /// <summary>
         /// This method just returns the multiselection component.
         /// </summary>
-        /// <param name="msEntity"></param>
+        /// <param name="msEntity">The multiselection entity required to perform the operation</param>
         /// <returns></returns>
         public abstract IMSComponent GetMultiselectionComponent(MSEntity msEntity);
         /// <summary>
         /// This method writes the game data to the binary file
         /// </summary>
-        /// <param name="bw"></param>
+        /// <param name="bw">The writer to be used for writing to the binary</param>
         public abstract void WriteToBinary(BinaryWriter bw);
         /// <summary>
         /// Constructor of Component class which inherits from ViewModelBase and initializes the Owner.
         /// </summary>
-        /// <param name="owner"></param>
+        /// <param name="owner">The game entity to which this component belongs</param>
         public Component(GameEntity owner)
         {
             Debug.Assert(owner != null);
             Owner = owner;
         }
     }
-
     abstract class MSComponent<T> : ViewModelBase, IMSComponent where T : Component
     {
         private bool _enableUpdates = true;
         public List<T> SelectedComponents { get; }
-        protected abstract bool UpdateComponents(string propertyName);
+        protected abstract bool UpdateComponents(string? propertyName);
         protected abstract bool UpdateMSComponents();
         public void Refresh()
         {
@@ -58,7 +54,6 @@ namespace PrimalEditor.Components
             UpdateMSComponents();
             _enableUpdates = true;
         }
-
         public MSComponent(MSEntity msEntity)
         {
             Debug.Assert(msEntity?.SelectedEntities.Any() == true);

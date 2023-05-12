@@ -8,11 +8,10 @@ namespace PrimalEditor.Utilities
     /// </summary>
     public partial class LoggerView : UserControl
     {
-        public LoggerView()
-        {
-            InitializeComponent();
-        }
-
+        /// <summary>
+        /// The user control for displaying and interacting with system generated logs of various severity.
+        /// </summary>
+        public LoggerView() => InitializeComponent();
         private void OnClear_Button_Click(object sender, RoutedEventArgs e)
         {
             Logger.Clear();
@@ -23,14 +22,14 @@ namespace PrimalEditor.Utilities
                 Height = 200,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
-
-            var textBlock = new TextBlock { Text = "Hello, World!" };
-            textBlock.Style = (Style)Application.Current.FindResource("LightTextBlockStyle");
-
+            var textBlock = new TextBlock
+            {
+                Text = "Hello, World!",
+                Style = (Style)Application.Current.FindResource("LightTextBlockStyle")
+            };
             floatingWindow.Content = textBlock;
             floatingWindow.Show();
         }
-
         private void OnMessageFilter_Button_Click(object sender, RoutedEventArgs e)
         {
             var filter = 0x0;

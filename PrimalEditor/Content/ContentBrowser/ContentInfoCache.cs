@@ -60,6 +60,7 @@ namespace PrimalEditor.Content
                     var info = _contentInfoCache[key];
                     writer.Write(key);
                     writer.Write(info.DateModified.ToBinary());
+                    if (info.Icon == null) return;
                     writer.Write(info.Icon.Length);
                     writer.Write(info.Icon);
                 }

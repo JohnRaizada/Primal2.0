@@ -1,4 +1,5 @@
 ﻿using PrimalEditor.Content;
+using PrimalEditor.Utilities.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,34 +17,41 @@ namespace PrimalEditor
 {
     static class VisualExtensions
     {
-        public static T FindVisualParent<T>(this DependencyObject depObject) where T : DependencyObject
+        public static T? FindVisualParent<T>(this DependencyObject depObject) where T : DependencyObject
         {
-            if (!(depObject is Visual)) return null;
+            if (depObject is not Visual) return null;
             var parent = VisualTreeHelper.GetParent(depObject);
             while (parent != null)
             {
-                if (parent is T type)
-                {
-                    return type;
-                }
+                if (parent is T type) return type;
                 parent = VisualTreeHelper.GetParent(parent);
             }
             return null;
         }
     }
+    /// <summary>
+    /// Contains accessibility methods which might be useful when performing a plethora of files and folders related tasks.
+    /// </summary>
     public static class ContentHelper
     {
+        /// <summary>
+        /// Generates a string of given length with random characters
+        /// </summary>
+        /// <param name="length">The length of desired string. Defaults to 8.</param>
+        /// <returns>A string which contains system generated random characters of given length</returns>
         public static string GetRandomString(int length = 8)
         {
             if (length <= 0) length = 8;
             var n = length / 11;
             var sb = new StringBuilder();
-            for (int i = 0; i <= n; ++i)
-            {
-                sb.Append(Path.GetRandomFileName().Replace(".", ""));
-            }
+            for (int i = 0; i <= n; ++i) sb.Append(Path.GetRandomFileName().Replace(".", ""));
             return sb.ToString(0, length);
         }
+        /// <summary>
+        /// Determines whether the given path is a valid directory
+        /// </summary>
+        /// <param name="path">The path of the directory whose existence is in question</param>
+        /// <returns>A boolean value based on whether the given path was indeed a directory</returns>
         public static bool IsDirectory(string path)
         {
             try
@@ -52,33 +61,52 @@ namespace PrimalEditor
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
             return false;
         }
+        /// <summary>
+        /// Determines whether the given fileinfo belongs to a directory
+        /// </summary>
+        /// <param name="info">The fileinfo of the directory whose validity is in question</param>
+        /// <returns>A non-nullable boolean value based on whether the given fileinfo was indeed a directory</returns>
         public static bool IsDirectory(this FileInfo info) => info.Attributes.HasFlag(FileAttributes.Directory);
+        /// <summary>
+        /// Compares between two given datetimes and checks if the later is indeed the later one
+        /// </summary>
+        /// <param name="date">The first datetime object to be compared</param>
+        /// <param name="other">The second datetime object to be compared</param>
+        /// <returns></returns>
         public static bool IsOlder(this DateTime date, DateTime other) => date < other;
+        /// <summary>
+        /// Cleans up invalid file characters and generates a very valid file name closest to the given one
+        /// </summary>
+        /// <param name="name">Takes the file name which needs to be fixed</param>
+        /// <returns>A </returns>
         public static string SanitizeFileName(string name)
         {
-            var path = new StringBuilder(name.Substring(0, name.LastIndexOf(Path.DirectorySeparatorChar) + 1));
+            StringBuilder path = new(name[..(name.LastIndexOf(Path.DirectorySeparatorChar) + 1)]);
             var file = new StringBuilder(name[(name.LastIndexOf(Path.DirectorySeparatorChar) + 1)..]);
-            foreach (var c in Path.GetInvalidPathChars())
-            {
-                path.Replace(c, '_');
-            }
-            foreach (var c in Path.GetInvalidFileNameChars())
-            {
-                file.Replace(c, '_');
-            }
+            foreach (var c in Path.GetInvalidPathChars()) path.Replace(c, '_');
+            foreach (var c in Path.GetInvalidFileNameChars()) file.Replace(c, '_');
             return path.Append(file).ToString();
         }
-
-        public static byte[] ComputeHash(byte[] data, int offset = 0, int count = 0)
+        /// <summary>
+        /// Computes the SHA-256 hash of the specified data.
+        /// </summary>
+        /// <param name="data">The data to compute the hash for.</param>
+        /// <param name="offset">The offset in the data to start computing the hash from.</param>
+        /// <param name="count">The number of bytes to compute the hash for. If this value is 0, the entire data is used.</param>
+        /// <returns>The computed SHA-256 hash, or null if the data is null or empty.</returns>
+        public static byte[]? ComputeHash(byte[] data, int offset = 0, int count = 0)
         {
-            if (data?.Length > 0)
-            {
-                using var sha256 = SHA256.Create();
-                return sha256.ComputeHash(data, offset, count > 0 ? count : data.Length);
-            }
-            return null;
+            if (data?.Length <= 0) return null;
+            using var sha256 = SHA256.Create();
+            if (data == null) return data;
+            return sha256.ComputeHash(data, offset, count > 0 ? count : data.Length);
         }
-
+        /// <summary>
+        /// Intializes the various methods required to actually import the file without disturbing the UI thread by running async.
+        /// </summary>
+        /// <param name="files">The file paths of files which need to be imported.</param>
+        /// <param name="destination">The destination folder path to store the imported files.</param>
+        /// <returns></returns>
         public static async Task ImportFilesAsync(string[] files, string destination)
         {
             try
@@ -105,7 +133,7 @@ namespace PrimalEditor
             if (!destination.EndsWith(Path.DirectorySeparatorChar)) destination += Path.DirectorySeparatorChar;
             var name = Path.GetFileNameWithoutExtension(file).ToLower();
             var ext = Path.GetExtension(file).ToLower();
-            Asset asset = null;
+            Asset? asset = null;
             switch (ext)
             {
                 case ".fbx": asset = new Content.Geometry(); break;
@@ -118,63 +146,93 @@ namespace PrimalEditor
                 case ".tga": break;
                 case ".wav": break;
                 case ".ogg": break;
-                default:
-                    break;
+                default: break;
             }
-            if (asset != null)
-            {
-                Import(asset, name, file, destination);
-            }
+            if (asset != null) Import(asset, name, file, destination);
         }
         private static void Import(Asset asset, string name, string file, string destination)
         {
             Debug.Assert(asset != null);
             asset.FullPath = destination + name + Asset.AssetFileExtension;
-            if (!string.IsNullOrEmpty(file))
-            {
-                asset.Import(file);
-            }
+            if (!string.IsNullOrEmpty(file)) asset.Import(file);
             asset.Save(asset.FullPath);
-            return;
+        }
+        public static string VerifyDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return "Path is null or empty.";
+            }
+            else if (!Directory.Exists(path))
+            {
+                return "Path does not exist.";
+            }
+            else if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+            {
+                return "Path is not a directory.";
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
+    /// <summary>
+    /// Useful in calling commands from code behind without the boilerplate code.
+    /// </summary>
     public static class CommandHelper
     {
-        internal static void CallCommand(ICommand command, object parameter = null)
+        private static CancellationTokenSource _cts = new CancellationTokenSource();
+        private static List<string> _sourceCommands = new List<string>();
+        private static List<string> _processedCommands = new List<string>();
+        private static CommandOutputRelay _commandOutputRelay = new CommandOutputRelay();
+        internal static void CallCommand(ICommand? command, object? parameter = null)
         {
-            if (command != null && command.CanExecute(parameter))
+            if (command != null && command.CanExecute(parameter)) command.Execute(parameter);
+        }
+        internal static async Task RunCommandAsync(CommandOutputRelay commandOutputRelay, string command)
+        {
+            if (_cts.IsCancellationRequested) return;
+            commandOutputRelay.Command = command;
+            await commandOutputRelay.RunCommandAsync(_cts.Token);
+            _processedCommands.Add(command);
+        }
+        internal static void TryStopCurrentCommandAndDisableFurtherProcessing()
+        {
+            _cts.Cancel();
+        }
+        internal static async Task RestartCallChainAsync()
+        {
+            _cts = new CancellationTokenSource();
+            await CallCommandChainAsync(_commandOutputRelay, _sourceCommands);
+        }
+        internal static async Task ContinueCallChainAsync(bool fromNextItem = true)
+        {
+            _cts = new CancellationTokenSource();
+            foreach (var command in _sourceCommands.GetRange(_processedCommands.Count - (fromNextItem ? 1 : 0), _sourceCommands.Count - _processedCommands.Count - (fromNextItem ? 1 : 0)))
             {
-                command.Execute(parameter);
+                await RunCommandAsync(_commandOutputRelay, command);
+            }
+        }
+        internal static async Task CallCommandChainAsync(CommandOutputRelay commandOutputRelay, List<string> commands)
+        {
+            _commandOutputRelay = commandOutputRelay;
+            _sourceCommands = commands;
+            foreach (var item in commands)
+            {
+                await RunCommandAsync(commandOutputRelay, item);
             }
         }
     }
     internal class Node<T>
     {
-        /*TODO: Implement these functionality based on need.
-         * AddRange: Adds a range of nodes to the tree.
-         * AsReadOnly: Returns a read-only wrapper for the tree.
-         * BinarySearch: Searches the tree for a node using a binary search algorithm.
-         * ConvertAll: Converts the nodes in the tree to another type.
-         * Exists: Determines whether the tree contains a node that matches a specific condition.
-         * FindAll: Searches the tree for all nodes with a specific value and returns them.
-         * FindLast: Searches the tree for the last node with a specific value and returns it.
-         * FindLastIndex: Searches the tree for the last node with a specific value and returns its index.
-         * ForEach: Performs an action on each node in the tree.
-         * IndexOf: Returns the index of a specific node in the tree.
-         * InsertRange: Inserts a range of nodes into the tree at a specific position.
-         * LastIndexOf: Returns the index of the last occurrence of a specific node in the tree.
-         * RemoveAll: Removes all nodes from the tree that match a specific condition.
-         * RemoveRange: Removes a range of nodes from the tree.
-         * Reverse: Reverses the order of the nodes in the tree.
-         * Sort: Sorts the nodes in the tree.
-         * GetRange: Returns a range of nodes from the tree.*/
-        internal T Value { get; set; }
-        internal List<Node<T>> Children { get; set; }
+        internal T? Value { get; set; }
+        internal List<Node<T>?> Children { get; set; }
 
         internal Node(T value)
         {
             Value = value;
-            Children = new List<Node<T>>();
+            Children = new List<Node<T>?>();
         }
 
         internal void AddChild(Node<T> child)
@@ -193,128 +251,92 @@ namespace PrimalEditor
         {
             Children.Clear();
         }
-        public static void RemoveChildren(Node<T> parent)
+        public static void RemoveChildren(Node<T?> parent)
         {
             parent.Children.Clear();
         }
-        internal List<Node<T>> GetChildren()
+        internal List<Node<T>?> GetChildren()
         {
             return Children;
         }
 
-        internal static List<Node<T>> GetChildren(Node<T> parent)
+        internal static List<Node<T>?>? GetChildren(Node<T> parent)
         {
-            return parent.Children;
+            return parent?.Children;
         }
-        public Node<T> FindParent(Node<T> child)
+        public Node<T?>? FindParent(Node<T> child)
         {
-            if (Children.Contains(child))
-                return this;
-
-            foreach (Node<T> node in Children)
-            {
-                Node<T> parent = node.FindParent(child);
-                if (parent != null)
-                    return parent;
-            }
-
+            if (Children.Contains(child)) return this;
+            foreach (var parent in from Node<T?> node in Children let parent = node.FindParent(child) where parent != null select parent) return parent;
             return null;
         }
-        public Node<T> Find(Predicate<T> match)
+        public Node<T?>? Find(Predicate<T?> match)
         {
-            if (match(Value))
-                return this;
-
-            foreach (Node<T> child in Children)
-            {
-                Node<T> found = child.Find(match);
-                if (found != null)
-                    return found;
-            }
-
+            if (match(Value)) return this;
+            foreach (var found in from Node<T?> child in Children let found = child.Find(match) where found != null select found) return found;
             return null;
         }
-        public bool Contains(Predicate<T> match)
+        public bool Contains(Predicate<T?> match)
         {
             return Find(match) != null;
         }
-
-        public void Traverse(Action<Node<T>> action)
+        public void Traverse(Action<Node<T?>?> action)
         {
             action(this);
-
-            foreach (Node<T> child in Children)
-                child.Traverse(action);
+            foreach (var child in Children) child?.Traverse(action);
         }
-
         public int Count()
         {
             int count = 1;
-
-            foreach (Node<T> child in Children)
-                count += child.Count();
-
+            foreach (var child in Children) if (child != null) count += child.Count();
             return count;
         }
-        public static int Count(Node<T> parent)
+        public static int Count(Node<T?> parent)
         {
             return parent.Children.Count;
         }
         public int Height()
         {
             int height = 0;
-
-            foreach (Node<T> child in Children)
-                height = Math.Max(height, child.Height());
-
+            foreach (var child in Children) if (child != null) height = Math.Max(height, child.Height());
             return height + 1;
         }
-        public void CopyTo(T[] array, int arrayIndex)
+        public void CopyTo(T?[] array, int arrayIndex)
         {
             array[arrayIndex++] = Value;
-
-            foreach (Node<T> child in Children)
-                child.CopyTo(array, arrayIndex);
+            foreach (var child in Children) child?.CopyTo(array, arrayIndex);
         }
-
         public void Clear()
         {
-            Value = default(T);
+            Value = default;
             Children.Clear();
         }
-        internal int FindIndex(Predicate<Node<T>> match)
+        internal int FindIndex(Predicate<Node<T>?> match)
         {
-            Queue<Node<T>> queue = new Queue<Node<T>>();
+            var queue = new Queue<Node<T>>();
             queue.Enqueue(this);
             int index = -1;
-
             while (queue.Count > 0)
             {
                 index++;
                 Node<T> current = queue.Dequeue();
-                if (match(current))
-                    return index;
-
-                foreach (Node<T> child in current.Children)
-                    queue.Enqueue(child);
+                if (match(current)) return index;
+                foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }
-
             return -1;
         }
         internal void RemoveAt(int index)
         {
-            Queue<Node<T>> queue = new Queue<Node<T>>();
+            var queue = new Queue<Node<T>>();
             queue.Enqueue(this);
             int currentIndex = -1;
-
             while (queue.Count > 0)
             {
                 currentIndex++;
                 Node<T> current = queue.Dequeue();
                 if (currentIndex == index)
                 {
-                    if (current == this)
-                        throw new InvalidOperationException("Cannot remove root node");
+                    if (current == this) throw new InvalidOperationException("Cannot remove root node");
                     else
                     {
                         Node<T> parent = queue.Peek();
@@ -322,39 +344,31 @@ namespace PrimalEditor
                         return;
                     }
                 }
-
                 queue.Enqueue(current);
-                foreach (Node<T> child in current.Children)
-                    queue.Enqueue(child);
+                foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }
         }
-
         internal void Insert(int index, Node<T> item)
         {
             Children.Insert(index, item);
         }
-        internal Node<T> this[int index]
+        internal Node<T>? this[int index]
         {
             get => GetElementAtIndex(index);
             set => Children[index] = value;
         }
-        internal Node<T> GetElementAtIndex(int index)
+        internal Node<T>? GetElementAtIndex(int index)
         {
-            Queue<Node<T>> queue = new Queue<Node<T>>();
+            Queue<Node<T>> queue = new();
             queue.Enqueue(this);
             int currentIndex = -1;
-
             while (queue.Count > 0)
             {
                 currentIndex++;
                 Node<T> current = queue.Dequeue();
-                if (currentIndex == index)
-                    return current;
-
-                foreach (Node<T> child in current.Children)
-                    queue.Enqueue(child);
+                if (currentIndex == index) return current;
+                foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }
-
             return null;
         }
     }

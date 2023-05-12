@@ -37,7 +37,7 @@ namespace PrimalEditor.GameProject.Settings.Player
 
         private void listBox_Drop(object sender, DragEventArgs e)
         {/*
-            YourDataType droppedData = e.Data.GetData(typeof(YourDataType)) as YourDataType;
+            YourDataType droppedData = e.AndroidPackage.GetData(typeof(YourDataType)) as YourDataType;
             YourDataType target = ((ListBoxItem)(sender)).DataContext as YourDataType;
 
             int removedIdx = listBox.Items.IndexOf(droppedData);

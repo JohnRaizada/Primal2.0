@@ -133,7 +133,7 @@ namespace PrimalEditor.Content
         public static readonly DependencyProperty SelectedItemsProperty =
             DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<ContentInfo>), typeof(ContentBrowserView), new PropertyMetadata(new ObservableCollection<ContentInfo>()));
 
-        private List<object> _selectedItems = new List<object>();
+        private readonly List<object> _selectedItems = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentBrowserView"/> class.
@@ -195,8 +195,8 @@ namespace PrimalEditor.Content
 
         private void GeneratePathStackButtons()
         {
-            var vm = DataContext as ContentBrowser;
-            if (vm == null) return;
+            if (DataContext is not ContentBrowser vm) return;
+            if (vm.SelectedFolder == null || vm.ContentFolder == null) return;
             var path = Path.TrimEndingDirectorySeparator(vm.SelectedFolder);
             var contentPath = Path.TrimEndingDirectorySeparator(vm.ContentFolder);
             pathStack.Children.Clear();
@@ -209,7 +209,7 @@ namespace PrimalEditor.Content
                 paths[i] = path;
                 labels[i] = path[(path.LastIndexOf(Path.DirectorySeparatorChar) + 1)..];
                 if (path == contentPath) break;
-                path = path.Substring(0, path.LastIndexOf(Path.DirectorySeparatorChar));
+                path = path[..path.LastIndexOf(Path.DirectorySeparatorChar)];
             }
             if (i == 3) i = 2;
             for (; i >= 0; --i)
@@ -227,8 +227,7 @@ namespace PrimalEditor.Content
         }
         private void OnPathStack_Button_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as ContentBrowser;
-            if (vm == null) return;
+            if (DataContext is not ContentBrowser vm) return;
             vm.UpdatePathStack(vm.SelectedFolder);
             vm.SelectedFolder = (string)((Button)sender).DataContext;
         }
@@ -250,15 +249,13 @@ namespace PrimalEditor.Content
 
         private void OnContent_Item_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var info = ((FrameworkElement)sender).DataContext as ContentInfo;
-            if (info == null) return;
+            if (((FrameworkElement)sender).DataContext is not ContentInfo info) return;
             if (info.IsToggled) return;
             ExecuteSelection(info);
         }
         private void OnContent_Item_KeyDown(object sender, KeyEventArgs e)
         {
-            var info = ((FrameworkElement)sender).DataContext as ContentInfo;
-            if (info == null) return;
+            if (((FrameworkElement)sender).DataContext is not ContentInfo info) return;
             if (e.Key == Key.Enter)
             {
                 ExecuteSelection(info);
@@ -269,9 +266,8 @@ namespace PrimalEditor.Content
             if (info == null) return;
             if (info.IsDirectory)
             {
-                var vm = DataContext as ContentBrowser;
-                if (vm == null) return;
-                string currentSelectedFolder = vm.SelectedFolder;
+                if (DataContext is not ContentBrowser vm) return;
+                string? currentSelectedFolder = vm.SelectedFolder;
                 vm.SelectedFolder = info.FullPath;
                 vm.UpdatePathStack(currentSelectedFolder);
             }
@@ -285,7 +281,7 @@ namespace PrimalEditor.Content
             }
         }
 
-        private IAssetEditor? OpenAssetEditor(AssetInfo info)
+        private static IAssetEditor? OpenAssetEditor(AssetInfo info)
         {
             IAssetEditor? editor = null;
             try
@@ -297,7 +293,7 @@ namespace PrimalEditor.Content
                     case AssetType.Audio: break;
                     case AssetType.Material: break;
                     case AssetType.Mesh:
-                        editor = OpenEditorPanel<GeomteryEditorView>(info, info.Guid, "GeometryEditor");
+                        editor = OpenEditorPanel<GeomteryEditorView>(info, "GeometryEditor");
                         break;
                     case AssetType.Skeleton: break;
                     case AssetType.Texture: break;
@@ -310,7 +306,7 @@ namespace PrimalEditor.Content
             return editor;
         }
 
-        private IAssetEditor? OpenEditorPanel<T>(AssetInfo info, Guid guid, string title) where T : FrameworkElement, new()
+        private static IAssetEditor? OpenEditorPanel<T>(AssetInfo info, string title) where T : FrameworkElement, new()
         {
             // First look for a window that's already open and is displaying the same asset.
             foreach (Window window in Application.Current.Windows)
@@ -365,8 +361,9 @@ namespace PrimalEditor.Content
             foreach (var thing in e.AddedItems)
             {
                 _selectedItems.Add(thing);
-                var item = folderListView.SelectedItems[_selectedItems.IndexOf(thing)] as ContentInfo;
-                SelectedItems.Add(item?.IsDirectory == true ? null : item);
+                if (folderListView.SelectedItems[_selectedItems.IndexOf(thing)] is not ContentInfo item) continue;
+                if (item.IsDirectory) continue;
+                SelectedItems.Add(item);
                 if (DataContext == null) continue;
                 var vm = DataContext as ContentBrowser;
                 if (item == null) continue;
@@ -408,8 +405,7 @@ namespace PrimalEditor.Content
         }
         private void TextBoxBlockCombo_OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            var info = (sender as FrameworkElement)?.DataContext as ContentInfo;
-            if (info == null) return;
+            if (((FrameworkElement)sender)?.DataContext is not ContentInfo info) return;
             if (e.Value == info.FileName) return;
             SystemOperations.Rename(e.Value, info.FullPath);
         }
@@ -417,8 +413,7 @@ namespace PrimalEditor.Content
         private void TextBoxBlockCombo_LeftMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (_numberOfClicks++ < 1) return;
-            var vm = DataContext as ContentBrowser;
-            if (vm == null) return;
+            if (DataContext is not ContentBrowser vm) return;
             CommandHelper.CallCommand(vm.RenameCommand);
             _numberOfClicks = 0;
         }
@@ -427,8 +422,7 @@ namespace PrimalEditor.Content
         {
             if (sender is MenuItem menuItem)
             {
-                var vm = DataContext as ContentBrowser;
-                if (vm == null) return;
+                if (DataContext is not ContentBrowser vm) return;
                 switch (menuItem.Header.ToString())
                 {
                     case "Copy":
@@ -460,34 +454,25 @@ namespace PrimalEditor.Content
                         var dlg = new PrimitiveMeshDialog();
                         dlg.ShowDialog();
                         break;
-                    default:
-                        break;
+                    default: break;
                 }
             }
         }
         private void MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
-            var menuItem = sender as MenuItem;
-            if (menuItem == null) return;
+            if (sender is not MenuItem menuItem) return;
             menuItem.IsSubmenuOpen = true;
             Debug.WriteLine(menuItem.IsSubmenuOpen);
         }
-        private void OnNewMenuItem_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //newContextMenu.IsOpen = true;
-        }
-
         private void OnAddItem_Button_Click(object sender, RoutedEventArgs e)
         {
             myContextMenu.IsOpen = true;
         }
-
         private void OnAddItemButton_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem item)
             {
-                var vm = DataContext as ContentBrowser;
-                if (vm == null) return;
+                if (DataContext is not ContentBrowser vm) return;
                 switch (item.Header.ToString())
                 {
                     case "Folder":
@@ -497,10 +482,8 @@ namespace PrimalEditor.Content
                         var dlg = new PrimitiveMeshDialog();
                         dlg.ShowDialog();
                         break;
-                    case "Asset":
-                        break;
-                    default:
-                        break;
+                    case "Asset": break;
+                    default: break;
                 }
             }
         }

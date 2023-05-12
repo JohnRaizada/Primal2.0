@@ -1,4 +1,5 @@
-﻿using PrimalEditor.GameProject;
+﻿using Microsoft.Xaml.Behaviors;
+using PrimalEditor.GameProject;
 using PrimalEditor.Utilities.Controls;
 using System;
 using System.Globalization;
@@ -11,7 +12,7 @@ namespace PrimalEditor.Dictionaries
 {
     public partial class ControlTemplates : ResourceDictionary
     {
-        private void OnTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void OnTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var textBox = sender as TextBox;
             var exp = textBox?.GetBindingExpression(TextBox.TextProperty);
@@ -37,8 +38,7 @@ namespace PrimalEditor.Dictionaries
         }
         private void OnTextBoxRename_KeyDown(object sender, KeyEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox == null) return;
+            if (sender is not TextBox textBox) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
             if (e.Key == Key.Enter)
@@ -63,8 +63,7 @@ namespace PrimalEditor.Dictionaries
 
         private void OnTextBoxRename_LostFocus(object sender, RoutedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox == null) return;
+            if (sender is not TextBox textBox) return;
             if (!textBox.IsVisible) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp != null)
@@ -139,6 +138,33 @@ namespace PrimalEditor.Dictionaries
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+    /// <summary>
+    /// Determines the appropriate position of the scrollbar based on new content addition and user interaction
+    /// </summary>
+    public class ScrollViewerBehavior : Behavior<ScrollViewer>
+    {
+        /// <inheritdoc/>
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+            AssociatedObject.LayoutUpdated += OnLayoutUpdated;
+        }
+        /// <inheritdoc/>
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.LayoutUpdated -= OnLayoutUpdated;
+        }
+
+        private void OnLayoutUpdated(object? sender, EventArgs e)
+        {
+            if (AssociatedObject.VerticalOffset == AssociatedObject.ScrollableHeight)
+            {
+                AssociatedObject.ScrollToBottom();
+            }
         }
     }
 }

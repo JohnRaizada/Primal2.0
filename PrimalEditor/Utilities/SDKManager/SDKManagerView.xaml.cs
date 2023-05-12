@@ -1,254 +1,202 @@
-﻿using PrimalEditor.GameProject;
-using PrimalEditor.Utilities.Controls;
+﻿using PrimalEditor.Utilities.Controls;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace PrimalEditor.Utilities
 {
-	/// <summary>
-	/// Interaction logic for SDKManagerView.xaml
-	/// </summary>
-	public partial class SDKManagerView : Window
-	{
-		private bool _wasCheckboxCheckedManually = false;
-
-		public SDKManagerView()
-		{
-			InitializeComponent();
-			DataContext = Project.Current;
-			ForceCursor = true;
-
-			// Create a list of sample data
-			var items = new List<ExpanderListMenuItem>
-		{
-			new ExpanderListMenuItem { Name = "Item 1", APILevel = 1 },
-			new ExpanderListMenuItem { Name = "Item 2", APILevel = 2 },
-			new ExpanderListMenuItem { Name = "Item 3", APILevel = 3 }
-		};
-
-			// Set the ItemsSource of the ListView to the list of sample data
-			//myList.ItemsSource = items;
-			var myItems = new List<ExpanderListMenuItem>
-			{
-			new ExpanderListMenuItem { Name = "Item2", APILevel = 5, Status = false, IsChecked = false },
-			new ExpanderListMenuItem { Name = "Item3", APILevel = 6, Status = true, ListMenuItems = new List<ExpanderListMenuItem>{
-				new ExpanderListMenuItem {Name = "ItemC", APILevel = 7, Status = true, IsChecked = true },
-				new ExpanderListMenuItem {Name = "ItemD", APILevel = 8, Status = true, IsChecked = false}
-			}, IsChecked = true },
-			new ExpanderListMenuItem { Name = "Item5", APILevel = 9, Status = false, IsChecked = false },
-			new ExpanderListMenuItem { Name = "Item6", APILevel = 19, Status = false, IsChecked = false },
-			new ExpanderListMenuItem { Name = "Item7", APILevel = 29, Status = false, IsChecked = false },
-			new ExpanderListMenuItem { Name = "Item8", APILevel = 39, Status = false, IsChecked = false },
-			// Add more items here
-		};
-
-			// Set the ContentSource property
-			myCustomElement.ContentSource = myItems;
-		}
-
-		private void OnSDKManager_Android_EditButton_Click(object sender, RoutedEventArgs e)
-		{
-			SDKPath.IsToggled = true;
-		}
-
-		private void OnSDKManager_DismissButton_Click(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
-
-		private void OnSDKManager_ActionButton_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-		private void ShowPackageDetails_Checked(object sender, RoutedEventArgs e)
-		{
-			//// Expand all items when the CheckBox is checked
-			//foreach (var item in myList.Items)
-			//{
-			//    var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//    var expander = FindVisualChild<Expander>(container);
-			//    if (expander == null) continue;
-			//    expander.IsExpanded = true;
-
-		}
-
-		private void ShowPackageDetails_Unchecked(object sender, RoutedEventArgs e)
-		{
-			//// Collapse all items when the CheckBox is unchecked
-			//foreach (var item in myList.Items)
-			//{
-			//    var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//    var expander = FindVisualChild<Expander>(container);
-			//    if (expander == null) continue;
-			//    if (!_wasCheckboxCheckedManually) return;
-			//    expander.IsExpanded = false;
-			//}
-		}
-
-		private void Expander_Expanded(object sender, RoutedEventArgs e)
-		{
-			//// Check if all items are expanded
-			//bool allExpanded = true;
-			//foreach (var item in myList.Items)
-			//{
-			//    var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//    var expander = FindVisualChild<Expander>(container);
-			//    if (expander != null && !expander.IsExpanded)
-			//    {
-			//        allExpanded = false;
-			//        break;
-			//    }
-			//}
-			//// Check the CheckBox if all items are expanded
-			//showPackageDetails.IsChecked = allExpanded;
-		}
-
-		private void Expander_Collapsed(object sender, RoutedEventArgs e)
-		{
-			//// Uncheck the CheckBox when an item is collapsed
-			//showPackageDetails.IsChecked = false;
-		}
-
-		private T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-		{
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-			{
-				var child = VisualTreeHelper.GetChild(obj, i);
-				if (child is T visualChild)
-				{
-					return visualChild;
-				}
-				else
-				{
-					var descendant = FindVisualChild<T>(child);
-					if (descendant != null)
-					{
-						return descendant;
-					}
-				}
-			}
-			return null;
-		}
-
-		private void ShowPackageDetails_Clicked(object sender, RoutedEventArgs e)
-		{
-			//_wasCheckboxCheckedManually = true;
-			//if ((bool)showPackageDetails.IsChecked)
-			//{
-			//    // Expand all items when the CheckBox is checked
-			//    foreach (var item in myList.Items)
-			//    {
-			//        var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//        var expander = FindVisualChild<Expander>(container);
-			//        if (expander == null) continue;
-			//        expander.IsExpanded = true;
-			//    }
-			//    return;
-			//}
-			//// Collapse all items when the CheckBox is unchecked
-			//foreach (var item in myList.Items)
-			//{
-			//    var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//    var expander = FindVisualChild<Expander>(container);
-			//    if (expander == null) continue;
-			//    if (!_wasCheckboxCheckedManually) return;
-			//    expander.IsExpanded = false;
-			//}
-		}
-
-		private void Expander_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			_wasCheckboxCheckedManually = false;
-			// Uncheck the CheckBox when an item is collapsed
-			showPackageDetails.IsChecked = false;
-		}
-
-		private void GridSplitter_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-		{
-
-			//        var newWidth = ColumnHeaders.ColumnDefinitions[0].ActualWidth + e.HorizontalChange;
-			//        if (newWidth <= ColumnHeaders.ColumnDefinitions[0].MinWidth) return;
-			//        /*int i = 0;
-			//        foreach (var item in ColumnHeaders.Children)
-			//        {
-			//            if (!(item is GridSplitter)) continue;
-			//            var container = item as GridSplitter;
-			//            container.DragDelta += (sender, e) => GridSplitter_DragDelta(sender, e, i++);
-			//        }*/
-			//        ColumnHeaders.ColumnDefinitions[0].Width = new GridLength(newWidth);
-			//        foreach (var item in myList.Items)
-			//        {
-			//            var container = myList.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
-			//            if (container == null) return;
-			//            var expander = FindVisualChild<Expander>(container);
-			//            if (expander == null) return;
-			//            // Access the Expander and its child elements here
-			//            /*var headerTextBlock = expander.Header as TextBlock;
-			//if (headerTextBlock == null) return;
-			//	var text = headerTextBlock.Text;
-			//	// Do something with the text
-			//	*/
-			//            var grid = expander.Content as Grid;
-			//            if (grid == null) return;
-			//            grid.ColumnDefinitions[0].Width = new GridLength(newWidth);
-			//            grid.ColumnDefinitions[1].Width = new GridLength(newWidth);
-			//            grid.ColumnDefinitions[2].Width = new GridLength(newWidth);
-			//            grid.ColumnDefinitions[3].Width = new GridLength(newWidth);
-			//        }
-		}
-
-		private void RadioButton_Checked(object sender, RoutedEventArgs e)
-		{
-			var radioButton = sender as RadioButton;
-			if (radioButton == null) return;
-			if (myCustomElement == null) return;
-			if (radioButton == listViewRadioButton)
-				myCustomElement.ContentViewMode = ContentViewMode.List;
-			else
-				myCustomElement.ContentViewMode = ContentViewMode.Expander;
-		}
-
-		private void RadioButton_UnChecked(object sender, RoutedEventArgs e)
-		{
-
-			var radioButton = sender as RadioButton;
-			if (radioButton == null) return;
-			if (myCustomElement == null) return;
-
-			if (radioButton == listViewRadioButton)
-				myCustomElement.ContentViewMode = ContentViewMode.Expander;
-			else
-				myCustomElement.ContentViewMode = ContentViewMode.List;
-		}
-	}
-	public class AndroidSdkDetails
-	{
-		public ObservableCollection<Platform> Platforms { get; set; }
-		public ObservableCollection<Tool> Tools { get; set; }
-		public ObservableCollection<UpdateSite> UpdateSites { get; set; }
-	}
-
-	public class Platform
-	{
-		public string Name { get; set; }
-		public string APILevel { get; set; }
-		public string Revision { get; set; }
-		public string Status { get; set; }
-	}
-
-	public class Tool
-	{
-		public string Name { get; set; }
-		public string Version { get; set; }
-		public string Status { get; set; }
-	}
-
-	public class UpdateSite
-	{
-		public string Name { get; set; }
-		public string URL { get; set; }
-	}
+    /// <summary>
+    /// Interaction logic for SDKManagerView.xaml
+    /// </summary>
+    public partial class SDKManagerView : Window
+    {
+        private static HashSet<ExpanderListMenuItem> _deletedItems = new HashSet<ExpanderListMenuItem>();
+        private static HashSet<ExpanderListMenuItem> _addedItems = new HashSet<ExpanderListMenuItem>();
+        private static double? _originalDataSource = null;
+        private static bool? _showObsoletePackages = null;
+        private static bool? _originalDisplayState = null;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SDKManagerView"/> class.
+        /// </summary>
+        public SDKManagerView()
+        {
+            InitializeComponent();
+            ForceCursor = true;
+            Loaded += async (sender, e) =>
+            {
+                SDKManager.Instance.UpdateInstance();
+                SDKManager.Instance.GenerateAndroidUpadateSitesContent();
+                await SDKManager.Instance.GenerateAndroidPlatformPackagesAsync();
+                await SDKManager.Instance.GenerateAndroidToolsPackagesAsync();
+                if (SDKManager.Instance.IsAutoSyncEnabled == true)
+                {
+                    await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+                    {
+                        syncingBar.Visibility = Visibility.Visible;
+                        await SDKManager.Instance.SyncDataAsync();
+                        syncingBar.Visibility = Visibility.Collapsed;
+                    }));
+                }
+                DataContext = SDKManager.Instance;
+                SDKManager.Instance.IsContentAvailable = true;
+                _originalDisplayState = SDKManager.Instance.ShowObsoletePackages;
+            };
+        }
+        private void OnSDKManager_Android_EditButton_Click(object sender, RoutedEventArgs e) => SDKPath.IsToggled = true;
+        private void OnSDKManager_DismissButton_Click(object sender, RoutedEventArgs e) => Close();
+        private void OnSDKManager_OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnSDKManager_ApplyButton_Click(sender, e);
+            Close();
+        }
+        private void OnSDKManager_ApplyButton_Click(object sender, RoutedEventArgs e)
+        {
+            // A true means to be downloaded, and deleted otherwise
+            var itemsChanged = new Dictionary<ExpanderListMenuItem, bool>();
+            foreach (ExpanderListMenuItem item in _deletedItems) itemsChanged.Add(item, false);
+            foreach (ExpanderListMenuItem item in _addedItems) itemsChanged.Add(item, true);
+            if (itemsChanged.Count <= 0) return;
+            Downloads.Instance.ModifiedItems = itemsChanged;
+            SDKConfirmationWindow confirmationWindow = new SDKConfirmationWindow();
+            confirmationWindow.ShowDialog();
+        }
+        private void RadioButton_Toggled(object sender, RoutedEventArgs e, ExpanderListView listView, RadioButton radioButtonToCheck)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null) return;
+            if (listView == null) return;
+            if (radioButton == radioButtonToCheck) listView.ContentViewMode = radioButtonToCheck.IsChecked == true ? ContentViewMode.List : ContentViewMode.Expander;
+            else listView.ContentViewMode = radioButtonToCheck.IsChecked == true ? ContentViewMode.Expander : ContentViewMode.List;
+        }
+        private void Platform_RadioButton_Toggled(object sender, RoutedEventArgs e) => RadioButton_Toggled(sender, e, platformListView, listViewPlatformRadioButton);
+        private void Tools_RadioButton_Toggled(object sender, RoutedEventArgs e) => RadioButton_Toggled(sender, e, toolsListView, listViewToolsRadioButton);
+        private void UpdateSites_RadioButton_Toggled(object sender, RoutedEventArgs e) => RadioButton_Toggled(sender, e, updateSitesListView, updateSitesListViewRadioButton);
+        private async void OnSDKManager_Android_Sync_Click(object sender, RoutedEventArgs e)
+        {
+            await Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            {
+                syncingBar.Visibility = Visibility.Visible;
+                await SDKManager.Instance.SyncDataAsync();
+                syncingBar.Visibility = Visibility.Collapsed;
+                SDKManager.Instance.IsNotificationReloadButtonVisible = true;
+                SDKManager.Instance.NotificationText = "Content may have changed. Please refresh the page to see the updated content!";
+                SDKManager.Instance.IsNotificationTextVisible = true;
+            }));
+        }
+        private void OnSDKManager_AutoSyncCheckbox_Toggled(object sender, RoutedEventArgs e)
+        {
+            SDKManager.Instance.IsAutoSyncEnabled = autoSyncCheckBox.IsChecked;
+            SDKManager.Instance.Save();
+        }
+        private void OnSDKManager_Android_SDKLocationBox_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            var validity = ContentHelper.VerifyDirectory(e.Value);
+            if (validity == string.Empty)
+            {
+                SDKManager.Instance.IsNotificationTextVisible = false;
+                SDKManager.Instance.AndroidSDKLocation = e.Value;
+                SDKManager.Instance.Save();
+                return;
+            }
+            SDKManager.Instance.NotificationText = validity;
+            SDKManager.Instance.IsNotificationTextVisible = true;
+        }
+        private void OnSDKManager_WarningButton_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Beware! Enabling Auto Sync or Manually Syncing while in online mode and doing this too frequently, may lead to the servers blocking the ip address. And thus leading the app paralysed and unable to check for updates 'EVER'; until google servers unblock us!! Remember: The app is using web scraping to retrieve data due to the absence of an API, so excessive scrapping will utilize more server and device resources!!!", "Please be mindful!!!!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+        private void OnSDKManager_PlatformListView_CheckBoxChanged(object sender, CheckBoxChangedEventArgs e)
+        {
+            if (_addedItems.Contains(e.MenuItem)) _addedItems.Remove(e.MenuItem);
+            else if (_deletedItems.Contains(e.MenuItem)) _deletedItems.Remove(e.MenuItem);
+            else if (e.IsChecked) _addedItems.Add(e.MenuItem);
+            else _deletedItems.Add(e.MenuItem);
+        }
+        private void OnSDKManager_ToolsListView_CheckBoxChanged(object sender, CheckBoxChangedEventArgs e)
+        {
+            if (_addedItems.Contains(e.MenuItem)) _addedItems.Remove(e.MenuItem);
+            else if (_deletedItems.Contains(e.MenuItem)) _deletedItems.Remove(e.MenuItem);
+            else if (e.IsChecked) _addedItems.Add(e.MenuItem);
+            else _deletedItems.Add(e.MenuItem);
+        }
+        private void OnSDKManager_DataSourceSwitch_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SDKManager.Instance.DataSource = e.NewValue == 1 ? DataSourceType.Local : DataSourceType.Web;
+            SDKManager.Instance.Save();
+        }
+        private void OnSDKManager_ReloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+            SDKManagerView managerView = new SDKManagerView();
+            managerView.ShowDialog();
+            SDKManager.Instance.IsNotificationReloadButtonVisible = false;
+            SDKManager.Instance.IsNotificationTextVisible = false;
+            _originalDataSource = dataSourceSwitch.Value;
+        }
+        private void OnSDKManager_Android_ObsoletePackagesCheckbox_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (sender is not CheckBox checkBox) return;
+            _showObsoletePackages = checkBox.IsChecked;
+            if (showPlatformObsoletePackages != null) showPlatformObsoletePackages.IsChecked = _showObsoletePackages;
+            if (showToolsObsoletePackages != null) showToolsObsoletePackages.IsChecked = _showObsoletePackages;
+            if (_showObsoletePackages == _originalDisplayState)
+            {
+                SDKManager.Instance.IsNotificationTextVisible = false;
+                SDKManager.Instance.IsNotificationRefreshButtonVisible = false;
+                return;
+            }
+            SDKManager.Instance.NotificationText = "The content needs to be regenerated for this change to show effect.";
+            SDKManager.Instance.IsNotificationTextVisible = true;
+            SDKManager.Instance.IsNotificationRefreshButtonVisible = true;
+        }
+        private void OnSDKManager_RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(async () =>
+            {
+                SDKManager.Instance.ShowObsoletePackages = _showObsoletePackages;
+                syncingBar.Visibility = Visibility.Visible;
+                await SDKManager.Instance.SyncDataAsync();
+                syncingBar.Visibility = Visibility.Collapsed;
+                Close();
+                _originalDisplayState = SDKManager.Instance.ShowObsoletePackages;
+                SDKManager.Instance.IsNotificationTextVisible = false;
+                SDKManager.Instance.IsNotificationRefreshButtonVisible = false;
+                SDKManagerView managerView = new SDKManagerView();
+                managerView.ShowDialog();
+            }));
+        }
+        private void OnSDKManager_InfoButton_Click(object sender, RoutedEventArgs e) => MessageBox.Show("The manager does not feature checking for the status of installation, or the relevance of packages in online mode due to the lack of incentive required to invest some significant effort into the feature. Thus, it may or may not be added to the feature in the later point in time depending on the necessity at that point of time.", "There's a feature missing", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+    }
+    /// <summary>
+    /// Generates a foreground color for dynamically changing progress bar based on given values.
+    /// </summary>
+    /// <remarks>
+    /// This returns a RGB SolidColorBrush.
+    /// Takes the value of progress as a double argument.
+    /// Takes the maximum value as a double parameter.
+    /// Takes the minimum value as a double parameter.
+    /// Ultimately returns bright red when progress is minimum and bright green when progress is maximum.
+    /// </remarks>
+    public class ProgressToForegroundConverter : IValueConverter
+    {
+        /// <inheritdoc/>
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double progress)
+            {
+                return GenerateProgressBarForeground(progress);
+            }
+            return Binding.DoNothing;
+        }
+        /// <inheritdoc/>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+        private static SolidColorBrush GenerateProgressBarForeground(double progress, double maximum = 100, double minimum = 0)
+        {
+            return new SolidColorBrush(Color.FromRgb((byte)(255 - ((progress / (maximum - minimum)) * 255)), (byte)((progress / (maximum - minimum)) * 255), 255));
+        }
+    }
 }

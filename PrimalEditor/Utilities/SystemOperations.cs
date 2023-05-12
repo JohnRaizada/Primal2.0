@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Media.Imaging;
 namespace PrimalEditor.Utilities
@@ -18,7 +19,7 @@ namespace PrimalEditor.Utilities
     }
     internal class SystemOperations
     {
-        private static readonly ObservableCollection<ClipboardContent> _clipboard = new ObservableCollection<ClipboardContent>();
+        private static readonly ObservableCollection<ClipboardContent> _clipboard = new();
         public static ReadOnlyObservableCollection<ClipboardContent> Clipboard
         {
             get;
@@ -305,6 +306,10 @@ namespace PrimalEditor.Utilities
         {
             if (Directory.Exists(path)) return;
             Directory.CreateDirectory(path);
+        }
+        public static void ExtractZipFile(string zipFilePath, string destinationFolder)
+        {
+            ZipFile.ExtractToDirectory(zipFilePath, destinationFolder);
         }
     }
 }

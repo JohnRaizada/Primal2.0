@@ -14,10 +14,10 @@
     <PackageOutputPath>$(OutputPath)</PackageOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="NewFolder\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
-    <None Remove="NewFolder\**" />
-    <Page Remove="NewFolder\**" />
+    <Compile Remove="Utilities\Downloads\**" />
+    <EmbeddedResource Remove="Utilities\Downloads\**" />
+    <None Remove="Utilities\Downloads\**" />
+    <Page Remove="Utilities\Downloads\**" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE80">
@@ -39,6 +39,9 @@
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SDKManager\AndroidUpdateSites.json" />
+  </ItemGroup>
 	<ItemGroup>
 		<Reference Include="Xceed.Wpf.Toolkit.NET5" />
 	</ItemGroup>
@@ -52,10 +55,18 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="MouseKeyHook" Version="5.7.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Audio\" />
   </ItemGroup>
+	<ItemGroup>
+		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
+		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
+		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
+	</ItemGroup>
 </Project>

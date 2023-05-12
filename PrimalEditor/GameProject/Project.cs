@@ -253,7 +253,7 @@ namespace PrimalEditor.GameProject
         /// </summary>
         /// <param name="file">The path to the file to load the project from.</param>
         /// <returns>The loaded project.</returns>
-        public static Project Load(string file)
+        public static Project? Load(string file)
         {
             Debug.Assert(File.Exists(file));
             return Serializer.FromFile<Project>(file);
@@ -311,26 +311,6 @@ namespace PrimalEditor.GameProject
                         component.WriteToBinary(bw);
                     }
                 }
-            }
-        }
-        private static void Copy(string path)
-        {
-            Debug.Assert(path != null);
-            Debug.Assert(!string.IsNullOrEmpty(path));
-            Debug.Assert(path.Length > 0);
-            try
-            {
-                Debug.Assert(Directory.Exists(path));
-
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Debug.Assert(File.Exists(path));
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Logger.Log(MessageType.Warning, $"Failed to copy {path}");
             }
         }
         private async Task RunGame(bool debug)

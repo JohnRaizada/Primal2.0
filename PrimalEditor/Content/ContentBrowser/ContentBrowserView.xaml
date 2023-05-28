@@ -202,14 +202,14 @@
 				<utl:TextBoxBlockCombo Text="{Binding FileName}" Foreground="{StaticResource Editor.FontBrush}" HorizontalAlignment="Center" Margin="2,0" MaxHeight="60" IsToggled="{Binding IsToggled}" ValueChanged="TextBoxBlockCombo_OnValueChanged" PreviewMouseLeftButtonUp="TextBoxBlockCombo_LeftMouseButtonUp"/>
 			</StackPanel>
 		</DataTemplate>
-		<local:PlainView x:Key="tileView" ItemTemplate="{StaticResource tileTemplate}">
-			<local:PlainView.ItemContainerStyle>
+		<utl:PlainView x:Key="tileView" ItemTemplate="{StaticResource tileTemplate}">
+			<utl:PlainView.ItemContainerStyle>
 				<Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemStyle}">
 					<EventSetter Event="MouseDoubleClick" Handler="OnContent_Item_MouseDoubleClick"/>
 					<EventSetter Event="KeyDown" Handler="OnContent_Item_KeyDown"/>
 				</Style>
-			</local:PlainView.ItemContainerStyle>
-		</local:PlainView>
+			</utl:PlainView.ItemContainerStyle>
+		</utl:PlainView>
 		<Style TargetType="{x:Type ToggleButton}" x:Key="ListViewToggleButtonStyle">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderBrush" Value="{StaticResource Editor.Window.GrayBrush4}"/>

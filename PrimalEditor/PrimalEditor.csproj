@@ -40,6 +40,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Fonts\DarumadropOne-Regular.ttf" />
+    <Content Include="Resources\DeviceManager\AndroidDeviceIconList.json" />
     <Content Include="Resources\SDKManager\AndroidUpdateSites.json" />
   </ItemGroup>
 	<ItemGroup>
@@ -51,7 +53,7 @@
     <Resource Include="Resources\ContentBrowser\FolderSmall.png" />
     <Resource Include="Resources\ContentBrowser\ListView.png" />
     <Resource Include="Resources\ContentBrowser\TileView.png" />
-	<Resource Include="Resources\SplashScreen\splashscreen.png" />
+	<SplashScreen Include="Resources\SplashScreen\splashscreen.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
@@ -65,8 +67,7 @@
     <Folder Include="Content\Audio\" />
   </ItemGroup>
 	<ItemGroup>
-		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
-		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
+		<None Include="Resources\DeviceManager\AndroidDeviceIconList.json" />
 		<None Include="Resources\SDKManager\AndroidUpdateSites.json" />
 	</ItemGroup>
 </Project>

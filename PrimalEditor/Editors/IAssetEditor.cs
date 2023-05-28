@@ -4,7 +4,7 @@ namespace PrimalEditor.Editors
 {
     interface IAssetEditor
     {
-        Asset Asset { get; }
+        Asset? Asset { get; }
         void SetAsset(AssetInfo asset);
     }
 }

@@ -1,22 +1,18 @@
 ﻿
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace PrimalEditor.Utilities.Controls
 {
-    class CommandOutputRelay : Control
+    class CommandOutputRelay : Control, IObserver
     {
         private static string? _currentWorkingDirectory;
-        private bool _isCancelled;
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(string), typeof(CommandOutputRelay), new PropertyMetadata(null));
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register(nameof(Output), typeof(string), typeof(CommandOutputRelay), new PropertyMetadata(null));
         public static readonly DependencyProperty CurrentPathProperty = DependencyProperty.Register(nameof(CurrentPath), typeof(string), typeof(CommandOutputRelay), new PropertyMetadata(null));
@@ -54,7 +50,6 @@ namespace PrimalEditor.Utilities.Controls
             var control = (CommandOutputRelay)d;
             control.ProgressChanged?.Invoke(control, EventArgs.Empty);
         }
-
         private static void OnStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CommandOutputRelay)d;
@@ -62,56 +57,35 @@ namespace PrimalEditor.Utilities.Controls
         }
         private static readonly ObservableCollection<CommandLineMessage> _messages = new();
         public static ReadOnlyObservableCollection<CommandLineMessage> Messages { get; } = new ReadOnlyObservableCollection<CommandLineMessage>(_messages);
-        public async Task RunCommandAsync(CancellationToken ct)
-        {
-            _currentWorkingDirectory ??= MainWindow.PrimalPath;
-            _messages.Add(new CommandLineMessage { Text = Command, HorizontalAlignment = HorizontalAlignment.Right, Background = (Brush)Application.Current.FindResource("Editor.BlueBrush") });
-            var process = new Process();
-            if (Command.ToLower().StartsWith("cd "))
-            {
-                var stringOfInterest = Command[3..];
-                _currentWorkingDirectory = stringOfInterest.StartsWith("..") ? Directory.GetParent(_currentWorkingDirectory)?.FullName : Path.Combine(_currentWorkingDirectory, stringOfInterest);
-            }
-            process.StartInfo.WorkingDirectory = _currentWorkingDirectory;
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = "/C " + Command;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-            process.Start();
-            GenerateConsoleCtrlEvent(0, (uint)process.Id);
-            process.OutputDataReceived += async (sender, e) =>
-            {
-                if (e.Data == null) return;
-                await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    _messages.Add(new CommandLineMessage { Text = e.Data, HorizontalAlignment = HorizontalAlignment.Left, Background = (Brush)Application.Current.FindResource("Editor.YellowBrush") });
-                    // Parse the output of the sdkmanager command
-                    if (!e.Data.StartsWith("[") || !e.Data.Contains(']')) return;
-                    var progress = double.NaN;
-                    var success = double.TryParse(e.Data.Split(']').LastOrDefault()?.Trim().Split('%').FirstOrDefault(), out progress);
-                    if (success) Progress = progress;
-                    Status = e.Data.Split('%').LastOrDefault()?.Trim();
-                    CurrentPath = Command.Contains("uninstall") ? null : Command.Split(new string[] { "--install" }, StringSplitOptions.None)[1].Trim().Trim('"');
-                }));
-            };
-            process.BeginOutputReadLine();
-            try
-            {
-                await process.WaitForExitAsync(ct);
-            }
-            catch (TaskCanceledException)
-            {
-                GenerateConsoleCtrlEvent(0, (uint)process.Id);
-                process.Kill(true);
-            }
-            catch (OperationCanceledException)
-            {
-                GenerateConsoleCtrlEvent(0, (uint)process.Id);
-                process.Kill(true);
-            }
-        }
+        public void RunCommand(CancellationToken ct) => CommandLineHost.Instance.RunCommand(Command, ct);
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, uint dwProcessGroupId);
+        public void Update(ISubject subject)
+        {
+            if (subject is not CommandLineHost commandLineHost) return;
+            if (commandLineHost.CommandLineMessageType == CommandLineMessageType.Command)
+            {
+                _messages.Add(new CommandLineMessage { Text = commandLineHost.GetLatestCommand(), HorizontalAlignment = HorizontalAlignment.Right, Background = (Brush)Application.Current.FindResource("Editor.BlueBrush") });
+                return;
+            }
+            var latestOutput = commandLineHost.GetLatestOutput();
+            if (latestOutput == null) return;
+            _messages.Add(new CommandLineMessage { Text = latestOutput, HorizontalAlignment = HorizontalAlignment.Left, Background = (Brush)Application.Current.FindResource("Editor.YellowBrush") });
+            if (!latestOutput.StartsWith("[") || !latestOutput.Contains(']')) return;
+            var success = double.TryParse(latestOutput.Split(']').LastOrDefault()?.Trim().Split('%').FirstOrDefault(), out double progress);
+            if (success) Progress = progress;
+            Status = latestOutput.Split('%').LastOrDefault()?.Trim();
+            CurrentPath = commandLineHost.GetLatestCommand()?.Contains("uninstall") == true ? null : commandLineHost.GetLatestCommand()?.Split(new string[] { "--install" }, StringSplitOptions.None)[1].Trim().Trim('"');
+            //process.OutputDataReceived += async (sender, e) =>
+            //{
+            //    if (e.Data == null) return;
+            //    await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //    {
+            //        // Parse the output of the sdkmanager command
+            //    }));
+            //};
+        }
+        public CommandOutputRelay() => CommandLineHost.Instance.Attach(this);
+        ~CommandOutputRelay() => CommandLineHost.Instance.Detach(this);
     }
 }

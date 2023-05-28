@@ -15,7 +15,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-
 namespace PrimalEditor.Content
 {
     class DataSizeToStringConverter : IValueConverter
@@ -37,43 +36,11 @@ namespace PrimalEditor.Content
             }
             return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, _sizeSuffixes[mag]);
         }
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (value is long size) ? SizeSuffix(size, 0) : null;
-        }
-
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) => (value is long size) ? SizeSuffix(size, 0) : null;
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
-    }
-    class PlainView : ViewBase
-    {
-        public static readonly DependencyProperty ItemContainerStyleProperty = ItemsControl.ItemContainerStyleProperty.AddOwner(typeof(PlainView));
-        public Style ItemContainerStyle
-        {
-            get { return (Style)GetValue(ItemContainerStyleProperty); }
-            set { SetValue(ItemContainerStyleProperty, value); }
-        }
-        public static readonly DependencyProperty ItemTemplateProperty = ItemsControl.ItemTemplateProperty.AddOwner(typeof(PlainView));
-        public DataTemplate ItemTemplate
-        {
-            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
-            set { SetValue(ItemTemplateProperty, value); }
-        }
-        public static readonly DependencyProperty ItemWidthProperty = WrapPanel.ItemWidthProperty.AddOwner(typeof(PlainView));
-        public double ItemWidth
-        {
-            get { return (double)GetValue(ItemWidthProperty); }
-            set { SetValue(ItemWidthProperty, value); }
-        }
-        public static readonly DependencyProperty ItemHeightProperty = WrapPanel.ItemHeightProperty.AddOwner(typeof(PlainView));
-        public double ItemHeight
-        {
-            get { return (double)GetValue(ItemHeightProperty); }
-            set { SetValue(ItemHeightProperty, value); }
-        }
-        protected override object DefaultStyleKey => new ComponentResourceKey(GetType(), "PlainViewResourceId");
     }
     /// <summary>
     /// Interaction logic for ContentBrowserView.xaml
@@ -83,7 +50,6 @@ namespace PrimalEditor.Content
         private int _numberOfClicks = 0;
         private string _sortedProperty = nameof(ContentInfo.FileName);
         private ListSortDirection _sortDirection;
-
         /// <summary>
         /// Gets or sets the selection mode for the content browser.
         /// </summary>
@@ -98,9 +64,7 @@ namespace PrimalEditor.Content
         /// <remarks>
         /// Selection mode can be anyone of Single, Multiple and Extended
         /// </remarks>
-        public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register(nameof(SelectionMode), typeof(SelectionMode), typeof(ContentBrowserView), new PropertyMetadata(SelectionMode.Extended));
-
+        public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(nameof(SelectionMode), typeof(SelectionMode), typeof(ContentBrowserView), new PropertyMetadata(SelectionMode.Extended));
         /// <summary>
         /// Gets or sets the file access mode for the content browser.
         /// </summary>
@@ -109,16 +73,13 @@ namespace PrimalEditor.Content
             get => (FileAccess)GetValue(FileAccessProperty);
             set => SetValue(FileAccessProperty, value);
         }
-
         /// <summary>
         /// Property associated with File Access of the items.
         /// </summary>
         /// <remarks>
         /// File Access can be anyone of Read, Write and ReadWrite
         /// </remarks>
-        public static readonly DependencyProperty FileAccessProperty =
-            DependencyProperty.Register(nameof(FileAccess), typeof(FileAccess), typeof(ContentBrowserView), new PropertyMetadata(FileAccess.ReadWrite));
-
+        public static readonly DependencyProperty FileAccessProperty = DependencyProperty.Register(nameof(FileAccess), typeof(FileAccess), typeof(ContentBrowserView), new PropertyMetadata(FileAccess.ReadWrite));
         internal ObservableCollection<ContentInfo> SelectedItems
         {
             get { return (ObservableCollection<ContentInfo>)GetValue(SelectedItemsProperty); }
@@ -130,11 +91,8 @@ namespace PrimalEditor.Content
         /// <remarks>
         /// It is useful in accessing and modifying the properties associated with selected items.
         /// </remarks>
-        public static readonly DependencyProperty SelectedItemsProperty =
-            DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<ContentInfo>), typeof(ContentBrowserView), new PropertyMetadata(new ObservableCollection<ContentInfo>()));
-
+        public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register("SelectedItems", typeof(ObservableCollection<ContentInfo>), typeof(ContentBrowserView), new PropertyMetadata(new ObservableCollection<ContentInfo>()));
         private readonly List<object> _selectedItems = new();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentBrowserView"/> class.
         /// </summary>
@@ -148,51 +106,32 @@ namespace PrimalEditor.Content
         private void OnContentBrowserLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnContentBrowserLoaded;
-            if (Application.Current?.MainWindow != null)
-            {
-                Application.Current.MainWindow.DataContextChanged += OnProjectChanged;
-            }
+            if (Application.Current?.MainWindow != null) Application.Current.MainWindow.DataContextChanged += OnProjectChanged;
             OnProjectChanged(null, new DependencyPropertyChangedEventArgs(DataContextProperty, null, Project.Current));
             folderListView.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
             folderListView.Items.SortDescriptions.Add(new SortDescription(_sortedProperty, _sortDirection));
         }
-
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            if (e.OriginalSource is Thumb thumb && thumb.TemplatedParent is GridViewColumnHeader header)
-            {
-                if (header.Column.ActualWidth < 50)
-                {
-                    header.Column.Width = 50;
-                }
-                else if (header.Column.ActualWidth > 250)
-                {
-                    header.Column.Width = 250;
-                }
-            }
+            if (e.OriginalSource is not Thumb thumb || thumb.TemplatedParent is not GridViewColumnHeader header) return;
+            if (header.Column.ActualWidth < 50) header.Column.Width = 50;
+            else if (header.Column.ActualWidth > 250) header.Column.Width = 250;
         }
-
         private void OnProjectChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             (DataContext as ContentBrowser)?.Dispose();
             DataContext = null;
-            if (e.NewValue is Project project)
-            {
-                Debug.Assert(e.NewValue == Project.Current);
-                var contentBrowser = new ContentBrowser(project);
-                contentBrowser.PropertyChanged += OnSelectedFolderChanged;
-                DataContext = contentBrowser;
-            }
+            if (e.NewValue is not Project project) return;
+            Debug.Assert(e.NewValue == Project.Current);
+            var contentBrowser = new ContentBrowser(project);
+            contentBrowser.PropertyChanged += OnSelectedFolderChanged;
+            DataContext = contentBrowser;
         }
         private void OnSelectedFolderChanged(object? sender, PropertyChangedEventArgs e)
         {
             var vm = sender as ContentBrowser;
-            if (e.PropertyName == nameof(vm.SelectedFolder) && !string.IsNullOrEmpty(vm?.SelectedFolder))
-            {
-                GeneratePathStackButtons();
-            }
+            if (e.PropertyName == nameof(vm.SelectedFolder) && !string.IsNullOrEmpty(vm?.SelectedFolder)) GeneratePathStackButtons();
         }
-
         private void GeneratePathStackButtons()
         {
             if (DataContext is not ContentBrowser vm) return;
@@ -238,15 +177,11 @@ namespace PrimalEditor.Content
             if (sortBy == null) return;
             folderListView.Items.SortDescriptions.Clear();
             var newDir = ListSortDirection.Ascending;
-            if (_sortedProperty == sortBy && _sortDirection == newDir)
-            {
-                newDir = ListSortDirection.Descending;
-            }
+            if (_sortedProperty == sortBy && _sortDirection == newDir) newDir = ListSortDirection.Descending;
             _sortDirection = newDir;
             _sortedProperty = sortBy;
             folderListView.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
-
         private void OnContent_Item_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (((FrameworkElement)sender).DataContext is not ContentInfo info) return;
@@ -256,10 +191,7 @@ namespace PrimalEditor.Content
         private void OnContent_Item_KeyDown(object sender, KeyEventArgs e)
         {
             if (((FrameworkElement)sender).DataContext is not ContentInfo info) return;
-            if (e.Key == Key.Enter)
-            {
-                ExecuteSelection(info);
-            }
+            if (e.Key == Key.Enter) ExecuteSelection(info);
         }
         private void ExecuteSelection(ContentInfo info)
         {
@@ -274,13 +206,9 @@ namespace PrimalEditor.Content
             else if (FileAccess.HasFlag(FileAccess.Read))
             {
                 var assetInfo = Asset.GetAssetInfo(info.FullPath);
-                if (assetInfo != null)
-                {
-                    OpenAssetEditor(assetInfo);
-                }
+                if (assetInfo != null) OpenAssetEditor(assetInfo);
             }
         }
-
         private static IAssetEditor? OpenAssetEditor(AssetInfo info)
         {
             IAssetEditor? editor = null;
@@ -305,17 +233,14 @@ namespace PrimalEditor.Content
             }
             return editor;
         }
-
         private static IAssetEditor? OpenEditorPanel<T>(AssetInfo info, string title) where T : FrameworkElement, new()
         {
             // First look for a window that's already open and is displaying the same asset.
             foreach (Window window in Application.Current.Windows)
             {
-                if (window.Content is FrameworkElement content && content.DataContext is IAssetEditor editor && editor.Asset.Guid == info.Guid)
-                {
-                    window.Activate();
-                    return editor;
-                }
+                if (window.Content is not FrameworkElement content || content.DataContext is not IAssetEditor editor || editor.Asset.Guid != info.Guid) continue;
+                window.Activate();
+                return editor;
             }
             // If not already open in an asset editor, we create a new window and load the asset.
             var newEditor = new T();
@@ -332,19 +257,14 @@ namespace PrimalEditor.Content
             win.Show();
             return newEditor.DataContext as IAssetEditor;
         }
-
         private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
         {
             var vm = DataContext as ContentBrowser;
-            if (vm?.SelectedFolder != null && e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (files?.Length > 0 && Directory.Exists(vm.SelectedFolder))
-                {
-                    _ = ContentHelper.ImportFilesAsync(files, vm.SelectedFolder);
-                    e.Handled = true;
-                }
-            }
+            if ((vm?.SelectedFolder) == null || !e.Data.GetDataPresent(DataFormats.FileDrop)) return;
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (!(files?.Length > 0) || !Directory.Exists(vm.SelectedFolder)) return;
+            _ = ContentHelper.ImportFilesAsync(files, vm.SelectedFolder);
+            e.Handled = true;
         }
         private void OnFolderContent_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -376,10 +296,7 @@ namespace PrimalEditor.Content
         public void Dispose()
         {
             Loaded -= OnContentBrowserLoaded;
-            if (Application.Current?.MainWindow != null)
-            {
-                Application.Current.MainWindow.DataContextChanged -= OnProjectChanged;
-            }
+            if (Application.Current?.MainWindow != null) Application.Current.MainWindow.DataContextChanged -= OnProjectChanged;
             (DataContext as ContentBrowser)?.Dispose();
             DataContext = null;
         }
@@ -409,7 +326,6 @@ namespace PrimalEditor.Content
             if (e.Value == info.FileName) return;
             SystemOperations.Rename(e.Value, info.FullPath);
         }
-
         private void TextBoxBlockCombo_LeftMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (_numberOfClicks++ < 1) return;
@@ -417,45 +333,42 @@ namespace PrimalEditor.Content
             CommandHelper.CallCommand(vm.RenameCommand);
             _numberOfClicks = 0;
         }
-
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem)
+            if (sender is not MenuItem menuItem) return;
+            if (DataContext is not ContentBrowser vm) return;
+            switch (menuItem.Header.ToString())
             {
-                if (DataContext is not ContentBrowser vm) return;
-                switch (menuItem.Header.ToString())
-                {
-                    case "Copy":
-                        if (vm.SelectedItems.Count == 0) return;
-                        CommandHelper.CallCommand(vm.CopyCommand);
-                        break;
-                    case "Cut":
-                        if (vm.SelectedItems.Count == 0) return;
-                        CommandHelper.CallCommand(vm.CutCommand);
-                        break;
-                    case "Paste":
-                        CommandHelper.CallCommand(vm.PasteCommand);
-                        break;
-                    case "Delete":
-                        if (vm.SelectedItems.Count == 0) return;
-                        CommandHelper.CallCommand(vm.TemporaryDeleteCommand);
-                        break;
-                    case "Rename":
-                        if (vm.SelectedItems.Count == 0) return;
-                        CommandHelper.CallCommand(vm.RenameCommand);
-                        break;
-                    case "Asset":
-                        MessageBox.Show("This is the welcome message");
-                        break;
-                    case "Folder":
-                        CommandHelper.CallCommand(vm.NewFolderCommand);
-                        break;
-                    case "Primitive Mesh":
-                        var dlg = new PrimitiveMeshDialog();
-                        dlg.ShowDialog();
-                        break;
-                    default: break;
-                }
+                case "Copy":
+                    if (vm.SelectedItems.Count == 0) return;
+                    CommandHelper.CallCommand(vm.CopyCommand);
+                    break;
+                case "Cut":
+                    if (vm.SelectedItems.Count == 0) return;
+                    CommandHelper.CallCommand(vm.CutCommand);
+                    break;
+                case "Paste":
+                    CommandHelper.CallCommand(vm.PasteCommand);
+                    break;
+                case "Delete":
+                    if (vm.SelectedItems.Count == 0) return;
+                    CommandHelper.CallCommand(vm.TemporaryDeleteCommand);
+                    break;
+                case "Rename":
+                    if (vm.SelectedItems.Count == 0) return;
+                    CommandHelper.CallCommand(vm.RenameCommand);
+                    break;
+                case "Asset":
+                    MessageBox.Show("This is the welcome message");
+                    break;
+                case "Folder":
+                    CommandHelper.CallCommand(vm.NewFolderCommand);
+                    break;
+                case "Primitive Mesh":
+                    var dlg = new PrimitiveMeshDialog();
+                    dlg.ShowDialog();
+                    break;
+                default: break;
             }
         }
         private void MenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
@@ -464,27 +377,22 @@ namespace PrimalEditor.Content
             menuItem.IsSubmenuOpen = true;
             Debug.WriteLine(menuItem.IsSubmenuOpen);
         }
-        private void OnAddItem_Button_Click(object sender, RoutedEventArgs e)
-        {
-            myContextMenu.IsOpen = true;
-        }
+        private void OnAddItem_Button_Click(object sender, RoutedEventArgs e) => myContextMenu.IsOpen = true;
         private void OnAddItemButton_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem item)
+            if (sender is not MenuItem item) return;
+            if (DataContext is not ContentBrowser vm) return;
+            switch (item.Header.ToString())
             {
-                if (DataContext is not ContentBrowser vm) return;
-                switch (item.Header.ToString())
-                {
-                    case "Folder":
-                        CommandHelper.CallCommand(vm.NewFolderCommand);
-                        break;
-                    case "Primitive Mesh":
-                        var dlg = new PrimitiveMeshDialog();
-                        dlg.ShowDialog();
-                        break;
-                    case "Asset": break;
-                    default: break;
-                }
+                case "Folder":
+                    CommandHelper.CallCommand(vm.NewFolderCommand);
+                    break;
+                case "Primitive Mesh":
+                    var dlg = new PrimitiveMeshDialog();
+                    dlg.ShowDialog();
+                    break;
+                case "Asset": break;
+                default: break;
             }
         }
     }

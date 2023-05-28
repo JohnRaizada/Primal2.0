@@ -20,7 +20,7 @@ namespace PrimalEditor.GameDev
         /// </summary>
         Debug,
         /// <summary>
-        /// The expected output of this configuation is an unstable DLL.
+        /// The expected output of this configuration is an unstable DLL.
         /// </summary>
         DebugEditor,
         /// <summary>
@@ -34,11 +34,11 @@ namespace PrimalEditor.GameDev
     }
     static class VisualStudio
     {
-        private static readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
+        private static readonly ManualResetEventSlim _resetEvent = new(false);
         private static readonly string _progID = "VisualStudio.DTE";
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
         private static readonly string[] _buildConfigurationNames = new string[] { "Debug", "DebugEditor", "Release", "ReleaseEditor" };
-        private static EnvDTE80.DTE2 _vsInstance = null;
+        private static EnvDTE80.DTE2? _vsInstance;
         public static bool BuildSucceeded { get; private set; } = true;
         public static bool BuildDone { get; private set; } = true;
         public static string GetConfigurationName(BuildConfiguration config) => _buildConfigurationNames[(int)config];
@@ -60,50 +60,43 @@ namespace PrimalEditor.GameDev
             thread.Start();
             thread.Join();
         }
-        private static void OpenVisualStudio_Internal(string solutionPath)
+        private static void OpenVisualStudio_Internal(string? solutionPath)
         {
-            IRunningObjectTable rot = null;
-            IEnumMoniker monikerTable = null;
-            IBindCtx bindCtx = null;
+            IRunningObjectTable? rot = null;
+            IEnumMoniker? monikerTable = null;
+            IBindCtx? bindCtx = null;
             try
             {
-                if (_vsInstance == null)
+                if (_vsInstance != null) return;
+                // Find and open visual
+                var hResult = GetRunningObjectTable(0, out rot);
+                if (hResult < 0 || rot == null) throw new COMException($"GetRunningObjectTable() returned HRESULT: {hResult:X8}");
+                rot.EnumRunning(out monikerTable);
+                monikerTable.Reset();
+                hResult = CreateBindCtx(0, out bindCtx);
+                if (hResult < 0 || bindCtx == null) throw new COMException($"CreateBindCtx() returned HRESULT: {hResult:X8}");
+                IMoniker[] currentMoniker = new IMoniker[1];
+                while (monikerTable.Next(1, currentMoniker, IntPtr.Zero) == 0)
                 {
-                    // Find and open visual
-                    var hResult = GetRunningObjectTable(0, out rot);
-                    if (hResult < 0 || rot == null) throw new COMException($"GetRunningObjectTable() returned HRESULT: {hResult:X8}");
-                    rot.EnumRunning(out monikerTable);
-                    monikerTable.Reset();
-                    hResult = CreateBindCtx(0, out bindCtx);
-                    if (hResult < 0 || bindCtx == null) throw new COMException($"CreateBindCtx() returned HRESULT: {hResult:X8}");
-                    IMoniker[] currentMoniker = new IMoniker[1];
-                    while (monikerTable.Next(1, currentMoniker, IntPtr.Zero) == 0)
+                    string? name = string.Empty;
+                    currentMoniker[0]?.GetDisplayName(bindCtx, null, out name);
+                    if (!name.Contains(_progID)) continue;
+                    hResult = rot.GetObject(currentMoniker[0], out object obj);
+                    if (hResult < 0 || obj == null) throw new COMException($"Running object table's GetObject() returned HRESULT: {hResult:X8}");
+                    EnvDTE80.DTE2? dte = obj as EnvDTE80.DTE2;
+                    var solutionName = string.Empty;
+                    CallOnSTAThread(() =>
                     {
-                        string name = string.Empty;
-                        currentMoniker[0]?.GetDisplayName(bindCtx, null, out name);
-                        if (name.Contains(_progID))
-                        {
-                            hResult = rot.GetObject(currentMoniker[0], out object obj);
-                            if (hResult < 0 || obj == null) throw new COMException($"Running object table's GetObject() returned HRESULT: {hResult:X8}");
-                            EnvDTE80.DTE2 dte = obj as EnvDTE80.DTE2;
-                            var solutionName = string.Empty;
-                            CallOnSTAThread(() =>
-                            {
-                                solutionName = dte.Solution.FullName;
-                            });
-                            if (solutionName == solutionPath)
-                            {
-                                _vsInstance = dte;
-                                break;
-                            }
-                        }
-                    }
-                    if (_vsInstance == null)
-                    {
-                        Type visualStudioType = Type.GetTypeFromProgID(_progID, true);
-                        _vsInstance = Activator.CreateInstance(visualStudioType) as EnvDTE80.DTE2;
-                    }
+                        solutionName = dte?.Solution.FullName;
+                    });
+                    if (solutionName != solutionPath) continue;
+                    _vsInstance = dte;
+                    break;
                 }
+                if (_vsInstance != null) return;
+                Type? visualStudioType = Type.GetTypeFromProgID(_progID, true);
+                if (visualStudioType == null) return;
+                _vsInstance = Activator.CreateInstance(visualStudioType) as EnvDTE80.DTE2;
             }
             catch (Exception ex)
             {
@@ -119,56 +112,45 @@ namespace PrimalEditor.GameDev
         }
         public static void OpenVisualStudio(string solutionPath)
         {
-            lock (_lock) { OpenVisualStudio_Internal(solutionPath); }
+            lock (_lock) OpenVisualStudio_Internal(solutionPath);
         }
-        private static void CloseVisualStudio_Internal()
-        {
-            CallOnSTAThread(() =>
-            {
-                if (_vsInstance?.Solution.IsOpen == true)
-                {
-                    _vsInstance.ExecuteCommand("File.SaveAll");
-                    _vsInstance.Solution.Close(true);
-                }
-                _vsInstance?.Quit();
-                _vsInstance = null;
-            });
-        }
+        private static void CloseVisualStudio_Internal() => CallOnSTAThread(() =>
+                                                                     {
+                                                                         if (_vsInstance?.Solution.IsOpen == true)
+                                                                         {
+                                                                             _vsInstance.ExecuteCommand("File.SaveAll");
+                                                                             _vsInstance.Solution.Close(true);
+                                                                         }
+                                                                         _vsInstance?.Quit();
+                                                                         _vsInstance = null;
+                                                                     });
         public static void CloseVisualStudio()
         {
-            lock (_lock) { CloseVisualStudio_Internal(); }
+            lock (_lock) CloseVisualStudio_Internal();
         }
-        private static bool AddFilesToSolution_Internal(string solution, string projectName, string[] files)
+        private static bool AddFilesToSolution_Internal(string? solution, string? projectName, string[] files)
         {
             Debug.Assert(files?.Length > 0);
             OpenVisualStudio_Internal(solution);
             try
             {
-                if (_vsInstance != null)
+                if (_vsInstance == null) return true;
+                CallOnSTAThread(() =>
                 {
-                    CallOnSTAThread(() =>
+                    if (!_vsInstance.Solution.IsOpen) _vsInstance.Solution.Open(solution);
+                    else _vsInstance.ExecuteCommand("File.SaveAll");
+                    foreach (EnvDTE.Project project in _vsInstance.Solution.Projects)
                     {
-                        if (!_vsInstance.Solution.IsOpen) _vsInstance.Solution.Open(solution);
-                        else _vsInstance.ExecuteCommand("File.SaveAll");
-                        foreach (EnvDTE.Project project in _vsInstance.Solution.Projects)
-                        {
-                            if (project.UniqueName.Contains(projectName))
-                            {
-                                foreach (var file in files)
-                                {
-                                    project.ProjectItems.AddFromFile(file);
-                                }
-                            }
-                        }
-                        var cpp = files.FirstOrDefault(x => Path.GetExtension(x) == ".cpp");
-                        if (!string.IsNullOrEmpty(cpp))
-                        {
-                            _vsInstance.ItemOperations.OpenFile(cpp).Visible = true; // EnvDTE.Constants.vsViewKindTextView
-                        }
-                        _vsInstance.MainWindow.Activate();
-                        _vsInstance.MainWindow.Visible = true;
-                    });
-                }
+                        if (projectName == null) continue;
+                        if (!project.UniqueName.Contains(projectName)) continue;
+                        foreach (var file in files) project.ProjectItems.AddFromFile(file);
+                    }
+                    var cpp = files.FirstOrDefault(x => Path.GetExtension(x) == ".cpp");
+                    if (!string.IsNullOrEmpty(cpp)) _vsInstance.ItemOperations.OpenFile(cpp).Visible = true; // EnvDTE.Constants.vsViewKindTextView
+                    _vsInstance.MainWindow.Activate();
+                    _vsInstance.MainWindow.Visible = true;
+                });
+                return true;
             }
             catch (Exception ex)
             {
@@ -176,11 +158,10 @@ namespace PrimalEditor.GameDev
                 Debug.WriteLine("Failed to add files to Visual Studio projects");
                 return false;
             }
-            return true;
         }
-        public static bool AddFilesToSolution(string solution, string projectName, string[] files)
+        public static bool AddFilesToSolution(string? solution, string? projectName, string[] files)
         {
-            lock (_lock) { return AddFilesToSolution_Internal(solution, projectName, files); }
+            lock (_lock) return AddFilesToSolution_Internal(solution, projectName, files);
         }
         private static bool IsDebugging_Internal()
         {
@@ -193,7 +174,7 @@ namespace PrimalEditor.GameDev
         }
         public static bool IsDebugging()
         {
-            lock (_lock) { return IsDebugging_Internal(); }
+            lock (_lock) return IsDebugging_Internal();
         }
         private static void BuildSolution_Internal(GameProject.Project project, BuildConfiguration buildConfig, bool showWindow = true)
         {
@@ -206,6 +187,7 @@ namespace PrimalEditor.GameDev
             BuildDone = BuildSucceeded = false;
             CallOnSTAThread(() =>
             {
+                if (_vsInstance == null) return;
                 if (!_vsInstance.Solution.IsOpen) _vsInstance.Solution.Open(project.Solution);
                 _vsInstance.MainWindow.Visible = showWindow;
                 _vsInstance.Events.BuildEvents.OnBuildProjConfigBegin += OnBuildSolutionBegin;
@@ -214,23 +196,20 @@ namespace PrimalEditor.GameDev
             var configName = GetConfigurationName(buildConfig);
             try
             {
-                foreach (var pdbFile in Directory.GetFiles(Path.Combine($"{project.Path}", $@"x64\{configName}"), "*.pdb"))
-                {
-                    File.Delete(pdbFile);
-                }
+                foreach (var pdbFile in Directory.GetFiles(Path.Combine($"{project.Path}", $@"x64\{configName}"), "*.pdb")) File.Delete(pdbFile);
             }
             catch (Exception ex) { Debug.WriteLine(ex.Message); }
             CallOnSTAThread(() =>
             {
-                _vsInstance.Solution.SolutionBuild.SolutionConfigurations.Item(configName).Activate();
-                _vsInstance.ExecuteCommand("Build.BuildSolution");
+                _vsInstance?.Solution.SolutionBuild.SolutionConfigurations.Item(configName).Activate();
+                _vsInstance?.ExecuteCommand("Build.BuildSolution");
                 _resetEvent.Wait();
                 _resetEvent.Reset();
             });
         }
         public static void BuildSolution(Project project, BuildConfiguration buildConfig, bool showWindow = true)
         {
-            lock (_lock) { BuildSolution_Internal(project, buildConfig, showWindow); }
+            lock (_lock) BuildSolution_Internal(project, buildConfig, showWindow);
         }
         private static void OnBuildSolutionDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
@@ -241,39 +220,26 @@ namespace PrimalEditor.GameDev
             BuildSucceeded = success;
             _resetEvent.Set();
         }
-
         private static void OnBuildSolutionBegin(string project, string projectConfig, string platform, string solutionConfig)
         {
             if (BuildDone) return;
             Logger.Log(MessageType.Info, $"Building {project}, {projectConfig}, {platform}, {solutionConfig}");
         }
-        private static void Run_Internal(Project project, BuildConfiguration buildConfig, bool debug)
+        private static void Run_Internal(bool debug) => CallOnSTAThread(() =>
         {
-            CallOnSTAThread(() =>
-            {
-                if (_vsInstance != null && !IsDebugging_Internal() && BuildSucceeded)
-                {
-                    _vsInstance.ExecuteCommand(debug ? "Debug.Start" : "Debug.StartWithoutDebugging");
-                }
-            });
-        }
-        public static void Run(Project project, BuildConfiguration buildConfig, bool debug)
+            if (_vsInstance != null && !IsDebugging_Internal() && BuildSucceeded) _vsInstance.ExecuteCommand(debug ? "Debug.Start" : "Debug.StartWithoutDebugging");
+        });
+        public static void Run(bool debug)
         {
-            lock (_lock) { Run_Internal(project, buildConfig, debug); }
+            lock (_lock) Run_Internal(debug);
         }
-        private static void Stop_Internal()
+        private static void Stop_Internal() => CallOnSTAThread(() =>
         {
-            CallOnSTAThread(() =>
-            {
-                if (_vsInstance != null && IsDebugging_Internal())
-                {
-                    _vsInstance.ExecuteCommand("Debug.StopDebugging");
-                }
-            });
-        }
+            if (_vsInstance != null && IsDebugging_Internal()) _vsInstance.ExecuteCommand("Debug.StopDebugging");
+        });
         public static void Stop()
         {
-            lock ( _lock) { Stop_Internal(); }
+            lock (_lock) Stop_Internal();
         }
     }
     /// <summary>
@@ -285,14 +251,14 @@ namespace PrimalEditor.GameDev
         private const int PENDINGMSG_WAITDEFPROCESS = 2;
         private const int SERVERCALL_RETRYLATER = 2;
         [DllImport("Ole32.dll")]
-        private static extern int CoRegisterMessageFilter(IMessageFilter newFilter, out IMessageFilter oldFilter);
+        private static extern int CoRegisterMessageFilter(IMessageFilter? newFilter, out IMessageFilter oldFilter);
         /// <summary>
         /// It registers the type of message filter
         /// </summary>
         public static void Register()
         {
             IMessageFilter newFilter = new MessageFilter();
-            int hr = CoRegisterMessageFilter(newFilter, out var oldFilter);
+            int hr = CoRegisterMessageFilter(newFilter, out _);
             Debug.Assert(hr >= 0, "Registering COM IMessageFilter failed.");
         }
         /// <summary>
@@ -300,19 +266,13 @@ namespace PrimalEditor.GameDev
         /// </summary>
         public static void Revoke()
         {
-            int hr = CoRegisterMessageFilter(null, out var oldFilter);
+            int hr = CoRegisterMessageFilter(null, out _);
             Debug.Assert(hr >= 0, "Unregistering COM IMessageFilter failed.");
         }
-
-
-        int IMessageFilter.HandleInComingCall(int dwCallType, System.IntPtr hTaskCaller, int dwTickCount, System.IntPtr lpInterfaceInfo)
-        {
+        int IMessageFilter.HandleInComingCall(int dwCallType, IntPtr hTaskCaller, int dwTickCount, IntPtr lpInterfaceInfo) =>
             //returns the flag SERVERCALL_ISHANDLED. 
-            return SERVERCALL_ISHANDLED;
-        }
-
-
-        int IMessageFilter.RetryRejectedCall(System.IntPtr hTaskCallee, int dwTickCount, int dwRejectType)
+            SERVERCALL_ISHANDLED;
+        int IMessageFilter.RetryRejectedCall(IntPtr hTaskCallee, int dwTickCount, int dwRejectType)
         {
             // Thread call was refused, try again. 
             if (dwRejectType == SERVERCALL_RETRYLATER)
@@ -324,12 +284,7 @@ namespace PrimalEditor.GameDev
             // Too busy. Cancel call.
             return -1;
         }
-
-
-        int IMessageFilter.MessagePending(System.IntPtr hTaskCallee, int dwTickCount, int dwPendingType)
-        {
-            return PENDINGMSG_WAITDEFPROCESS;
-        }
+        int IMessageFilter.MessagePending(IntPtr hTaskCallee, int dwTickCount, int dwPendingType) => PENDINGMSG_WAITDEFPROCESS;
     }
     [ComImport(), Guid("00000016-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IMessageFilter

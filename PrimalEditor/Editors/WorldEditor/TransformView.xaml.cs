@@ -29,17 +29,18 @@ namespace PrimalEditor.Editors
             Loaded -= OnTransformViewLoaded;
             (DataContext as MSTransform).PropertyChanged += (s, e) => _propertyChanged = true;
         }
-        private Action GetAction(Func<Transform, (Transform transform, Vector3)> selector, Action<(Transform transform, Vector3)> forEachAction) {
-            if (!(DataContext is MSTransform vm))
+        private Action GetAction(Func<Transform, (Transform transform, Vector3)> selector, Action<(Transform transform, Vector3)> forEachAction)
+        {
+            if (DataContext is not MSTransform vm)
             {
                 _undoAction = null;
                 _propertyChanged = false;
                 return null;
             }
-            var selection = vm.SelectedComponents.Select(x=>selector(x)).ToList();
+            var selection = vm.SelectedComponents.Select(x => selector(x)).ToList();
             return new Action(() =>
             {
-                selection.ForEach(x=>forEachAction(x));
+                selection.ForEach(x => forEachAction(x));
                 (GameEntityView.Instance.DataContext as MSEntity)?.GetMSComponent<MSTransform>().Refresh();
             });
         }
@@ -84,7 +85,7 @@ namespace PrimalEditor.Editors
 
         }
 
-        private void OnScale_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
+        private void OnScale_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs? e)
         {
             RecordActions(GetScaleAction(), "Scale changed");
         }
@@ -105,10 +106,7 @@ namespace PrimalEditor.Editors
         }
         private void OnScale_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (_propertyChanged && _undoAction != null)
-            {
-                OnScale_VectorBox_PreviewMouse_LBU(sender, null);
-            }
+            if (_propertyChanged && _undoAction != null) OnScale_VectorBox_PreviewMouse_LBU(sender, null);
         }
     }
 }

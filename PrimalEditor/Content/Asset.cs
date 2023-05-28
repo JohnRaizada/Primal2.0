@@ -39,12 +39,10 @@ namespace PrimalEditor.Content
             get => _fullPath;
             set
             {
-                if (_fullPath != value)
-                {
-                    _fullPath = value;
-                    OnPropertyChanged(nameof(FullPath));
-                    OnPropertyChanged(nameof(FileName));
-                }
+                if (_fullPath == value) return;
+                _fullPath = value;
+                OnPropertyChanged(nameof(FullPath));
+                OnPropertyChanged(nameof(FileName));
             }
         }
         public string? FileName => Path.GetFileNameWithoutExtension(FullPath);
@@ -53,20 +51,19 @@ namespace PrimalEditor.Content
         public byte[]? Hash { get; protected set; }
         public abstract void Import(string file);
         public abstract void Load(string file);
-        public abstract IEnumerable<string> Save(string file);
+        public abstract IEnumerable<string>? Save(string file);
         private static AssetInfo GetAssetInfo(BinaryReader reader)
         {
             reader.BaseStream.Position = 0;
-            var info = new AssetInfo();
-            info.Type = (AssetType)reader.ReadInt32();
+            var info = new AssetInfo
+            {
+                Type = (AssetType)reader.ReadInt32()
+            };
             var idSize = reader.ReadInt32();
             info.Guid = new Guid(reader.ReadBytes(idSize));
             info.ImportDate = DateTime.FromBinary(reader.ReadInt64());
             var hashSize = reader.ReadInt32();
-            if (hashSize > 0)
-            {
-                info.Hash = reader.ReadBytes(hashSize);
-            }
+            if (hashSize > 0) info.Hash = reader.ReadBytes(hashSize);
             info.SourcePath = reader.ReadString();
             var iconSize = reader.ReadInt32();
             info.Icon = reader.ReadBytes(iconSize);
@@ -101,10 +98,7 @@ namespace PrimalEditor.Content
                 writer.Write(Hash.Length);
                 writer.Write(Hash);
             }
-            else
-            {
-                writer.Write(0);
-            }
+            else writer.Write(0);
             writer.Write(SourcePath ?? "");
             if (Icon == null) return;
             writer.Write(Icon.Length);

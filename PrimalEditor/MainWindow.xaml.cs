@@ -13,8 +13,13 @@ namespace PrimalEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string PrimalPath { get; private set; }
-
+        /// <summary>
+        /// Gets or sets the path to the Primal Editor installation.
+        /// </summary>
+        public static string? PrimalPath { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
             try
@@ -24,20 +29,18 @@ namespace PrimalEditor
                 Closing += OnMainWindowClosing;
                 ForceCursor = true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 // Log any exceptions that are thrown
                 Debug.WriteLine(ex.ToString());
             }
         }
-
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
             GetEnginePath();
             OpenProjectBrowserDialog();
         }
-
         private void GetEnginePath()
         {
             var primalPath = Environment.GetEnvironmentVariable("PRIMAL_ENGINE", EnvironmentVariableTarget.User);
@@ -47,19 +50,14 @@ namespace PrimalEditor
                 if (dlg.ShowDialog() == true)
                 {
                     PrimalPath = dlg.PrimalPath;
-                    Environment.SetEnvironmentVariable("PRIMAL_ENGINE", PrimalPath.ToUpper(), EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("PRIMAL_ENGINE", PrimalPath?.ToUpper(), EnvironmentVariableTarget.User);
+                    return;
                 }
-                else
-                {
-                    Application.Current.Shutdown();
-                }
+                Application.Current.Shutdown();
+                return;
             }
-            else
-            {
-                PrimalPath = primalPath;
-            }
+            PrimalPath = primalPath;
         }
-
         private void OnMainWindowClosing(object? sender, CancelEventArgs e)
         {
             if (DataContext == null)
@@ -67,34 +65,26 @@ namespace PrimalEditor
                 e.Cancel = true;
                 Application.Current.MainWindow.Hide();
                 OpenProjectBrowserDialog();
-                if (DataContext != null)
-                {
-                    Application.Current.MainWindow.Show();
-                }
+                if (DataContext != null) Application.Current.MainWindow.Show();
+                return;
             }
-            else
-            {
-                Closing -= OnMainWindowClosing;
-                Project.Current?.Unload();
-                DataContext = null;
-            }
+            Closing -= OnMainWindowClosing;
+            Project.Current?.Unload();
+            DataContext = null;
         }
-
         private void OpenProjectBrowserDialog()
         {
             var projectBrowser = new ProjectBrowserDialog();
             if (projectBrowser.ShowDialog() == false || projectBrowser.DataContext == null)
             {
                 Application.Current.Shutdown();
+                return;
             }
-            else
-            {
-                Project.Current?.Unload();
-                var project = projectBrowser.DataContext as Project;
-                Debug.Assert(project != null);
-                ContentWatcher.Reset(project.ContentPath, project.Path);
-                DataContext = project;
-            }
+            Project.Current?.Unload();
+            var project = projectBrowser.DataContext as Project;
+            Debug.Assert(project != null);
+            ContentWatcher.Reset(project.ContentPath, project.Path);
+            DataContext = project;
         }
     }
 }

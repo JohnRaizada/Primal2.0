@@ -290,7 +290,12 @@ namespace PrimalEditor.Utilities
                 OnPropertyChanged(nameof(IsNotificationRefreshButtonVisible));
             }
         }
-        internal void Save() { Serializer.ToFile(this, Path.Combine(MainWindow.PrimalPath, "PrimalEditor/Resources/SDKManager/SDKManager.primalconfig")); }
+        internal void Save()
+        {
+            var path = MainWindow.PrimalPath;
+            if (path == null) return;
+            Serializer.ToFile(this, Path.Combine(path, "PrimalEditor/Resources/SDKManager/SDKManager.primalconfig"));
+        }
         private static Dictionary<string, List<string>> GetSDKVersionMappingFromWeb()
         {
             //Dictionary<string, List<string>> x = new()
@@ -314,13 +319,11 @@ namespace PrimalEditor.Utilities
             foreach (var row in rows)
             {
                 var cells = row.SelectNodes(".//td");
-                if (cells != null && cells.Count == 3)
-                {
-                    var name = cells[0].InnerText;
-                    var sdk = cells[1].InnerText;
-                    var version = cells[2].InnerText.Trim();
-                    dictionary.Add(version, new List<string> { name, sdk });
-                }
+                if (cells == null || cells.Count != 3) continue;
+                var name = cells[0].InnerText;
+                var sdk = cells[1].InnerText;
+                var version = cells[2].InnerText.Trim();
+                dictionary.Add(version, new List<string> { name, sdk });
             }
             return dictionary;
         }
@@ -369,20 +372,12 @@ namespace PrimalEditor.Utilities
                     // Parse the output of the sdkmanager command
                     if (commandMode == CommandMode.Updates)
                     {
-                        if (e.Data.StartsWith("Available Updates:"))
-                        {
-                            isUpdatesSection = true;
-                        }
-                        else if (isUpdatesSection && e.Data.Contains('|'))
-                        {
-                            _commandOutput.Add(e.Data);
-                        }
+                        if (e.Data.StartsWith("Available Updates:")) isUpdatesSection = true;
+                        else if (isUpdatesSection && e.Data.Contains('|')) _commandOutput.Add(e.Data);
+                        return;
                     }
-                    else
-                    {
-                        if (!(e.Data.Contains('|') && e.Data.Contains(';'))) return;
-                        _commandOutput.Add(e.Data);
-                    }
+                    if (!(e.Data.Contains('|') && e.Data.Contains(';'))) return;
+                    _commandOutput.Add(e.Data);
                 }));
             };
             process.BeginOutputReadLine();
@@ -471,8 +466,7 @@ namespace PrimalEditor.Utilities
             }
             if (DataSource == DataSourceType.Local)
             {
-                if (Instance.AndroidPlatformContent == null || Instance.AndroidPlatformContent.Count <= 0)
-                    await GenerateAndroidPackagesFromLocalAsync();
+                if (Instance.AndroidPlatformContent == null || Instance.AndroidPlatformContent.Count <= 0) await GenerateAndroidPackagesFromLocalAsync();
                 return;
             }
             _packages ??= await GetAndroidPackagesFromWebAsync();
@@ -519,9 +513,11 @@ namespace PrimalEditor.Utilities
             Instance.AndroidToolsContent = menuItems;
             Instance.Save();
         }
-        internal void GenerateAndroidUpadateSitesContent()
+        internal void GenerateAndroidUpdateSitesContent()
         {
-            var json = File.ReadAllText(Path.Combine(MainWindow.PrimalPath, "PrimalEditor/Resources/SDKManager/AndroidUpdateSites.json"));
+            var path = MainWindow.PrimalPath;
+            if (path == null) return;
+            var json = File.ReadAllText(Path.Combine(path, "PrimalEditor/Resources/SDKManager/AndroidUpdateSites.json"));
             var content = JsonConvert.DeserializeObject<List<ExpanderListMenuItem>?>(json);
             Instance.AndroidUpdateSitesContent = content;
             Instance.Save();
@@ -588,7 +584,7 @@ namespace PrimalEditor.Utilities
                             var packagePath = relevant.FirstOrDefault();
                             var packageApiLevel = packagePath?.Split(';').Where(x => x.Split('-').Contains("android")).FirstOrDefault()?.Split('-').Where(x => x != "android").FirstOrDefault()?.Trim();
                             var subMenuItems = new List<ExpanderListMenuItem>();
-                            var values = value.Values.FirstOrDefault()?.Where(x => x.Split('|').Count() <= 3);
+                            var values = value.Values.FirstOrDefault()?.Where(x => x.Split('|').Length <= 3);
                             if (values == null) continue;
                             foreach (var child in values)
                             {
@@ -633,7 +629,7 @@ namespace PrimalEditor.Utilities
                             var packageVersion = relevant.ElementAtOrDefault(1)?.Trim();
                             var packagePath = relevant.FirstOrDefault()?.Trim();
                             var subMenuItems = new List<ExpanderListMenuItem>();
-                            var values = value.Values.FirstOrDefault()?.Where(x => x.Split('|').Count() <= 3);
+                            var values = value.Values.FirstOrDefault()?.Where(x => x.Split('|').Length <= 3);
                             if (values == null) continue;
                             foreach (var child in values)
                             {
@@ -676,17 +672,15 @@ namespace PrimalEditor.Utilities
                 {
                     if (!platforms.ContainsKey(subcategory)) platforms.Add(subcategory, new List<string>());
                     platforms[subcategory].Add(item);
+                    continue;
                 }
-                else
-                {
-                    if (!tools.ContainsKey(category)) tools.Add(category, new List<string>());
-                    tools[category].Add(item);
-                }
+                if (!tools.ContainsKey(category)) tools.Add(category, new List<string>());
+                tools[category].Add(item);
             }
             var result = new Dictionary<string, List<Dictionary<string, List<string>>>>
                 {
-                    { "Platforms", platforms.Select(x => new Dictionary<string, List<string>> { { x.Value.FirstOrDefault(), x.Value } }).ToList() },
-                    { "Tools", tools.Select(x => new Dictionary<string, List<string>> { { x.Value.FirstOrDefault(), x.Value } }).ToList() }
+                    { "Platforms", platforms.Select(x => new Dictionary<string, List<string>> { { x.Value.First(), x.Value } }).ToList() },
+                    { "Tools", tools.Select(x => new Dictionary<string, List<string>> { { x.Value.First(), x.Value } }).ToList() }
                 };
             return result;
         }
@@ -713,19 +707,13 @@ namespace PrimalEditor.Utilities
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is DataSourceType dataSourceType)
-            {
-                return dataSourceType == DataSourceType.Local ? 1 : 0;
-            }
+            if (value is DataSourceType dataSourceType) return dataSourceType == DataSourceType.Local ? 1 : 0;
             return 1;
         }
         /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double doubleValue)
-            {
-                return doubleValue == 1 ? DataSourceType.Local : DataSourceType.Web;
-            }
+            if (value is double doubleValue) return doubleValue == 1 ? DataSourceType.Local : DataSourceType.Web;
             return DataSourceType.Local;
         }
     }

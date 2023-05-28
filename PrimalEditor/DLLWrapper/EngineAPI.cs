@@ -14,7 +14,7 @@ namespace PrimalEditor.EngineAPIStructs
     {
         public Vector3 Position;
         public Vector3 Rotation;
-        public Vector3 Scale = new Vector3(1, 1, 1);
+        public Vector3 Scale = new(1, 1, 1);
     }
     [StructLayout(LayoutKind.Sequential)]
     class ScriptComponent
@@ -24,8 +24,8 @@ namespace PrimalEditor.EngineAPIStructs
     [StructLayout(LayoutKind.Sequential)]
     class GameEntityDescriptor
     {
-        public TransformComponent Transform = new TransformComponent();
-        public ScriptComponent Script = new ScriptComponent();
+        public TransformComponent Transform = new();
+        public ScriptComponent Script = new();
     }
 }
 namespace PrimalEditor.DLLWrapper
@@ -56,10 +56,11 @@ namespace PrimalEditor.DLLWrapper
             private static extern int CreateGameEntity(GameEntityDescriptor desc);
             public static int CreateGameEntity(GameEntity entity)
             {
-                GameEntityDescriptor desc = new GameEntityDescriptor();
+                GameEntityDescriptor desc = new();
                 //transform component
                 {
                     var c = entity.GetComponent<Transform>();
+                    if (c == null) return CreateGameEntity(desc);
                     desc.Transform.Position = c.Position;
                     desc.Transform.Rotation = c.Rotation;
                     desc.Transform.Scale = c.Scale;
@@ -68,26 +69,15 @@ namespace PrimalEditor.DLLWrapper
                 {
                     // NOTE: here we also check if current project is not null, so we can tell whether the game code Dll has been loaded or not. This way, creation of entities with a script component is deferred until the Dll has been loaded.
                     var c = entity.GetComponent<Script>();
-                    if (c != null && Project.Current != null)
-                    {
-                        if (Project.Current.AvailableScripts.Contains(c.Name))
-                        {
-                            desc.Script.ScriptCreator = GetScriptCreator(c.Name);
-                        }
-                        else
-                        {
-                            Logger.Log(MessageType.Error, $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
-                        }
-                    }
+                    if (c == null || Project.Current == null) return CreateGameEntity(desc);
+                    if (Project.Current.AvailableScripts?.Contains(c.Name) == true) desc.Script.ScriptCreator = GetScriptCreator(c.Name);
+                    else Logger.Log(MessageType.Error, $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
+                    return CreateGameEntity(desc);
                 }
-                return CreateGameEntity(desc);
             }
             [DllImport(_engineDll)]
             private static extern void RemoveGameEntity(int id);
-            public static void RemoveGameEntity(GameEntity entity)
-            {
-                RemoveGameEntity(entity.EntityId);
-            }
+            public static void RemoveGameEntity(GameEntity entity) => RemoveGameEntity(entity.EntityId);
         }
     }
 }

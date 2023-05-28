@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-
 namespace PrimalEditor
 {
     static class VisualExtensions
@@ -62,10 +61,10 @@ namespace PrimalEditor
             return false;
         }
         /// <summary>
-        /// Determines whether the given fileinfo belongs to a directory
+        /// Determines whether the given file info belongs to a directory
         /// </summary>
-        /// <param name="info">The fileinfo of the directory whose validity is in question</param>
-        /// <returns>A non-nullable boolean value based on whether the given fileinfo was indeed a directory</returns>
+        /// <param name="info">The file info of the directory whose validity is in question</param>
+        /// <returns>A non-nullable boolean value based on whether the given file info was indeed a directory</returns>
         public static bool IsDirectory(this FileInfo info) => info.Attributes.HasFlag(FileAttributes.Directory);
         /// <summary>
         /// Compares between two given datetimes and checks if the later is indeed the later one
@@ -94,7 +93,7 @@ namespace PrimalEditor
         /// <param name="offset">The offset in the data to start computing the hash from.</param>
         /// <param name="count">The number of bytes to compute the hash for. If this value is 0, the entire data is used.</param>
         /// <returns>The computed SHA-256 hash, or null if the data is null or empty.</returns>
-        public static byte[]? ComputeHash(byte[] data, int offset = 0, int count = 0)
+        public static byte[]? ComputeHash(byte[]? data, int offset = 0, int count = 0)
         {
             if (data?.Length <= 0) return null;
             using var sha256 = SHA256.Create();
@@ -102,7 +101,7 @@ namespace PrimalEditor
             return sha256.ComputeHash(data, offset, count > 0 ? count : data.Length);
         }
         /// <summary>
-        /// Intializes the various methods required to actually import the file without disturbing the UI thread by running async.
+        /// Initializes the various methods required to actually import the file without disturbing the UI thread by running async.
         /// </summary>
         /// <param name="files">The file paths of files which need to be imported.</param>
         /// <param name="destination">The destination folder path to store the imported files.</param>
@@ -157,24 +156,17 @@ namespace PrimalEditor
             if (!string.IsNullOrEmpty(file)) asset.Import(file);
             asset.Save(asset.FullPath);
         }
+        /// <summary>
+        /// Verifies that the specified path is a valid directory.
+        /// </summary>
+        /// <param name="path">The path to verify.</param>
+        /// <returns>A string indicating the result of the verification.</returns>
         public static string VerifyDirectory(string path)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                return "Path is null or empty.";
-            }
-            else if (!Directory.Exists(path))
-            {
-                return "Path does not exist.";
-            }
-            else if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
-            {
-                return "Path is not a directory.";
-            }
-            else
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(path)) return "Path is null or empty.";
+            else if (!Directory.Exists(path)) return "Path does not exist.";
+            else if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory) return "Path is not a directory.";
+            else return string.Empty;
         }
     }
     /// <summary>
@@ -182,10 +174,10 @@ namespace PrimalEditor
     /// </summary>
     public static class CommandHelper
     {
-        private static CancellationTokenSource _cts = new CancellationTokenSource();
-        private static List<string> _sourceCommands = new List<string>();
-        private static List<string> _processedCommands = new List<string>();
-        private static CommandOutputRelay _commandOutputRelay = new CommandOutputRelay();
+        private static CancellationTokenSource _cts = new();
+        private static List<string> _sourceCommands = new();
+        private static readonly List<string> _processedCommands = new();
+        private static CommandOutputRelay _commandOutputRelay = new();
         internal static void CallCommand(ICommand? command, object? parameter = null)
         {
             if (command != null && command.CanExecute(parameter)) command.Execute(parameter);
@@ -194,13 +186,10 @@ namespace PrimalEditor
         {
             if (_cts.IsCancellationRequested) return;
             commandOutputRelay.Command = command;
-            await commandOutputRelay.RunCommandAsync(_cts.Token);
+            commandOutputRelay.RunCommand(_cts.Token);
             _processedCommands.Add(command);
         }
-        internal static void TryStopCurrentCommandAndDisableFurtherProcessing()
-        {
-            _cts.Cancel();
-        }
+        internal static void TryStopCurrentCommandAndDisableFurtherProcessing() => _cts.Cancel();
         internal static async Task RestartCallChainAsync()
         {
             _cts = new CancellationTokenSource();
@@ -209,62 +198,32 @@ namespace PrimalEditor
         internal static async Task ContinueCallChainAsync(bool fromNextItem = true)
         {
             _cts = new CancellationTokenSource();
-            foreach (var command in _sourceCommands.GetRange(_processedCommands.Count - (fromNextItem ? 1 : 0), _sourceCommands.Count - _processedCommands.Count - (fromNextItem ? 1 : 0)))
-            {
-                await RunCommandAsync(_commandOutputRelay, command);
-            }
+            foreach (var command in _sourceCommands.GetRange(_processedCommands.Count - (fromNextItem ? 1 : 0), _sourceCommands.Count - _processedCommands.Count - (fromNextItem ? 1 : 0))) await RunCommandAsync(_commandOutputRelay, command);
         }
         internal static async Task CallCommandChainAsync(CommandOutputRelay commandOutputRelay, List<string> commands)
         {
             _commandOutputRelay = commandOutputRelay;
             _sourceCommands = commands;
-            foreach (var item in commands)
-            {
-                await RunCommandAsync(commandOutputRelay, item);
-            }
+            foreach (var item in commands) await RunCommandAsync(commandOutputRelay, item);
         }
     }
     internal class Node<T>
     {
         internal T? Value { get; set; }
-        internal List<Node<T>?> Children { get; set; }
-
+        internal List<Node<T?>?> Children { get; set; }
         internal Node(T value)
         {
             Value = value;
-            Children = new List<Node<T>?>();
+            Children = new List<Node<T?>?>();
         }
-
-        internal void AddChild(Node<T> child)
-        {
-            Children.Add(child);
-        }
-        internal static void AddChild(Node<T> child, Node<T> parent)
-        {
-            parent.Children.Add(child);
-        }
-        internal void RemoveChild(Node<T> child)
-        {
-            Children.Remove(child);
-        }
-        public void RemoveChildren()
-        {
-            Children.Clear();
-        }
-        public static void RemoveChildren(Node<T?> parent)
-        {
-            parent.Children.Clear();
-        }
-        internal List<Node<T>?> GetChildren()
-        {
-            return Children;
-        }
-
-        internal static List<Node<T>?>? GetChildren(Node<T> parent)
-        {
-            return parent?.Children;
-        }
-        public Node<T?>? FindParent(Node<T> child)
+        internal void AddChild(Node<T?> child) => Children.Add(child);
+        internal static void AddChild(Node<T?> child, Node<T?> parent) => parent.Children.Add(child);
+        internal void RemoveChild(Node<T?> child) => Children.Remove(child);
+        public void RemoveChildren() => Children.Clear();
+        public static void RemoveChildren(Node<T?> parent) => parent.Children.Clear();
+        internal List<Node<T?>?> GetChildren() => Children;
+        internal static List<Node<T?>?>? GetChildren(Node<T?> parent) => parent?.Children;
+        public Node<T?>? FindParent(Node<T?> child)
         {
             if (Children.Contains(child)) return this;
             foreach (var parent in from Node<T?> node in Children let parent = node.FindParent(child) where parent != null select parent) return parent;
@@ -276,10 +235,7 @@ namespace PrimalEditor
             foreach (var found in from Node<T?> child in Children let found = child.Find(match) where found != null select found) return found;
             return null;
         }
-        public bool Contains(Predicate<T?> match)
-        {
-            return Find(match) != null;
-        }
+        public bool Contains(Predicate<T?> match) => Find(match) != null;
         public void Traverse(Action<Node<T?>?> action)
         {
             action(this);
@@ -291,10 +247,7 @@ namespace PrimalEditor
             foreach (var child in Children) if (child != null) count += child.Count();
             return count;
         }
-        public static int Count(Node<T?> parent)
-        {
-            return parent.Children.Count;
-        }
+        public static int Count(Node<T?> parent) => parent.Children.Count;
         public int Height()
         {
             int height = 0;
@@ -311,15 +264,15 @@ namespace PrimalEditor
             Value = default;
             Children.Clear();
         }
-        internal int FindIndex(Predicate<Node<T>?> match)
+        internal int FindIndex(Predicate<Node<T?>?> match)
         {
-            var queue = new Queue<Node<T>>();
+            var queue = new Queue<Node<T?>>();
             queue.Enqueue(this);
             int index = -1;
             while (queue.Count > 0)
             {
                 index++;
-                Node<T> current = queue.Dequeue();
+                Node<T?> current = queue.Dequeue();
                 if (match(current)) return index;
                 foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }
@@ -327,45 +280,39 @@ namespace PrimalEditor
         }
         internal void RemoveAt(int index)
         {
-            var queue = new Queue<Node<T>>();
+            var queue = new Queue<Node<T?>>();
             queue.Enqueue(this);
             int currentIndex = -1;
             while (queue.Count > 0)
             {
                 currentIndex++;
-                Node<T> current = queue.Dequeue();
+                Node<T?> current = queue.Dequeue();
                 if (currentIndex == index)
                 {
                     if (current == this) throw new InvalidOperationException("Cannot remove root node");
-                    else
-                    {
-                        Node<T> parent = queue.Peek();
-                        parent.Children.Remove(current);
-                        return;
-                    }
+                    Node<T?> parent = queue.Peek();
+                    parent.Children.Remove(current);
+                    return;
                 }
                 queue.Enqueue(current);
                 foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }
         }
-        internal void Insert(int index, Node<T> item)
-        {
-            Children.Insert(index, item);
-        }
-        internal Node<T>? this[int index]
+        internal void Insert(int index, Node<T?> item) => Children.Insert(index, item);
+        internal Node<T?>? this[int index]
         {
             get => GetElementAtIndex(index);
             set => Children[index] = value;
         }
-        internal Node<T>? GetElementAtIndex(int index)
+        internal Node<T?>? GetElementAtIndex(int index)
         {
-            Queue<Node<T>> queue = new();
+            Queue<Node<T?>> queue = new();
             queue.Enqueue(this);
             int currentIndex = -1;
             while (queue.Count > 0)
             {
                 currentIndex++;
-                Node<T> current = queue.Dequeue();
+                Node<T?> current = queue.Dequeue();
                 if (currentIndex == index) return current;
                 foreach (var child in current.Children) if (child != null) queue.Enqueue(child);
             }

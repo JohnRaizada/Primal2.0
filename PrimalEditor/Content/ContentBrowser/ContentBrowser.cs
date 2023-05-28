@@ -183,7 +183,6 @@ namespace PrimalEditor.Content
         public ICommand? UpCommand { get; private set; }
         public ICommand? RenameCommand { get; private set; }
         public ICommand? NewFolderCommand { get; internal set; }
-
         internal void SetCommands()
         {
             CopyCommand = new RelayCommand<object>(x => SystemOperations.LocalCopy(SelectedItems));
@@ -196,10 +195,7 @@ namespace PrimalEditor.Content
             RenameCommand = new RelayCommand<object>(x =>
             {
                 var lastItem = SelectedItemsInfo.LastOrDefault();
-                if (lastItem != null)
-                {
-                    lastItem.IsToggled = true;
-                }
+                if (lastItem != null) lastItem.IsToggled = true;
             });
             if (SelectedFolder != null)
             {
@@ -263,22 +259,10 @@ namespace PrimalEditor.Content
         }
         internal void UpdateAccessibilityStatus()
         {
-            if (FrontPathStack.Count < 1)
-            {
-                IsFrontButtonEnabled = false;
-            }
-            else
-            {
-                IsFrontButtonEnabled = true;
-            }
-            if (SelectedFolder != ContentFolder)
-            {
-                IsUpButtonEnabled = true;
-            }
-            else
-            {
-                IsUpButtonEnabled = false;
-            }
+            if (FrontPathStack.Count < 1) IsFrontButtonEnabled = false;
+            else IsFrontButtonEnabled = true;
+            if (SelectedFolder != ContentFolder) IsUpButtonEnabled = true;
+            else IsUpButtonEnabled = false;
             if (BackPathStack.Count < 1)
             {
                 IsBackButtonEnabled = false;
@@ -291,10 +275,7 @@ namespace PrimalEditor.Content
             if (Path.GetDirectoryName(e.FullPath) != SelectedFolder) return;
             _refreshTimer.Trigger();
         }
-        private void Refresh(object? sender, DelayEventTimerArgs e)
-        {
-            _ = GetFolderContent();
-        }
+        private void Refresh(object? sender, DelayEventTimerArgs e) => _ = GetFolderContent();
         private async Task GetFolderContent()
         {
             var folderContent = new List<ContentInfo>();
@@ -306,7 +287,6 @@ namespace PrimalEditor.Content
             _folderContent.Clear();
             folderContent.ForEach(x => _folderContent.Add(x));
         }
-
         private static List<ContentInfo> GetFolderContent(string path)
         {
             Debug.Assert(!string.IsNullOrEmpty(path));
@@ -314,10 +294,7 @@ namespace PrimalEditor.Content
             try
             {
                 // Get sub-folder
-                foreach (var dir in Directory.GetDirectories(path))
-                {
-                    folderContent.Add(new ContentInfo(dir));
-                }
+                foreach (var dir in Directory.GetDirectories(path)) folderContent.Add(new ContentInfo(dir));
                 // Get files
                 foreach (var file in Directory.GetFiles(path, $"*{Asset.AssetFileExtension}"))
                 {
@@ -336,7 +313,6 @@ namespace PrimalEditor.Content
             ContentWatcher.ContentModified -= OnContentModified;
             ContentInfoCache.Save();
         }
-
         public ContentBrowser(Project project)
         {
             Debug.Assert(project != null);

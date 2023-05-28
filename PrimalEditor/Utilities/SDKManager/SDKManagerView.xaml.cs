@@ -14,11 +14,11 @@ namespace PrimalEditor.Utilities
     /// </summary>
     public partial class SDKManagerView : Window
     {
-        private static HashSet<ExpanderListMenuItem> _deletedItems = new HashSet<ExpanderListMenuItem>();
-        private static HashSet<ExpanderListMenuItem> _addedItems = new HashSet<ExpanderListMenuItem>();
-        private static double? _originalDataSource = null;
-        private static bool? _showObsoletePackages = null;
-        private static bool? _originalDisplayState = null;
+        private static readonly HashSet<ExpanderListMenuItem> _deletedItems = new();
+        private static readonly HashSet<ExpanderListMenuItem> _addedItems = new();
+        private static double? _originalDataSource;
+        private static bool? _showObsoletePackages;
+        private static bool? _originalDisplayState;
         /// <summary>
         /// Initializes a new instance of the <see cref="SDKManagerView"/> class.
         /// </summary>
@@ -29,7 +29,7 @@ namespace PrimalEditor.Utilities
             Loaded += async (sender, e) =>
             {
                 SDKManager.Instance.UpdateInstance();
-                SDKManager.Instance.GenerateAndroidUpadateSitesContent();
+                SDKManager.Instance.GenerateAndroidUpdateSitesContent();
                 await SDKManager.Instance.GenerateAndroidPlatformPackagesAsync();
                 await SDKManager.Instance.GenerateAndroidToolsPackagesAsync();
                 if (SDKManager.Instance.IsAutoSyncEnabled == true)
@@ -61,13 +61,12 @@ namespace PrimalEditor.Utilities
             foreach (ExpanderListMenuItem item in _addedItems) itemsChanged.Add(item, true);
             if (itemsChanged.Count <= 0) return;
             Downloads.Instance.ModifiedItems = itemsChanged;
-            SDKConfirmationWindow confirmationWindow = new SDKConfirmationWindow();
+            SDKConfirmationWindow confirmationWindow = new();
             confirmationWindow.ShowDialog();
         }
         private void RadioButton_Toggled(object sender, RoutedEventArgs e, ExpanderListView listView, RadioButton radioButtonToCheck)
         {
-            var radioButton = sender as RadioButton;
-            if (radioButton == null) return;
+            if (sender is not RadioButton radioButton) return;
             if (listView == null) return;
             if (radioButton == radioButtonToCheck) listView.ContentViewMode = radioButtonToCheck.IsChecked == true ? ContentViewMode.List : ContentViewMode.Expander;
             else listView.ContentViewMode = radioButtonToCheck.IsChecked == true ? ContentViewMode.Expander : ContentViewMode.List;
@@ -105,7 +104,7 @@ namespace PrimalEditor.Utilities
             SDKManager.Instance.NotificationText = validity;
             SDKManager.Instance.IsNotificationTextVisible = true;
         }
-        private void OnSDKManager_WarningButton_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Beware! Enabling Auto Sync or Manually Syncing while in online mode and doing this too frequently, may lead to the servers blocking the ip address. And thus leading the app paralysed and unable to check for updates 'EVER'; until google servers unblock us!! Remember: The app is using web scraping to retrieve data due to the absence of an API, so excessive scrapping will utilize more server and device resources!!!", "Please be mindful!!!!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+        private void OnSDKManager_WarningButton_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Beware! Enabling Auto Sync or Manually Syncing while in online mode and doing this too frequently, may lead to the servers blocking the ip address. And thus leading the app paralyzed and unable to check for updates 'EVER'; until google servers unblock us!! Remember: The app is using web scraping to retrieve data due to the absence of an API, so excessive scrapping will utilize more server and device resources!!!", "Please be mindful!!!!", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
         private void OnSDKManager_PlatformListView_CheckBoxChanged(object sender, CheckBoxChangedEventArgs e)
         {
             if (_addedItems.Contains(e.MenuItem)) _addedItems.Remove(e.MenuItem);
@@ -128,7 +127,7 @@ namespace PrimalEditor.Utilities
         private void OnSDKManager_ReloadButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            SDKManagerView managerView = new SDKManagerView();
+            SDKManagerView managerView = new();
             managerView.ShowDialog();
             SDKManager.Instance.IsNotificationReloadButtonVisible = false;
             SDKManager.Instance.IsNotificationTextVisible = false;
@@ -162,7 +161,7 @@ namespace PrimalEditor.Utilities
                 _originalDisplayState = SDKManager.Instance.ShowObsoletePackages;
                 SDKManager.Instance.IsNotificationTextVisible = false;
                 SDKManager.Instance.IsNotificationRefreshButtonVisible = false;
-                SDKManagerView managerView = new SDKManagerView();
+                SDKManagerView managerView = new();
                 managerView.ShowDialog();
             }));
         }
@@ -183,10 +182,7 @@ namespace PrimalEditor.Utilities
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is double progress)
-            {
-                return GenerateProgressBarForeground(progress);
-            }
+            if (value is double progress) return GenerateProgressBarForeground(progress);
             return Binding.DoNothing;
         }
         /// <inheritdoc/>

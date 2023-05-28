@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace PrimalEditor.Utilities
 {
-	internal class Network
-	{
+    internal class Network
+    {
         public static async Task DownloadFileFromURLAsync(string url, string destinationFolder)
         {
             using (HttpClient client = new HttpClient())
@@ -30,7 +30,6 @@ namespace PrimalEditor.Utilities
             {
                 originalFileName = "downloadedFile.xml";
             }
-
             string fileName = System.IO.Path.Combine(destinationFolder, originalFileName);
             int count = 1;
             while (System.IO.File.Exists(fileName))
@@ -38,7 +37,6 @@ namespace PrimalEditor.Utilities
                 fileName = System.IO.Path.Combine(destinationFolder, System.IO.Path.GetFileNameWithoutExtension(originalFileName) + $" ({count})" + System.IO.Path.GetExtension(originalFileName));
                 count++;
             }
-
             return fileName;
         }
     }

@@ -65,11 +65,9 @@ namespace PrimalEditor.GameProject
             get => _buildConfig;
             set
             {
-                if (_buildConfig != value)
-                {
-                    _buildConfig = value;
-                    OnPropertyChanged(nameof(BuildConfig));
-                }
+                if (_buildConfig == value) return;
+                _buildConfig = value;
+                OnPropertyChanged(nameof(BuildConfig));
             }
         }
         /// <summary>
@@ -89,28 +87,21 @@ namespace PrimalEditor.GameProject
             get => _availableScripts;
             private set
             {
-                if (_availableScripts != value)
-                {
-                    _availableScripts = value;
-                    OnPropertyChanged(nameof(AvailableScripts));
-                }
+                if (_availableScripts == value) return;
+                _availableScripts = value;
+                OnPropertyChanged(nameof(AvailableScripts));
             }
         }
         [DataMember(Name = nameof(Scenes))]
-        private readonly ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
+        private readonly ObservableCollection<Scene> _scenes = new();
         /// <summary>
         /// Gets the collection of scenes in the project.
         /// </summary>
-        public ReadOnlyObservableCollection<Scene>? Scenes
-        {
-            get; private set;
-        }
-
+        public ReadOnlyObservableCollection<Scene>? Scenes { get; private set; }
         private Scene? _activeScene;
         /// <summary>
         /// Gets or sets the active scene in the project.
         /// </summary>
-
         public Scene? ActiveScene
         {
             get => _activeScene;
@@ -241,7 +232,6 @@ namespace PrimalEditor.GameProject
             _scenes.Add(new Scene(this, sceneName));
             _isModified = true;
         }
-
         private void RemoveScene(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
@@ -271,10 +261,7 @@ namespace PrimalEditor.GameProject
         }
         private void DeleteTempFolder()
         {
-            if (Directory.Exists(TempFolder))
-            {
-                Directory.Delete(TempFolder, true);
-            }
+            if (Directory.Exists(TempFolder)) Directory.Delete(TempFolder, true);
         }
         private static void Save(Project project)
         {
@@ -304,6 +291,7 @@ namespace PrimalEditor.GameProject
                 foreach (var entity in ActiveScene.GameEntities)
                 {
                     bw.Write(0); //entity type (reserved for later)
+                    if (entity.Components == null) continue;
                     bw.Write(entity.Components.Count);
                     foreach (var component in entity.Components)
                     {
@@ -316,10 +304,7 @@ namespace PrimalEditor.GameProject
         private async Task RunGame(bool debug)
         {
             await Task.Run(() => VisualStudio.BuildSolution(this, StandAloneBuildConfig, debug));
-            if (VisualStudio.BuildSucceeded)
-            {
-                await Task.Run(() => VisualStudio.Run(this, StandAloneBuildConfig, debug));
-            }
+            if (VisualStudio.BuildSucceeded) await Task.Run(() => VisualStudio.Run(debug));
         }
         private async Task StopGame() => await Task.Run(() => VisualStudio.Stop());
         private async Task BuildGameCodeDLL(bool showWindow = true)
@@ -328,18 +313,16 @@ namespace PrimalEditor.GameProject
             {
                 UnloadGameCodeDLL();
                 await Task.Run(() => VisualStudio.BuildSolution(this, DLLBuildConfig, showWindow));
-                if (VisualStudio.BuildSucceeded)
+                if (!VisualStudio.BuildSucceeded) return;
+                try
                 {
-                    try
-                    {
-                        await Task.Run(() => SaveToBinary());
-                    }
-                    catch (Exception)
-                    {
-                        Logger.Log(MessageType.Warning, "Failed to create a game binary. Try running the game first.");
-                    }
-                    LoadGameCodeDLL();
+                    await Task.Run(() => SaveToBinary());
                 }
+                catch (Exception)
+                {
+                    Logger.Log(MessageType.Warning, "Failed to create a game binary. Try running the game first.");
+                }
+                LoadGameCodeDLL();
             }
             catch (Exception e)
             {
@@ -357,20 +340,16 @@ namespace PrimalEditor.GameProject
                 AvailableScripts = EngineAPI.GetScriptNames();
                 ActiveScene?.GameEntities?.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, "Game code Dll loaded successfully");
+                return;
             }
-            else
-            {
-                Logger.Log(MessageType.Warning, "Failed to load game code DLL file. Try to build the project first");
-            }
+            Logger.Log(MessageType.Warning, "Failed to load game code DLL file. Try to build the project first");
         }
         private void UnloadGameCodeDLL()
         {
             ActiveScene?.GameEntities?.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
-            if (EngineAPI.UnloadGameCodeDll() != 0)
-            {
-                Logger.Log(MessageType.Info, "Game code Dll unloaded successfully");
-                AvailableScripts = null;
-            }
+            if (EngineAPI.UnloadGameCodeDll() == 0) return;
+            Logger.Log(MessageType.Info, "Game code Dll unloaded successfully");
+            AvailableScripts = null;
         }
         [OnDeserialized]
         private async void OnDeserialized(StreamingContext context)

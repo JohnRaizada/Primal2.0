@@ -8,8 +8,8 @@ namespace PrimalEditor.Content
 {
     static class ContentInfoCache
     {
-        private static readonly object _lock = new object();
-        private static readonly Dictionary<string, ContentInfo> _contentInfoCache = new Dictionary<string, ContentInfo>();
+        private static readonly object _lock = new();
+        private static readonly Dictionary<string, ContentInfo> _contentInfoCache = new();
         private static bool _isDirty;
         private static string _cacheFilePath = string.Empty;
         public static ContentInfo Add(string file)
@@ -40,12 +40,10 @@ namespace PrimalEditor.Content
                     _contentInfoCache.Clear();
                     _isDirty = false;
                 }
-                if (!string.IsNullOrEmpty(projectPath))
-                {
-                    Debug.Assert(Directory.Exists(projectPath));
-                    _cacheFilePath = $@"{projectPath}.Primal\ContentInfoCache.bin";
-                    LoadInfoCache();
-                }
+                if (string.IsNullOrEmpty(projectPath)) return;
+                Debug.Assert(Directory.Exists(projectPath));
+                _cacheFilePath = $@"{projectPath}.Primal\ContentInfoCache.bin";
+                LoadInfoCache();
             }
         }
         public static void Save() => Reset(string.Empty);
@@ -87,10 +85,7 @@ namespace PrimalEditor.Content
                     var iconSize = reader.ReadInt32();
                     var icon = reader.ReadBytes(iconSize);
                     // Cache only the files that still exist.
-                    if (File.Exists(assetFile))
-                    {
-                        _contentInfoCache[assetFile] = new ContentInfo(assetFile, icon, null, date);
-                    }
+                    if (File.Exists(assetFile)) _contentInfoCache[assetFile] = new ContentInfo(assetFile, icon, null, date);
                 }
             }
             catch (Exception ex)

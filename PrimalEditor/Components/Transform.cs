@@ -21,7 +21,6 @@ namespace PrimalEditor.Components
                 OnPropertyChanged(nameof(Position));
             }
         }
-
         private Vector3 _rotation;
         [DataMember]
         public Vector3 Rotation
@@ -34,7 +33,6 @@ namespace PrimalEditor.Components
                 OnPropertyChanged(nameof(Rotation));
             }
         }
-
         private Vector3 _scale;
         [DataMember]
         public Vector3 Scale
@@ -42,11 +40,9 @@ namespace PrimalEditor.Components
             get => _scale;
             set
             {
-                if (_scale != value)
-                {
-                    _scale = value;
-                    OnPropertyChanged(nameof(Scale));
-                }
+                if (_scale == value) return;
+                _scale = value;
+                OnPropertyChanged(nameof(Scale));
             }
         }
         public override IMSComponent GetMultiselectionComponent(MSEntity msEntity) => new MSTransform(msEntity);
@@ -60,7 +56,6 @@ namespace PrimalEditor.Components
         {
 
         }
-
     }
     sealed class MSTransform : MSComponent<Transform>
     {
@@ -70,11 +65,9 @@ namespace PrimalEditor.Components
             get => _posX;
             set
             {
-                if (!_posX.IsTheSameAs(value))
-                {
-                    _posX = value;
-                    OnPropertyChanged(nameof(PosX));
-                }
+                if (_posX.IsTheSameAs(value)) return;
+                _posX = value;
+                OnPropertyChanged(nameof(PosX));
             }
         }
         private float? _posY;
@@ -83,11 +76,9 @@ namespace PrimalEditor.Components
             get => _posY;
             set
             {
-                if (!_posY.IsTheSameAs(value))
-                {
-                    _posY = value;
-                    OnPropertyChanged(nameof(PosY));
-                }
+                if (_posY.IsTheSameAs(value)) return;
+                _posY = value;
+                OnPropertyChanged(nameof(PosY));
             }
         }
         private float? _posZ;
@@ -96,11 +87,9 @@ namespace PrimalEditor.Components
             get => _posZ;
             set
             {
-                if (!_posZ.IsTheSameAs(value))
-                {
-                    _posZ = value;
-                    OnPropertyChanged(nameof(PosZ));
-                }
+                if (_posZ.IsTheSameAs(value)) return;
+                _posZ = value;
+                OnPropertyChanged(nameof(PosZ));
             }
         }
         private float? _rotX;
@@ -109,11 +98,9 @@ namespace PrimalEditor.Components
             get => _rotX;
             set
             {
-                if (!_rotX.IsTheSameAs(value))
-                {
-                    _rotX = value;
-                    OnPropertyChanged(nameof(RotX));
-                }
+                if (_rotX.IsTheSameAs(value)) return;
+                _rotX = value;
+                OnPropertyChanged(nameof(RotX));
             }
         }
         private float? _rotY;
@@ -122,11 +109,9 @@ namespace PrimalEditor.Components
             get => _rotY;
             set
             {
-                if (!_rotY.IsTheSameAs(value))
-                {
-                    _rotY = value;
-                    OnPropertyChanged(nameof(RotY));
-                }
+                if (_rotY.IsTheSameAs(value)) return;
+                _rotY = value;
+                OnPropertyChanged(nameof(RotY));
             }
         }
         private float? _rotZ;
@@ -135,11 +120,9 @@ namespace PrimalEditor.Components
             get => _rotZ;
             set
             {
-                if (!_rotZ.IsTheSameAs(value))
-                {
-                    _rotZ = value;
-                    OnPropertyChanged(nameof(RotZ));
-                }
+                if (_rotZ.IsTheSameAs(value)) return;
+                _rotZ = value;
+                OnPropertyChanged(nameof(RotZ));
             }
         }
         private float? _scaleX;
@@ -148,11 +131,9 @@ namespace PrimalEditor.Components
             get => _scaleX;
             set
             {
-                if (!_scaleX.IsTheSameAs(value))
-                {
-                    _scaleX = value;
-                    OnPropertyChanged(nameof(ScaleX));
-                }
+                if (_scaleX.IsTheSameAs(value)) return;
+                _scaleX = value;
+                OnPropertyChanged(nameof(ScaleX));
             }
         }
         private float? _scaleY;
@@ -171,21 +152,19 @@ namespace PrimalEditor.Components
             get => _scaleZ;
             set
             {
-                if (!_scaleZ.IsTheSameAs(value))
-                {
-                    _scaleZ = value;
-                    OnPropertyChanged(nameof(ScaleZ));
-                }
+                if (_scaleZ.IsTheSameAs(value)) return;
+                _scaleZ = value;
+                OnPropertyChanged(nameof(ScaleZ));
             }
         }
-        protected override bool UpdateComponents(string propertyName)
+        protected override bool UpdateComponents(string? propertyName)
         {
             switch (propertyName)
             {
                 case nameof(PosX):
                 case nameof(PosY):
                 case nameof(PosZ):
-                    SelectedComponents.ForEach(c => c.Position = new Vector3(_posX ?? c.Position.X, _posY ??  c.Position.Y, _posZ ?? c.Position.Z));
+                    SelectedComponents.ForEach(c => c.Position = new Vector3(_posX ?? c.Position.X, _posY ?? c.Position.Y, _posZ ?? c.Position.Z));
                     return true;
                 case nameof(RotX):
                 case nameof(RotY):
@@ -213,9 +192,6 @@ namespace PrimalEditor.Components
             ScaleZ = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Scale.Z));
             return true;
         }
-        public MSTransform(MSEntity msEntity) : base(msEntity)
-        {
-            Refresh();
-        }
+        public MSTransform(MSEntity msEntity) : base(msEntity) => Refresh();
     }
 }

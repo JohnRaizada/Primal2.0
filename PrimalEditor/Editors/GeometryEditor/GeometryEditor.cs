@@ -21,12 +21,10 @@ namespace PrimalEditor.Editors
             get => _isHighlighted;
             set
             {
-                if (_isHighlighted != value)
-                {
-                    _isHighlighted = value;
-                    OnPropertyChanged(nameof(IsHighlighted));
-                    OnPropertyChanged(nameof(Diffuse));
-                }
+                if (_isHighlighted == value) return;
+                _isHighlighted = value;
+                OnPropertyChanged(nameof(IsHighlighted));
+                OnPropertyChanged(nameof(Diffuse));
             }
         }
         private bool _isIsolated;
@@ -35,11 +33,9 @@ namespace PrimalEditor.Editors
             get => _isIsolated;
             set
             {
-                if (_isIsolated != value)
-                {
-                    _isIsolated = value;
-                    OnPropertyChanged(nameof(IsIsolated));
-                }
+                if (_isIsolated == value) return;
+                _isIsolated = value;
+                OnPropertyChanged(nameof(IsIsolated));
             }
         }
         private Brush _specular = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ff111111"));
@@ -48,11 +44,9 @@ namespace PrimalEditor.Editors
             get => _specular;
             set
             {
-                if (_specular != value)
-                {
-                    _specular = value;
-                    OnPropertyChanged(nameof(Specular));
-                }
+                if (_specular == value) return;
+                _specular = value;
+                OnPropertyChanged(nameof(Specular));
             }
         }
         private Brush _diffuse = Brushes.White;
@@ -61,14 +55,12 @@ namespace PrimalEditor.Editors
             get => _isHighlighted ? Brushes.Orange : _diffuse;
             set
             {
-                if (_diffuse != value)
-                {
-                    _diffuse = value;
-                    OnPropertyChanged(nameof(Diffuse));
-                }
+                if (_diffuse == value) return;
+                _diffuse = value;
+                OnPropertyChanged(nameof(Diffuse));
             }
         }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public Point3DCollection Positions { get; } = new Point3DCollection();
         public Vector3DCollection Normals { get; } = new Vector3DCollection();
         public PointCollection UVs { get; } = new PointCollection();
@@ -78,59 +70,51 @@ namespace PrimalEditor.Editors
     class MeshRenderer : ViewModelBase
     {
         public ObservableCollection<MeshRendererVertexData> Meshes { get; } = new ObservableCollection<MeshRendererVertexData>();
-        private Vector3D _cameraDirection = new Vector3D(0, 0, -10);
+        private Vector3D _cameraDirection = new(0, 0, -10);
         public Vector3D CameraDirection
         {
             get => _cameraDirection;
             set
             {
-                if (_cameraDirection != value)
-                {
-                    _cameraDirection = value;
-                    OnPropertyChanged(nameof(CameraDirection));
-                }
+                if (_cameraDirection == value) return;
+                _cameraDirection = value;
+                OnPropertyChanged(nameof(CameraDirection));
             }
         }
-        private Point3D _cameraPosition = new Point3D(0, 0, 10);
+        private Point3D _cameraPosition = new(0, 0, 10);
         public Point3D CameraPosition
         {
-            get => _cameraPosition; 
+            get => _cameraPosition;
             set
             {
-                if (_cameraPosition != value)
-                {
-                    _cameraPosition = value;
-                    CameraDirection = new Vector3D(-value.X, -value.Y, -value.Z);
-                    OnPropertyChanged(nameof(OffsetCameraPosition));
-                    OnPropertyChanged(nameof(CameraPosition));
-                }
+                if (_cameraPosition == value) return;
+                _cameraPosition = value;
+                CameraDirection = new Vector3D(-value.X, -value.Y, -value.Z);
+                OnPropertyChanged(nameof(OffsetCameraPosition));
+                OnPropertyChanged(nameof(CameraPosition));
             }
         }
-        private Point3D _cameraTarget = new Point3D(0, 0, 0);
+        private Point3D _cameraTarget = new(0, 0, 0);
         public Point3D CameraTarget
         {
             get => _cameraTarget; set
             {
-                if (_cameraTarget != value)
-                {
-                    _cameraTarget = value;
-                    OnPropertyChanged(nameof(OffsetCameraPosition));
-                    OnPropertyChanged(nameof(CameraTarget));
-                }
+                if (_cameraTarget == value) return;
+                _cameraTarget = value;
+                OnPropertyChanged(nameof(OffsetCameraPosition));
+                OnPropertyChanged(nameof(CameraTarget));
             }
         }
-        public Point3D OffsetCameraPosition => new Point3D(CameraPosition.X + CameraTarget.X, CameraPosition.Y + CameraTarget.Y, CameraPosition.Z + CameraTarget.Z);
+        public Point3D OffsetCameraPosition => new(CameraPosition.X + CameraTarget.X, CameraPosition.Y + CameraTarget.Y, CameraPosition.Z + CameraTarget.Z);
         private Color _keyLight = (Color)ColorConverter.ConvertFromString("#ffaeaeae");
         public Color KeyLight
         {
             get => _keyLight;
             set
             {
-                if (_keyLight != value)
-                {
-                    _keyLight = value;
-                    OnPropertyChanged(nameof(KeyLight));
-                }
+                if (_keyLight == value) return;
+                _keyLight = value;
+                OnPropertyChanged(nameof(KeyLight));
             }
         }
         private Color _skyLight = (Color)ColorConverter.ConvertFromString("#ff111b30");
@@ -139,11 +123,9 @@ namespace PrimalEditor.Editors
             get => _skyLight;
             set
             {
-                if (value != _skyLight)
-                {
-                    _skyLight = value;
-                    OnPropertyChanged(nameof(SkyLight));
-                }
+                if (value == _skyLight) return;
+                _skyLight = value;
+                OnPropertyChanged(nameof(SkyLight));
             }
         }
         private Color _groundLight = (Color)ColorConverter.ConvertFromString("#ff3f2f1e");
@@ -152,11 +134,9 @@ namespace PrimalEditor.Editors
             get => _groundLight;
             set
             {
-                if (_groundLight != value)
-                {
-                    _groundLight = value;
-                    OnPropertyChanged(nameof(GroundLight));
-                }
+                if (_groundLight == value) return;
+                _groundLight = value;
+                OnPropertyChanged(nameof(GroundLight));
             }
         }
         private Color _ambientLight = (Color)ColorConverter.ConvertFromString("#ff3b3b3b");
@@ -165,14 +145,12 @@ namespace PrimalEditor.Editors
             get => _ambientLight;
             set
             {
-                if (_ambientLight != value)
-                {
-                    _ambientLight = value;
-                    OnPropertyChanged(nameof(AmbientLight));
-                }
+                if (_ambientLight == value) return;
+                _ambientLight = value;
+                OnPropertyChanged(nameof(AmbientLight));
             }
         }
-        public MeshRenderer(MeshLOD lod, MeshRenderer old)
+        public MeshRenderer(MeshLOD? lod, MeshRenderer? old)
         {
             Debug.Assert(lod?.Meshes.Any() == true);
             // Calculate vertex size minus the position and normal vectors;
@@ -180,7 +158,7 @@ namespace PrimalEditor.Editors
             // In order to set up camera position and target properly, we need to figure out how big this object is that we're rendering. Hence, we need to know its bounding box.
             double minX, minY, minZ; minX = minY = minZ = double.MaxValue;
             double maxX, maxY, maxZ; maxX = maxY = maxZ = double.MinValue;
-            Vector3D avgNormal = new Vector3D();
+            Vector3D avgNormal = new();
             // This is to unpack the packed normals;
             var intervals = 2.0f / ((1 << 16) - 1);
             foreach (var mesh in lod.Meshes)
@@ -198,7 +176,7 @@ namespace PrimalEditor.Editors
                         vertexData.Positions.Add(new Point3D(posX, posY, posZ));
                         // Adjust the bounding box;
                         minX = Math.Min(minX, posX); maxX = Math.Max(maxX, posX);
-                        minY = Math.Min(minY, posY); maxY = Math.Max(maxY, posY);   
+                        minY = Math.Min(minY, posY); maxY = Math.Max(maxY, posY);
                         minZ = Math.Min(minZ, posZ); maxZ = Math.Max(minZ, posZ);
                         //Read normals
                         var nrmX = reader.ReadUInt16() * intervals - 1.0f;
@@ -215,10 +193,8 @@ namespace PrimalEditor.Editors
                         vertexData.UVs.Add(new Point(u, v));
                     }
                 using (var reader = new BinaryReader(new MemoryStream(mesh.Indices)))
-                    if (mesh.IndexSize == sizeof(short))
-                        for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadUInt16());
-                    else
-                        for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadInt32());
+                    if (mesh.IndexSize == sizeof(short)) for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadUInt16());
+                    else for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadInt32());
                 vertexData.Positions.Freeze();
                 vertexData.Normals.Freeze();
                 vertexData.UVs.Freeze();
@@ -244,52 +220,44 @@ namespace PrimalEditor.Editors
                     avgNormal *= radius;
                     CameraPosition = new Point3D(avgNormal.X, avgNormal.Y, avgNormal.Z);
                 }
-                else
-                {
-                    CameraPosition = new Point3D(width, height * 0.5, radius);
-                }
-                CameraTarget = new Point3D(minX + width * 0.5, minY + height * 0.5, minZ + depth  * 0.5);
+                else CameraPosition = new Point3D(width, height * 0.5, radius);
+                CameraTarget = new Point3D(minX + width * 0.5, minY + height * 0.5, minZ + depth * 0.5);
             }
         }
     }
     class GeometryEditor : ViewModelBase, IAssetEditor
     {
-        Asset IAssetEditor.Asset => Geometry;
-        private Content.Geometry _geometry;
-        public Content.Geometry Geometry
+        Asset? IAssetEditor.Asset => Geometry;
+        private Content.Geometry? _geometry;
+        public Content.Geometry? Geometry
         {
             get => _geometry;
             set
             {
-                if (_geometry != value)
-                {
-                    _geometry = value;
-                    OnPropertyChanged(nameof(Geometry));
-                }
+                if (_geometry == value) return;
+                _geometry = value;
+                OnPropertyChanged(nameof(Geometry));
             }
         }
-        private MeshRenderer _meshRenderer;
-        public MeshRenderer MeshRenderer
+        private MeshRenderer? _meshRenderer;
+        public MeshRenderer? MeshRenderer
         {
             get => _meshRenderer;
             set
             {
-                if (_meshRenderer != value)
+                if (_meshRenderer == value) return;
+                _meshRenderer = value;
+                OnPropertyChanged(nameof(MeshRenderer));
+                var lods = Geometry?.GetLODGroup()?.LODs;
+                MaxLODIndex = (lods?.Count > 0) ? lods.Count - 1 : 0;
+                OnPropertyChanged(nameof(MaxLODIndex));
+                if (lods?.Count <= 1) return;
+                if (MeshRenderer == null) return;
+                MeshRenderer.PropertyChanged += (s, e) =>
                 {
-                    _meshRenderer = value;
-                    OnPropertyChanged(nameof(MeshRenderer));
-                    var lods = Geometry.GetLODGroup().LODs;
-                    MaxLODIndex = (lods.Count > 0) ? lods.Count - 1 : 0;
-                    OnPropertyChanged(nameof(MaxLODIndex));
-                    if (lods.Count > 1)
-                    {
-                        MeshRenderer.PropertyChanged += (s, e) =>
-                        {
-                            if (e.PropertyName == nameof(MeshRenderer.OffsetCameraPosition) && AutoLOD) ComputeLOD(lods);
-                        };
-                        ComputeLOD(lods);
-                    }
-                }
+                    if (e.PropertyName == nameof(MeshRenderer.OffsetCameraPosition) && AutoLOD) ComputeLOD(lods);
+                };
+                ComputeLOD(lods);
             }
         }
         private bool _autoLOD = true;
@@ -298,11 +266,9 @@ namespace PrimalEditor.Editors
             get => _autoLOD;
             set
             {
-                if (_autoLOD != value)
-                {
-                    _autoLOD = value;
-                    OnPropertyChanged(nameof(AutoLOD));
-                }
+                if (_autoLOD == value) return;
+                _autoLOD = value;
+                OnPropertyChanged(nameof(AutoLOD));
             }
         }
         public int MaxLODIndex { get; private set; }
@@ -312,46 +278,40 @@ namespace PrimalEditor.Editors
             get => _lodIndex;
             set
             {
-                var lods = Geometry.GetLODGroup().LODs;
+                var lods = Geometry?.GetLODGroup()?.LODs;
+                if (lods == null) return;
                 value = Math.Clamp(value, 0, lods.Count);
-                if (_lodIndex != value)
-                {
-                    _lodIndex = value;
-                    OnPropertyChanged(nameof(LODIndex));
-                    MeshRenderer = new MeshRenderer(lods[value], MeshRenderer);
-                }
+                if (_lodIndex == value) return;
+                _lodIndex = value;
+                OnPropertyChanged(nameof(LODIndex));
+                MeshRenderer = new MeshRenderer(lods[value], MeshRenderer);
             }
         }
-        private void ComputeLOD(IList<MeshLOD> lods)
+        private void ComputeLOD(IList<MeshLOD>? lods)
         {
             if (!AutoLOD) return;
+            if (MeshRenderer == null) return;
             var p = MeshRenderer.OffsetCameraPosition;
             var distance = new Vector3D(p.X, p.Y, p.Z).Length;
             for (int i = MaxLODIndex; i >= 0; --i)
             {
-                if (lods[i].LodThreshold < distance)
-                {
-                    LODIndex = i;
-                    break;
-                }
+                if (lods?[i].LodThreshold >= distance) continue;
+                LODIndex = i;
+                break;
             }
         }
         public void SetAsset(Asset asset)
         {
             Debug.Assert(asset is Content.Geometry);
-            if (asset is Content.Geometry geometry)
+            if (asset is not Content.Geometry geometry) return;
+            Geometry = geometry;
+            var numLods = geometry.GetLODGroup()?.LODs.Count;
+            if (LODIndex >= numLods)
             {
-                Geometry = geometry;
-                var numLods = geometry.GetLODGroup().LODs.Count;
-                if (LODIndex >= numLods)
-                {
-                    LODIndex = numLods - 1;
-                }
-                else
-                {
-                    MeshRenderer = new MeshRenderer(Geometry.GetLODGroup().LODs[0], MeshRenderer);
-                }
+                LODIndex = (int)(numLods - 1);
+                return;
             }
+            MeshRenderer = new MeshRenderer(Geometry.GetLODGroup()?.LODs[0], MeshRenderer);
         }
         public async void SetAsset(AssetInfo info)
         {

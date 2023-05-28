@@ -7,9 +7,9 @@ namespace PrimalEditor.Editors
     /// </summary>
     public partial class ScriptView : UserControl
     {
-        public ScriptView()
-        {
-            InitializeComponent();
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScriptView"/> class.
+        /// </summary>
+		public ScriptView() => InitializeComponent();
     }
 }

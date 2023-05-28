@@ -60,18 +60,14 @@ namespace PrimalEditor.GameProject
     }
     class OpenProject
     {
-        private static readonly string _applicationDataPath =
-            $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\PrimalEditor\";
-
+        private static readonly string _applicationDataPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\PrimalEditor\";
         private static readonly string _projectDataPath;
-        private static readonly ObservableCollection<ProjectData> _projects = new ObservableCollection<ProjectData>();
+        private static readonly ObservableCollection<ProjectData> _projects = new();
         public static ReadOnlyObservableCollection<ProjectData> Projects { get; }
-
         private static void ReadProjectData()
         {
             if (!File.Exists(_projectDataPath)) return;
-            var projects = Serializer.FromFile<ProjectDataList>(_projectDataPath).Projects?
-                .OrderByDescending(x => x.Date);
+            var projects = Serializer.FromFile<ProjectDataList>(_projectDataPath)?.Projects?.OrderByDescending(x => x.Date);
             _projects.Clear();
             if (projects == null) return;
             foreach (var project in projects)
@@ -87,21 +83,17 @@ namespace PrimalEditor.GameProject
             var projects = _projects.OrderBy(x => x.Date).ToList();
             Serializer.ToFile(new ProjectDataList() { Projects = projects }, _projectDataPath);
         }
-        public static Project Open(ProjectData data)
+        public static Project? Open(ProjectData data)
         {
             ReadProjectData();
             var project = _projects.FirstOrDefault(x => x.FullPath == data.FullPath);
-            if (project != null)
-            {
-                project.Date = DateTime.Now;
-            }
+            if (project != null) project.Date = DateTime.Now;
             else
             {
                 project = data;
                 project.Date = DateTime.Now;
                 _projects.Add(project);
             }
-
             WriteProjectData();
             return Project.Load(project.FullPath);
         }

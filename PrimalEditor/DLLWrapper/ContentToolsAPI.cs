@@ -13,7 +13,7 @@ namespace PrimalEditor.ContentToolsAPIStructs
         public byte CalculateNormals = 0;
         public byte CalculateTangents = 1;
         public byte ReverseHandedness = 0;
-        public byte ImportEmbededTextures = 1;
+        public byte ImportEmbeddedTextures = 1;
         public byte ImportAnimations = 1;
         private byte ToByte(bool value) => value ? (byte)1 : (byte)0;
         public void FromContentSettings(Content.Geometry geometry)
@@ -23,7 +23,7 @@ namespace PrimalEditor.ContentToolsAPIStructs
             CalculateNormals = ToByte(settings.CalculateNormals);
             CalculateTangents = ToByte(settings.CalculateTangents);
             ReverseHandedness = ToByte(settings.ReverseHandedness);
-            ImportEmbededTextures = ToByte(settings.ImportEmbeddedTextures);
+            ImportEmbeddedTextures = ToByte(settings.ImportEmbeddedTextures);
             ImportAnimations = ToByte(settings.ImportAnimations);
         }
     }
@@ -32,8 +32,7 @@ namespace PrimalEditor.ContentToolsAPIStructs
     {
         public IntPtr Data;
         public int DataSize;
-        public GeometryImportSettings ImportSettings = new GeometryImportSettings();
-
+        public GeometryImportSettings ImportSettings = new();
         public void Dispose()
         {
             Marshal.FreeCoTaskMem(Data);
@@ -51,7 +50,7 @@ namespace PrimalEditor.ContentToolsAPIStructs
         public int SegmentX = 1;
         public int SegmentY = 1;
         public int SegmentZ = 1;
-        public Vector3 Size = new Vector3(1f);
+        public Vector3 Size = new(1f);
         public int LOD = 0;
     }
 }
@@ -81,15 +80,9 @@ namespace PrimalEditor.DLLWrapper
         }
         [DllImport(_toolsDll)]
         private static extern void CreatePrimitiveMesh([In, Out] SceneData data, PrimitiveInitInfo info);
-        public static void CreatePrimitiveMesh(Content.Geometry geometry, PrimitiveInitInfo info)
-        {
-            GeometryFromSceneData(geometry, (sceneData) => CreatePrimitiveMesh(sceneData, info), $"Failed to create {info.Type} primitive mesh.");
-        }
+        public static void CreatePrimitiveMesh(Content.Geometry geometry, PrimitiveInitInfo info) => GeometryFromSceneData(geometry, (sceneData) => CreatePrimitiveMesh(sceneData, info), $"Failed to create {info.Type} primitive mesh.");
         [DllImport(_toolsDll)]
-        private static extern void ImportFbx(string file, [In, Out] SceneData data); 
-        public static void ImportFbx(string file, Content.Geometry geometry)
-        {
-            GeometryFromSceneData(geometry, (sceneData) => ImportFbx(file, sceneData), $"Failed to import from FBX file: {file}");
-        }
+        private static extern void ImportFbx(string file, [In, Out] SceneData data);
+        public static void ImportFbx(string file, Content.Geometry geometry) => GeometryFromSceneData(geometry, (sceneData) => ImportFbx(file, sceneData), $"Failed to import from FBX file: {file}");
     }
 }

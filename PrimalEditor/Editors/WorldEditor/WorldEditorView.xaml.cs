@@ -3,7 +3,9 @@ using PrimalEditor.GameDev;
 using PrimalEditor.GameProject;
 using PrimalEditor.GameProject.Settings;
 using PrimalEditor.Utilities;
+using PrimalEditor.Utilities.DeviceManager;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,19 +17,20 @@ namespace PrimalEditor.Editors
     /// </summary>
     public partial class WorldEditorView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorldEditorView"/> class.
+        /// </summary>
         public WorldEditorView()
         {
             InitializeComponent();
             Loaded += OnWorldEditorViewLoaded;
             ForceCursor = true;
         }
-
         private void OnWorldEditorViewLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnWorldEditorViewLoaded;
             Focus();
             ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
-            //Docks.Children.Remove(LoggerView);
             GenerateVisualTree();
         }
         private void GenerateVisualTree()
@@ -64,21 +67,12 @@ namespace PrimalEditor.Editors
             Node<DockedElement> gameEntityView = Docking.MakeElement(GameEntityView, nameof(GameEntityView));
             projectLayoutViewWithGameEntityView.AddChild(gameEntityView);
         }
-        private void Generate()
-        {
-
-        }
-        private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
-        {
-            new NewScriptDialog().ShowDialog();
-        }
-
+        private void OnNewScript_Button_Click(object sender, RoutedEventArgs e) => new NewScriptDialog().ShowDialog();
         private void OnCreatePrimitiveMesh_Button_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new PrimitiveMeshDialog();
             dlg.ShowDialog();
         }
-
         private void OnNewProject(object sender, ExecutedRoutedEventArgs e)
         {
             ProjectBrowserDialog.GotoNewProjectTab = true;
@@ -86,47 +80,57 @@ namespace PrimalEditor.Editors
             Application.Current.MainWindow.DataContext = null;
             Application.Current.MainWindow.Close();
         }
-
         private void OnOpenProject(object sender, ExecutedRoutedEventArgs e)
         {
             Project.Current?.Unload();
             Application.Current.MainWindow.DataContext = null;
             Application.Current.MainWindow.Close();
         }
-
-        private void OnEditorClose(object sender, ExecutedRoutedEventArgs e)
-        {
-            Application.Current.MainWindow.Close();
-        }
-
+        private void OnEditorClose(object sender, ExecutedRoutedEventArgs e) => Application.Current.MainWindow.Close();
         private void OnPlatform_Menuitem_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         private void OnEngine_Menuitem_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         private void OnTools_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (!(sender is MenuItem menuItem)) return;
+            if (sender is not MenuItem menuItem) return;
             switch (menuItem.Header.ToString())
             {
                 case "SDK Manager":
-                    SDKManagerView dialog = new SDKManagerView();
+                    SDKManagerView dialog = new();
                     dialog.ShowDialog();
                     break;
-                default:
+                case "Device Manager":
+                    DeviceManagerView managerView = new();
+                    managerView.ShowDialog();
                     break;
+                default: break;
             }
         }
-
         private void OnSettings_Project_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ProjectSettingsView dialog = new ProjectSettingsView();
+            ProjectSettingsView dialog = new();
             dialog.ShowDialog();
+        }
+        private void OnWorldEditorView_RunButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            // Start the Android Emulator.
+            ProcessStartInfo processStartInfo = new("cmd.exe")
+            {
+                WorkingDirectory = @"C:\Users\indus\AppData\Local\Android\Sdk\emulator",
+                Arguments = "/C " + "emulator @Pixel_6_Pro_API_33",
+                UseShellExecute = false
+            };
+            Process process = new()
+            {
+                StartInfo = processStartInfo
+            };
+            process.Start();
+            processStartInfo.RedirectStandardOutput = true;
         }
     }
 }

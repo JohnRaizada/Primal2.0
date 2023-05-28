@@ -9,11 +9,7 @@ namespace PrimalEditor
     /// </summary>
     public partial class App : Application
     {
-        public App()
-        {
-            ShutdownMode = ShutdownMode.OnMainWindowClose;
-        }
-
+        public App() => ShutdownMode = ShutdownMode.OnMainWindowClose;
         protected override void OnStartup(StartupEventArgs e)
         {
             SplashScreenView splashScreen = new SplashScreenView();

@@ -5,6 +5,7 @@
 					xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
 					xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 					xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions">
+	<FontFamily x:Key="DarumadropOne">pack://application:,,,/Resources/Fonts/#Darumadrop One</FontFamily>
 	<local:ContentViewModeToVisibilityConverter x:Key="ContentViewModeToVisibilityConverter" />
 	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 	<local:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
@@ -869,7 +870,7 @@
 							<Grid x:Name="PART_ColumnHeaders" HorizontalAlignment="Stretch" Margin="1" Grid.IsSharedSizeScope="True" />
 						</Border>
 						<ScrollViewer Grid.Row="1" >
-                            <ListView x:Name="PART_ContentList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
+							<ListView x:Name="PART_ContentList" Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1">
 								<ListView.ItemTemplate>
 									<DataTemplate>
 										<Grid x:Name="ListMenuItemGrid">
@@ -906,7 +907,7 @@
 								</ListView.ItemTemplate>
 								<ListView.ItemsPanel>
 									<ItemsPanelTemplate>
-										<StackPanel Margin="1" />
+										<StackPanel Margin="1"/>
 									</ItemsPanelTemplate>
 								</ListView.ItemsPanel>
 							</ListView>
@@ -916,21 +917,21 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-    <Style TargetType="{x:Type utl:TextBoxBlockCombo}" x:Key="TextBoxBlockComboWithBorder">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type utl:TextBoxBlockCombo}">
-                    <Grid>
-                        <Border x:Name="TextBlockBorder" BorderBrush="{StaticResource Editor.Disabled.FontBrush}" BorderThickness="1">
-                            <TextBlock x:Name="PART_TextBlock" Text="{TemplateBinding Text}" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
-                        </Border>
-                        <TextBox x:Name="PART_TextBox" Visibility ="Collapsed" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style TargetType="{x:Type utl:PasswordBoxView}" x:Key="{x:Type utl:PasswordBoxView}">
+	<Style TargetType="{x:Type utl:TextBoxBlockCombo}" x:Key="TextBoxBlockComboWithBorder">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type utl:TextBoxBlockCombo}">
+					<Grid>
+						<Border x:Name="TextBlockBorder" BorderBrush="{StaticResource Editor.Disabled.FontBrush}" BorderThickness="1">
+							<TextBlock x:Name="PART_TextBlock" Text="{TemplateBinding Text}" Background="{StaticResource Editor.Window.GrayBrush2}" Foreground="{StaticResource Editor.FontBrush}" Margin="1" Padding="1"/>
+						</Border>
+						<TextBox x:Name="PART_TextBox" Visibility ="Collapsed" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="{x:Type utl:PasswordBoxView}" x:Key="{x:Type utl:PasswordBoxView}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type utl:PasswordBoxView}">
@@ -999,39 +1000,101 @@
 		</Setter.Value>
 	</Setter>
 </Style>
-    <Style TargetType="{x:Type Slider}" x:Key="SwitchAppearance">
-        <Setter Property="Background" Value="{StaticResource Editor.GreenBrush}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Slider}">
-                    <Grid>
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" Margin="1" Padding="1" Height="15">
-                            <Track x:Name="PART_Track">
-                                <Track.Thumb>
-                                    <Thumb Width="11" Height="11">
-                                        <Thumb.Template>
-                                            <ControlTemplate TargetType="{x:Type Thumb}">
-                                                <Ellipse Fill="{TemplateBinding Foreground}"/>
-                                            </ControlTemplate>
-                                        </Thumb.Template>
-                                    </Thumb>
-                                </Track.Thumb>
-                            </Track>
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Value, RelativeSource={RelativeSource Self}}" Value="0">
-                <Setter Property="Background" Value="{StaticResource Editor.RedBrush}" />
-            </DataTrigger>
-            <Trigger Property="Value" Value="1">
-                <Setter Property="Background" Value="{StaticResource Editor.GreenBrush}" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <ControlTemplate TargetType="{x:Type ComboBoxItem}" x:Key="ComboBoxItemTemplate">
+	<Style TargetType="{x:Type Slider}" x:Key="SwitchAppearance">
+		<Setter Property="Background" Value="{StaticResource Editor.GreenBrush}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Slider}">
+					<Grid>
+						<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" Margin="1" Padding="1" Height="15">
+							<Track x:Name="PART_Track">
+								<Track.Thumb>
+									<Thumb Width="11" Height="11">
+										<Thumb.Template>
+											<ControlTemplate TargetType="{x:Type Thumb}">
+												<Ellipse Fill="{TemplateBinding Foreground}"/>
+											</ControlTemplate>
+										</Thumb.Template>
+									</Thumb>
+								</Track.Thumb>
+							</Track>
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Value, RelativeSource={RelativeSource Self}}" Value="0">
+				<Setter Property="Background" Value="{StaticResource Editor.RedBrush}" />
+			</DataTrigger>
+			<Trigger Property="Value" Value="1">
+				<Setter Property="Background" Value="{StaticResource Editor.GreenBrush}" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	<Style TargetType="{x:Type Slider}" x:Key="SwitchAppearanceWithoutColourChange">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Slider}">
+					<Grid>
+						<Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7" Margin="1" Padding="1" Height="15">
+							<Track x:Name="PART_Track">
+								<Track.Thumb>
+									<Thumb Width="11" Height="11">
+										<Thumb.Template>
+											<ControlTemplate TargetType="{x:Type Thumb}">
+												<Ellipse Fill="{TemplateBinding Foreground}" x:Name="ellipse"/>
+												<ControlTemplate.Triggers>
+													<Trigger Property="IsMouseOver" Value="True">
+														<Setter Property="Fill" TargetName="ellipse" Value="{StaticResource Editor.Window.GrayBrush2}"/>
+													</Trigger>
+												</ControlTemplate.Triggers>
+											</ControlTemplate>
+										</Thumb.Template>
+									</Thumb>
+								</Track.Thumb>
+							</Track>
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="{x:Type utl:DeviceSchematic}" x:Key="{x:Type utl:DeviceSchematic}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type utl:DeviceSchematic}">
+					<Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<Line Grid.Column="0" Grid.Row="0" X1="0" Y1="0" X2="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}" Y2="0" Stroke="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Center" Opacity=".9"/>
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding DeviceWidth, RelativeSource={RelativeSource AncestorType={x:Type utl:DeviceSchematic}}, StringFormat='\{0}px'}" Margin="1" Padding="1" HorizontalAlignment="Center" Foreground="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Top"/>
+						<Line Grid.Column="2" Grid.Row="0" X1="0" Y1="0" X2="{Binding Width, RelativeSource={RelativeSource AncestorType=Grid}}" Y2="0" Stroke="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Center" Opacity=".9"/>
+						<Line Grid.Column="3" Grid.Row="1" X1="0" Y1="0" X2="0" Y2="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Stroke="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Center" Opacity=".9"/>
+                        <TextBlock Grid.Column="3" Grid.Row="2" Text="{Binding DeviceHeight, RelativeSource={RelativeSource AncestorType={x:Type utl:DeviceSchematic}}, StringFormat='\{0}px'}" Margin="1" Padding="1" HorizontalAlignment="Center" Foreground="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Top"/>
+						<Line Grid.Column="3" Grid.Row="3" X1="0" Y1="0" X2="0" Y2="{Binding Height, RelativeSource={RelativeSource AncestorType=Grid}}" Stroke="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Center" Opacity=".9"/>
+						<Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="3" BorderBrush="{StaticResource Editor.FontBrush}" BorderThickness="2" CornerRadius="10" Margin="1" Padding="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+							<Grid MaxWidth="{TemplateBinding DeviceWidth}" MaxHeight="{TemplateBinding DeviceHeight}">
+								<Line Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" X1="0" Y1="0" X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" Stroke="{StaticResource Editor.Disabled.FontBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".9"/>
+                                <TextBlock Text="{Binding DeviceDiagonal, RelativeSource={RelativeSource AncestorType={x:Type utl:DeviceSchematic}}, StringFormat='\{0}&quot;'}" Margin="{TemplateBinding DeviceDiagonal}" VerticalAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{StaticResource Editor.Disabled.FontBrush}" Background="{StaticResource Editor.Window.GrayBrush3}" TextAlignment="Center" Padding="1"/>
+							</Grid>
+						</Border>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<ControlTemplate TargetType="{x:Type ComboBoxItem}" x:Key="ComboBoxItemTemplate">
 		<Border x:Name="Border" Padding="10,5,10,5" BorderThickness="0" Margin="0">
 			<ContentPresenter ContentSource="Content" x:Name="ContentHost" RecognizesAccessKey="True" />
 		</Border>

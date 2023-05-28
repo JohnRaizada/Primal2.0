@@ -1,0 +1,136 @@
+﻿<Window x:Class="PrimalEditor.Utilities.DeviceManager.DeviceManagerView"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:PrimalEditor.Utilities.DeviceManager" xmlns:utl="clr-namespace:PrimalEditor.Utilities.Controls"
+		mc:Ignorable="d"
+		d:DataContext="{d:DesignInstance Type=local:DeviceManager}"
+		Title="Device Manager" Height="450" Width="800" Style="{StaticResource PrimalWindowStyle}">
+	<Grid Margin="1">
+		<TabControl TabStripPlacement="Bottom" Margin="1" Background="{StaticResource Editor.Window.GrayBrush5}" Foreground="{StaticResource Editor.FontBrush}" Padding="1" BorderBrush="{StaticResource Editor.Window.GrayBrush4}">
+			<TabItem Header="Android" Margin="1" Padding="1" Background="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush2}" >
+				<Grid Margin="1" Background="{StaticResource Editor.Window.GrayBrush1}">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<DockPanel LastChildFill="False" Background="{StaticResource Editor.Window.GrayBrush2}" Margin="1">
+						<Border Background="{StaticResource Editor.Window.GrayBrush3}" BorderBrush="{StaticResource Editor.Window.GrayBrush4}" CornerRadius="10" Margin="1" Padding="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+							<StackPanel Orientation="Horizontal" Margin="1" Background="Transparent">
+								<Path Data="m8.8 2.25h-.0321-.00002c-.81283-.00001-1.46844-.00001-1.99935.04336-.54663.04467-1.02678.13903-1.47099.36537-.70561.35952-1.27929.9332-1.63881 1.63881-.22634.44421-.3207.92436-.36537 1.47099-.04337.53091-.04337 1.18652-.04336 1.99935v.00002.0321 8.4.0321c-.00001.8129-.00001 1.4685.04336 1.9994.04467.5466.13903 1.0267.36537 1.471.35952.7056.9332 1.2792 1.63881 1.6388.44421.2263.92436.3207 1.47099.3653.53091.0434 1.18652.0434 1.99935.0434h.03212 6.4.0321c.8129 0 1.4685 0 1.9994-.0434.5466-.0446 1.0267-.139 1.471-.3653.7056-.3596 1.2793-.9332 1.6388-1.6388.2263-.4443.3207-.9244.3653-1.471.0434-.5309.0434-1.1865.0434-1.9994v-.0321-8.4-.03212c0-.81283 0-1.46844-.0434-1.99935-.0446-.54663-.139-1.02678-.3653-1.47099-.3595-.70561-.9332-1.27929-1.6388-1.63881-.4443-.22634-.9244-.3207-1.471-.36537-.5309-.04337-1.1865-.04337-1.9994-.04336h-.0321zm-2.82148 1.74524c.19752-.10064.45829-.16977.91216-.20686.46263-.0378 1.05687-.03838 1.90932-.03838h6.4c.8525 0 1.4467.00058 1.9093.03838.4539.03709.7147.10622.9122.20686.4233.21571.7675.55992.9833.98328.1006.19752.1697.45829.2068.91216.0378.46263.0384 1.05687.0384 1.90932v8.4c0 .8525-.0006 1.4467-.0384 1.9093-.0371.4539-.1062.7147-.2068.9122-.2158.4233-.56.7675-.9833.9833-.1975.1006-.4583.1697-.9122.2068-.4626.0378-1.0568.0384-1.9093.0384h-6.4c-.85245 0-1.44669-.0006-1.90932-.0384-.45387-.0371-.71464-.1062-.91216-.2068-.42336-.2158-.76757-.56-.98328-.9833-.10064-.1975-.16977-.4583-.20686-.9122-.0378-.4626-.03838-1.0568-.03838-1.9093v-8.4c0-.85245.00058-1.44669.03838-1.90932.03709-.45387.10622-.71464.20686-.91216.21571-.42336.55992-.76757.98328-.98328zm4.02148 13.25476c-.41421 0-.75.3358-.75.75s.33579.75.75.75h4c.4142 0 .75-.3358.75-.75s-.3358-.75-.75-.75z" Margin="1" Fill="{StaticResource Editor.Disabled.FontBrush}" Stroke="{StaticResource Editor.Disabled.OrangeBrush}" Stretch="Uniform" Height="15"/>
+								<TextBlock Text="Device Type" Margin="1,1,20,1" Padding="1"/>
+								<Path Data="M1.677 5.14c-.201-.46-.698-.67-1.162-.454-.465.216-.636.756-.426 1.218l1.949 4.436c.306.696.63 1.06 1.236 1.06.647 0 .93-.397 1.236-1.06l1.717-3.916a.247.247 0 01.245-.165c.146 0 .27.123.27.287v3.79c0 .585.308 1.064.904 1.064.595 0 .916-.48.916-1.063V7.235c0-.599.41-.987.968-.987s.929.402.929.987v3.102c0 .584.31 1.063.905 1.063s.918-.48.918-1.063V7.235c0-.599.408-.987.966-.987.557 0 .93.402.93.987v3.102c0 .584.31 1.063.905 1.063.594 0 .917-.48.917-1.063v-3.53c0-1.298-.996-2.207-2.195-2.207-1.197 0-1.947.868-1.947.868-.4-.542-.949-.867-1.878-.867-.982 0-1.84.867-1.84.867-.4-.542-1.078-.867-1.64-.867-.87 0-1.56.4-1.982 1.41L3.274 9.082 1.677 5.14z" Margin="20,1,1,1" Fill="{StaticResource Editor.BlueBrush}" Stroke="{StaticResource Editor.GreenBrush}" Stretch="Uniform" Height="15"/>
+								<TextBlock Text="Virtual" Margin="1" Padding="1"/>
+								<Slider Style="{StaticResource SwitchAppearanceWithoutColourChange}" Margin="1" Padding="1" MinWidth="30" Maximum="1" Minimum="0" Value="0" IsSnapToTickEnabled="True" BorderBrush="{StaticResource Editor.Disabled.OrangeBrush}" Background="{StaticResource Editor.BlueBrush}" BorderThickness="1" SmallChange="1" LargeChange="1" ValueChanged="OnDeviceManager_DeviceTypeSwitch_ValueChanged" x:Name="deviceTypeSwitch"/>
+								<TextBlock Text="Physical" Margin="1" Padding="1"/>
+								<Path Data="M262,7079 L246,7079 C244.895,7079 244,7079.895 244,7081 L244,7082 C244,7082.552 244.448,7083 245,7083 C245.552,7083 246,7082.552 246,7082 C246,7081.448 246.448,7081 247,7081 L261,7081 C261.552,7081 262,7081.448 262,7082 L262,7090 C262,7090.552 261.552,7091 261,7091 L257,7091 C255.895,7091 255,7091.895 255,7093 L255,7097 C255,7098.105 255.895,7099 257,7099 L260,7099 C260.552,7099 261,7098.552 261,7098 C261,7097.448 260.552,7097 260,7097 L258,7097 C257.448,7097 257,7096.552 257,7096 L257,7094 C257,7093.448 257.448,7093 258,7093 L262,7093 C263.105,7093 264,7092.105 264,7091 L264,7081 C264,7079.895 263.105,7079 262,7079 M252,7096 L252,7087 C252,7086.448 251.552,7086 251,7086 L247,7086 C246.448,7086 246,7086.448 246,7087 L246,7096 C246,7096.552 246.448,7097 247,7097 L251,7097 C251.552,7097 252,7096.552 252,7096 M246,7084 L252,7084 C253.105,7084 254,7084.895 254,7086 L254,7097 C254,7098.105 253.105,7099 252,7099 L246,7099 C244.895,7099 244,7098.105 244,7097 L244,7086 C244,7084.895 244.895,7084 246,7084 M250.042,7094 L250.042,7094 C250.042,7094.552 249.594,7095 249.042,7095 C248.489,7095 248.042,7094.552 248.042,7094 C248.042,7093.448 248.489,7093 249.042,7093 C249.594,7093 250.042,7093.448 250.042,7094" Margin="1" Fill="{StaticResource Editor.OrangeBrush}" Stroke="{StaticResource ListBoxBackgroundBrush}" Height="15" Stretch="Uniform"/>
+							</StackPanel>
+						</Border>
+						<Border DockPanel.Dock="Right" BorderBrush="{StaticResource Editor.Window.GrayBrush5}" CornerRadius="10" Margin="1" Padding="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush4}"/>
+                                    <Style.Triggers>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsMouseOver" Value="True"/>
+                                                <Condition Property="IsEnabled" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <MultiTrigger.Setters>
+                                                <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush5}"/>
+                                            </MultiTrigger.Setters>
+                                        </MultiTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+							<Button Background="Transparent" BorderBrush="Transparent" Foreground="{StaticResource Editor.FontBrush}" Padding="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1" Click="OnDeviceManager_NewDeviceButton_Click">
+								<Button.Style>
+									<Style TargetType="{x:Type Button}">
+                                        <Setter Property="Content" Value="Create Device"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" TargetName="border" Value="{StaticResource Editor.Window.GrayBrush5}"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=deviceTypeSwitch, Path=Value}" Value="1">
+                                                <Setter Property="Content" Value="Pair Using Wifi"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+									</Style>
+								</Button.Style>
+							</Button>
+						</Border>
+					</DockPanel>
+					<ListView x:Name="itemsListView" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="1" Background="{StaticResource Editor.Window.GrayBrush3}" Foreground="{StaticResource Editor.FontBrush}" BorderBrush="{StaticResource Editor.Window.GrayBrush4}" ItemsSource="{Binding Devices}">
+                        <ListView.Style>
+                            <Style TargetType="{x:Type ListView}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=deviceTypeSwitch, Path=Value}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
+						<ListView.View>
+							<utl:PlainView>
+								<utl:PlainView.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Margin="1" Orientation="Vertical" Background="Transparent" VerticalAlignment="Center">
+											<Border Background="{StaticResource Editor.Window.GrayBrush4}" BorderBrush="{StaticResource Editor.Window.GrayBrush5}" CornerRadius="10" Margin="1" Padding="1" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" MinHeight="100">
+												<StackPanel Orientation="Vertical" Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible" Background="{StaticResource Editor.Window.GrayBrush4}">
+													<TextBlock Text="{Binding Name}" Style="{StaticResource EnableDisableHeadingTextBlockStyle}"/>
+													<Separator Margin="1" Padding="1"/>
+													<Grid Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible" MinWidth="120" MinHeight="150">
+														<TextBlock Text="{Binding Size}" HorizontalAlignment="Right" Style="{StaticResource EnableDisableTextBlockStyle}"/>
+														<Path Data="{Binding Path}" Fill="{StaticResource Editor.BlueBrush}" Stroke="{StaticResource Editor.GreenBrush}" Stretch="Uniform" Opacity="1" Margin="1" VerticalAlignment="Top" HorizontalAlignment="Left" Height="40" Width="40"/>
+														<TextBlock Grid.Row="1" Text="{Binding Version}" Margin="1" VerticalAlignment="Bottom" Foreground="{StaticResource Editor.GreenBrush}" Opacity="1" TextWrapping="Wrap" Visibility="Visible" FontSize="100" FontWeight="ExtraBlack" HorizontalAlignment="Stretch" TextAlignment="Center" TextTrimming="CharacterEllipsis" FontFamily="{Binding FontFamily}" MinWidth="130"/>
+													</Grid>
+												</StackPanel>
+											</Border>
+											<Border Background="{StaticResource Editor.Window.GrayBrush5}" BorderBrush="{StaticResource Editor.Window.GrayBrush4}" CornerRadius="10" Opacity="1" Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="1">
+												<UniformGrid Rows="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1">
+													<Button Style="{StaticResource ControlButton}" Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+														<Button.Content>
+															<Path Data="M6,11 L11,8 L6,5 L6,11 Z M8,14.6 C4.4,14.6 1.4,11.6 1.4,8 C1.4,4.4 4.4,1.4 8,1.4 C11.6,1.4 14.6,4.4 14.6,8 C14.6,11.6 11.6,14.6 8,14.6 L8,14.6 Z M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 L8,0 Z" Stretch="Uniform" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.Disabled.OrangeBrush}" Margin="1" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Width="20" Opacity="1"/>
+														</Button.Content>
+													</Button>
+													<Button Style="{StaticResource ControlButton}" Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+														<Button.Content>
+															<Path Data="M9.287,104.344h220.114c3.039,0,5.808,1.135,7.595,3.11c0.874,0.965,1.871,2.556,1.664,4.641l-10.773,108.326 c-0.372,3.742-4.438,6.923-9.258,6.923H22.96c-4.721,0-8.78-3.103-9.243-6.766L0.044,112.143c-0.266-2.106,0.712-3.691,1.579-4.676 C3.38,105.475,6.245,104.344,9.287,104.344z M31.01,89.344V71.198c0-5.216,4.427-9.854,9.642-9.854h157.383 c5.216,0,8.976,4.639,8.976,9.854v18.146h20V47.605c0-4.143-2.606-7.262-6.749-7.262H132.01v-4.467 c0-14.037-9.021-24.533-20.723-24.533H31.793c-11.701,0-20.783,10.496-20.783,24.533v53.467H31.01z" Stretch="Uniform" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.Disabled.OrangeBrush}" Margin="1" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity=".9"/>
+														</Button.Content>
+													</Button>
+													<Button Style="{StaticResource ControlButton}" Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+														<Button.Content>
+															<Path Data="M14.4443 5.68747L5.44587 14.6859C4.78722 15.3446 4.26719 16.1441 4.10888 17.062C3.94903 17.9888 3.89583 19.139 4.44432 19.6875C4.99281 20.236 6.14299 20.1828 7.0698 20.0229C7.98772 19.8646 8.78722 19.3446 9.44587 18.6859L18.4443 9.68747M14.4443 5.68747C14.4443 5.68747 17.4443 2.68747 19.4443 4.68747C21.4443 6.68747 18.4443 9.68747 18.4443 9.68747M14.4443 5.68747L18.4443 9.68747" Stretch="Uniform" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.Disabled.OrangeBrush}" Margin="1" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity=".8"/>
+														</Button.Content>
+													</Button>
+													<Button Style="{StaticResource ControlButton}" Margin="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+														<Button.Content>
+															<Path Data="M12,16a2,2,0,1,1-2,2A2,2,0,0,1,12,16ZM10,6a2,2,0,1,0,2-2A2,2,0,0,0,10,6Zm0,6a2,2,0,1,0,2-2A2,2,0,0,0,10,12Z" Stretch="Uniform" Fill="{StaticResource Editor.FontBrush}" Stroke="{StaticResource Editor.Disabled.OrangeBrush}" Margin="1" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity=".7"/>
+														</Button.Content>
+													</Button>
+												</UniformGrid>
+											</Border>
+										</StackPanel>
+									</DataTemplate>
+								</utl:PlainView.ItemTemplate>
+							</utl:PlainView>
+						</ListView.View>
+					</ListView>
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</Window>
